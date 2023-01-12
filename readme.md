@@ -1,1 +1,5 @@
-Hello, and welcome to the CEN 3031 Project for which we have absolutely zero ideas as to what to do.
+# Welcome to our CEN 3031 Project 
+
+## List of Ideas:
+- [] What are things that UF doesn't do well?
+- [] New, better UI for the degree audit
