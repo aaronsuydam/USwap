@@ -1,12 +1,11 @@
-# Welcome to our CEN 3031 Project 
-
-## Project Name
-No idea
+# USwap: CEN 3031 Project (Canvas Group 46)
 
 ## Project Description
-No idea
+A free web application through which students can swap and trade physical items with each other. Users manage an inventory of items that they own and are willing to trade. Users can also search for items they are interested in and/or specify their interests on their profile. They can view listings from other users and arrange to trade with them. To trade, users arrange to meet in a public place and exchange their items. 
 ## Members
-Aaron Suydam
+### Front End Developers - Sprint 0
+Aaron Suydam  
 Evan Robinson
-Daniel Moraes
+### Back End Developers - Sprint 0
+Daniel Moraes  
 Andrew Jackson
