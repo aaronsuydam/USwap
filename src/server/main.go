@@ -1,12 +1,14 @@
 package main
 
 import (
-  "github.com/gorilla/mux"
-  "net/http"
-  "os"
-  "log"
-  "github.com/atxfjrotc/uswap/src/server/utils"
-  "fmt"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/atxfjrotc/uswap/src/server/utils"
+	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -14,10 +16,14 @@ func main() {
 
   r.HandleFunc("/hello-world", helloWorld)
 
-  http.Handle("/", r)
+  // Solver Cross Origin Access Issue
+  c := cors.New(cors.Options{
+    AllowedOrigins: []string{"http://localhost:4200"},
+  })
+  handler := c.Handler(r)
 
   srv := &http.Server{
-    Handler: r,
+    Handler: handler,
     Addr:    ":" + os.Getenv("PORT"),
   }
 

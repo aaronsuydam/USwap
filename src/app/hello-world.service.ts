@@ -1,24 +1,15 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../environments/environment.development';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment.development';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HelloWorldService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getTitle() {
-    return this.http.get(`${environment.serverUrl}/hello-world`)
-      .map(response => response.json());
+  public get() {
+    return this.http.get(`${environment.serverUrl}/hello-world`);
   }
-
 }
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class HelloWorldService {
-
-//   constructor() { }
-// }
