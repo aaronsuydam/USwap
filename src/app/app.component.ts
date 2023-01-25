@@ -8,13 +8,14 @@ import {HelloWorldService} from './hello-world.service';
 })
 export class AppComponent implements OnInit {
   title: any;
-  
+  field = 'title';
+
   constructor(private hw: HelloWorldService) {}
 
   ngOnInit(): void {
     this.hw.get().subscribe((data) => {
       console.log(data);
-      this.title = data;
+      this.title = data[this.field as keyof Object];
     })
   }
 }
