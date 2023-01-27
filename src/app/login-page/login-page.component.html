@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="login_ux">
+        <h1 id="title">Basic Login Page</h1>
+    
+        <label id="email_label" for="inputt">Login: </label>
+    
+        <input #userName id="email_input" type="email" placeholder="User Name">
+        <br>
+        <input #password id="password_input" placeholder="Password">
+    
+        <button id="email_submit" type="button" (click)="onClick(userName.value, password.value)">Login</button>
+    </div>
+</div>
+

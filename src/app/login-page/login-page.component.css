@@ -1,0 +1,6 @@
+.container {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 650px;
+}
