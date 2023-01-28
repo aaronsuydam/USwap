@@ -8,6 +8,8 @@ import { AuthService } from '../auth.service';
 })
 export class LoginPageComponent {
     loginField = document.querySelector("input");
+    userName: string = "";
+    userPassword: string = "";
 
     constructor(private authService: AuthService) {}
 
@@ -20,10 +22,10 @@ export class LoginPageComponent {
      *      return true if loginService.login()===true;
      * }
      */
-    loginAttempt(userName: string, userPassword: string): boolean {
+    loginAttempt(): boolean {
         console.log("attempt");
-        console.log(userName, userPassword);
-        if(this.authService.login(userName, userPassword))
+        console.log(this.userName, this.userPassword);
+        if(this.authService.login(this.userName, this.userPassword))
         {
             return true;
         }
@@ -33,8 +35,8 @@ export class LoginPageComponent {
         }
     }
 
-    onClick(userName: string = "", userPassword: string = "") {
-        this.loginAttempt(userName, userPassword);
+    onClick() {
+        this.loginAttempt();
     }
 
 }

@@ -1,6 +1,29 @@
-.container {
+.element {
     display: grid;
     align-items: center;
     justify-content: center;
-    height: 650px;
+    height: 750px;
+}
+
+button {
+    display: block;
+}
+
+.login_ux {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-credentials-input {
+    margin: 0px 10px 0px 10px;
+}   
+
+input::placeholder {
+    text-align: center;
+}
+
+#credentials-submit {
+    margin: auto;
+    width: 150px;
 }
