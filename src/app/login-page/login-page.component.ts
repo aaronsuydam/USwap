@@ -10,6 +10,7 @@ export class LoginPageComponent {
     loginField = document.querySelector("input");
     userName: string = "";
     userPassword: string = "";
+    loginSuccess: boolean = false;
 
     constructor(private authService: AuthService) {}
 
@@ -36,7 +37,14 @@ export class LoginPageComponent {
     }
 
     onClick() {
-        this.loginAttempt();
+        this.loginSuccess = this.loginAttempt();
+        this.userName = "";
+        this.userPassword = "";
+        if(this.loginSuccess)
+        {
+            console.log("Logging you in");
+            // Navigate to the new page.
+        }
     }
 
 }

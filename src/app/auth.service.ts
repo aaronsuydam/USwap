@@ -10,21 +10,23 @@ import { ServerRequestLogin } from './server-request-login';
 export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
-  loginSuccess: ServerRequestLogin | undefined;
-  loginUrl: string = "wahtever the heck the login url is.";
+  loginSuccess: boolean = false;
+  loginUrl: string = '${environment.serverUrl}/login';
   
 
   login(userName: string, userPassword: string): boolean
   {
     console.log(userName, userPassword);
-    this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginSuccess =
-         {loginSuccess : (data as any).loginSuccess}); 
-    if(this.loginSuccess?.loginSuccess)
+    //this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginSuccess = {loginSuccess : (data as any).loginSuccess}); 
+    this.loginSuccess = true;
+    if(this.loginSuccess)
     {
+        console.log("AuthService: Credentials Accepted, Logging In...")
         return true;
     }
     else
     {
+        console.log("AuthService: Credentials Refused, Please Enter Valid Credentials")
         return false;
     }
   }
@@ -33,8 +35,4 @@ export class AuthService {
     return this.httpClient.get<ServerRequestLogin>(this.loginUrl);
   }
 
-
-  interpret() {
-
-  }
 }
