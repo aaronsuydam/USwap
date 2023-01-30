@@ -15,6 +15,13 @@ button {
     justify-content: center;
 }
 
+.logo {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -250px;
+}
+
 .login-credentials-input {
     margin: 0px 10px 0px 10px;
 }   
