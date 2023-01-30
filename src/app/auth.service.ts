@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { Observable, startWith, throwError } from 'rxjs';
 import { ServerRequestLogin } from './server-request-login';
 
 @Injectable({
@@ -10,16 +9,16 @@ import { ServerRequestLogin } from './server-request-login';
 export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
-  loginSuccess: boolean = false;
+  loginAuthorized: ServerRequestLogin = {loginSuccess : false};
   loginUrl: string = '${environment.serverUrl}/login';
   
 
   login(userName: string, userPassword: string): boolean
   {
     console.log(userName, userPassword);
-    //this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginSuccess = {loginSuccess : (data as any).loginSuccess}); 
-    this.loginSuccess = true;
-    if(this.loginSuccess)
+    this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginAuthorized = {loginSuccess : (data as any).loginSuccess}); 
+    this.loginAuthorized.loginSuccess = true;
+    if(this.loginAuthorized)
     {
         console.log("AuthService: Credentials Accepted, Logging In...")
         return true;

@@ -8,13 +8,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { AppComponent } from './app.component';
+import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './login-page/login-page.component';
+import { HomepageComponent } from './homepage/homepage.component';
+
+const appRoutes: Routes = [
+    { path: 'login', component: LoginPageComponent },
+    { path: 'home', component: HomepageComponent },
+    { path: '**', component: HomepageComponent}, // Will Definitely need to update this in the future.
+  ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +33,11 @@ import { LoginPageComponent } from './login-page/login-page.component';
     MatButtonModule,
     MatInputModule,
     MatIconModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    RouterModule.forRoot(
+        appRoutes,
+        {enableTracing: true} // Debug only
+    ),
   ],
   providers: [],
   bootstrap: [AppComponent]
