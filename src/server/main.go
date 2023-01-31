@@ -28,7 +28,6 @@ func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Post statement called")
 	var data = struct {
 		LoginSuccess string `json:"loginSuccess"`
 	}{
