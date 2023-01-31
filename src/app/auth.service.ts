@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpInterceptor} from '@angular/common/http';
+import { HttpClient, HttpInterceptor, HttpResponse} from '@angular/common/http';
 import { environment } from '../environments/environment.development';
 import { Observable, startWith, throwError } from 'rxjs';
 import { ServerRequestLogin } from './server-request-login';
@@ -18,6 +18,7 @@ export class AuthService {
   {
     console.log(userName, userPassword);
     this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginAuthorized = {loginSuccess : (data as any).loginSuccess}); 
+    // Debug Line // this.getLoginSuccess(userName, userPassword).subscribe(data => console.log(data));
     this.loginAuthorized.loginSuccess = true;
     if(this.loginAuthorized)
     {
@@ -32,6 +33,7 @@ export class AuthService {
   }
 
   getLoginSuccess(userName: string, userPassword: string) {
+    console.log(this.httpClient.get(this.loginUrl));
     return this.httpClient.get(this.loginUrl);
   }
 }
