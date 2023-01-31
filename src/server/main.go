@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/atxfjrotc/uswap/src/server/utils"
 	"github.com/gorilla/handlers"
@@ -10,7 +12,6 @@ import (
 )
 
 func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Page Accessed")
 	var data = struct {
 		Title string `json:"title"`
 	}{
@@ -26,12 +27,11 @@ func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("Testlog")
+func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var data = struct {
-		Title string `json:"title"`
+		LoginSuccess string `json:"loginSuccess"`
 	}{
-		Title: "Login",
+		LoginSuccess: "True",
 	}
 
 	jsonBytes, err := utils.StructToJSON(data)
@@ -50,17 +50,15 @@ func main() {
 
 	r.HandleFunc("/", HelloWorldHandler)
 	r.HandleFunc("/hello-world", HelloWorldHandler)
-	r.HandleFunc("/login", LoginHandler)
+	r.HandleFunc("/login", LoginPost).Methods("POST")
+	r.HandleFunc("/login", LoginPost)
 
-	// srv := &http.Server{
-	// 	Handler: r,
-	// 	Addr:    "127.0.0.1:4201",
-	// 	//Addr:         ":" + os.Getenv("PORT"),
-	// 	WriteTimeout: 15 * time.Second,
-	// 	ReadTimeout:  15 * time.Second,
-	// }
+	srv := &http.Server{
+		Handler:      handlers.CORS()(r),
+		Addr:         "127.0.0.1:4201",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
 
-	http.ListenAndServe("127.0.0.1:4201", handlers.CORS()(r))
-
-	// log.Fatal(srv.ListenAndServe())
+	log.Fatal(srv.ListenAndServe())
 }

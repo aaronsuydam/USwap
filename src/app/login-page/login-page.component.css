@@ -1,0 +1,40 @@
+.container {
+    background-color: #f6f6f6;
+}
+
+.element {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 750px;
+}
+
+button {
+    display: block;
+}
+
+.login_ux {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -250px;
+}
+
+.login-credentials-input {
+    margin: 0px 10px 0px 10px;
+}   
+
+input::placeholder {
+    text-align: center;
+}
+
+#credentials-submit {
+    margin: auto;
+    width: 150px;
+}
