@@ -3,6 +3,7 @@ import { HttpClient, HttpInterceptor, HttpResponse} from '@angular/common/http';
 import { environment } from '../environments/environment.development';
 import { Observable, startWith, throwError } from 'rxjs';
 import { ServerRequestLogin } from './server-request-login';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +19,17 @@ export class AuthService {
   {
     console.log(userName, userPassword);
     this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginAuthorized = {loginSuccess : (data as any).loginSuccess}); 
-    // Debug Line // this.getLoginSuccess(userName, userPassword).subscribe(data => console.log(data));
+    // Debug Line
+    this.getLoginSuccess(userName, userPassword).subscribe(data => console.log(data));
     this.loginAuthorized.loginSuccess = true;
     if(this.loginAuthorized)
     {
-        console.log("AuthService: Credentials Accepted, Logging In...")
+        console.log("AuthService: Credentials Accepted, Logging In...");
         return true;
     }
     else
     {
-        console.log("AuthService: Credentials Refused, Please Enter Valid Credentials")
+        console.log("AuthService: Credentials Refused, Please Enter Valid Credentials");
         return false;
     }
   }
