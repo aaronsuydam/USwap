@@ -7,7 +7,9 @@
     height: 650px;
 }
 
-
+button {
+    display: block;
+}
 
 .login_ux {
     display: grid;

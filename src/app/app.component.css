@@ -5,3 +5,7 @@ html {
 nav {
     background-color: white;
 }
+
+a {
+    margin-left: 10px;
+}
