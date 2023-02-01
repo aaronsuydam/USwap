@@ -1,12 +1,10 @@
-.container {
-    background-color: #f6f6f6;
-}
+
 
 .element {
     display: grid;
     align-items: center;
     justify-content: center;
-    height: 750px;
+    height: 650px;
 }
 
 button {

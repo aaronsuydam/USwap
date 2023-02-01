@@ -6,14 +6,14 @@
         <div class="login_ux">
             <div id="input-fields">
                 <mat-form-field class="login-credentials-input">
-                <input matInput type="text" [(ngModel)]="userName" id="email_input" placeholder="Username">
+                <input matInput type="username" [(ngModel)]="userName" id="email_input" placeholder="Username">
                 <button *ngIf="userName" matSuffix mat-icon-button aria-label="Clear" (click)="userName=''">
                   <mat-icon>close</mat-icon>
                 </button>
                 </mat-form-field>
                 
                 <mat-form-field class="login-credentials-input">
-                    <input matInput type="text" [(ngModel)]="userPassword" id="password_input" placeholder="Password">
+                    <input matInput type="password" [(ngModel)]="userPassword" id="password_input" placeholder="Password">
                     <button *ngIf="userPassword" matSuffix mat-icon-button aria-label="Clear" (click)="userPassword=''">
                     <mat-icon>close</mat-icon>
                     </button>

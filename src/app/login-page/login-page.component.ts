@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -13,7 +13,7 @@ export class LoginPageComponent {
     userPassword: string = "";
     loginSuccess: boolean = false;
 
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute ) {}
 
     /**
      * Ok so we are going to have some kind of loginService. this login service will need to
@@ -27,8 +27,9 @@ export class LoginPageComponent {
     loginAttempt(): boolean {
         console.log("attempt");
         console.log(this.userName, this.userPassword);
-        if(this.authService.login(this.userName, this.userPassword))
+        if(this.authService.login(this.userName, this.userPassword) === true)
         {
+            this.router.navigate(['home'], {relativeTo: this.route});
             return true;
         }
         else
