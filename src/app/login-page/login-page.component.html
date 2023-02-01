@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="element">
+        <div class="logo">
+            <img  class="images" src="../../assets/Image_1-27-23_at_10.44_PM.jpeg"/>
+        </div>
+        <div class="login_ux">
+            <div id="input-fields">
+                <mat-form-field class="login-credentials-input">
+                <input matInput type="username" [(ngModel)]="userName" id="email_input" placeholder="Username">
+                <button *ngIf="userName" matSuffix mat-icon-button aria-label="Clear" (click)="userName=''">
+                  <mat-icon>close</mat-icon>
+                </button>
+                </mat-form-field>
+                
+                <mat-form-field class="login-credentials-input">
+                    <input matInput type="password" [(ngModel)]="userPassword" id="password_input" placeholder="Password">
+                    <button *ngIf="userPassword" matSuffix mat-icon-button aria-label="Clear" (click)="userPassword=''">
+                    <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+                   
+        <button mat-button id="credentials-submit" type="button" (click)="onClick()">Login</button>    
+        </div>
+        
+    </div>
+</div>
+
