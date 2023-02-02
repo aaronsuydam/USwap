@@ -2,10 +2,10 @@ html {
     background-color: #f6f6f6;
 }
 
-nav {
-    background-color: white;
-}
-
-a {
+/* a {
     margin-left: 10px;
+} */
+
+.spacer {
+    flex: 1 1 auto;
 }

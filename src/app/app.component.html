@@ -4,10 +4,14 @@
         <link href="app.component.css" rel="stylesheet">
         <title>USwap: You Have, I Want</title>
     </header>
-    <nav>
-        <a mat-button routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a>
+    <mat-toolbar color="primary">
+        <button mat-icon-button class="menu-icon" aria-label="Icon-button with menu icon">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <a mat-button routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">USwap</a>
+        <span class="spacer"></span>
         <a mat-button routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
-    </nav>
+    </mat-toolbar>
     <router-outlet></router-outlet>
         
 </html>
