@@ -6,7 +6,7 @@
 }
 
 button {
-    display: block;
+    width: auto;
 }
 
 .login-ux {
