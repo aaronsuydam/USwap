@@ -12,17 +12,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { HomepageComponent } from './homepage/homepage.component';
-import { ItemDetailComponent } from './item-detail/item-detail.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
-import { SwapUiComponent } from './swap-ui/swap-ui.component';
-import { SentOffersComponent } from './sent-offers/sent-offers.component';
 
 const appRoutes: Routes = [
-    { path: 'home', component: HomepageComponent },
     { path: 'login', component: LoginPageComponent },
-    { path: 'user-profile', component:UserProfileComponent},
-    { path: 'swap-ui', component:SwapUiComponent},
-    { path: 'sent-offers', component:SentOffersComponent},
+    { path: 'home', component: HomepageComponent },
     { path: '**', component: HomepageComponent}, // Will Definitely need to update this in the future.
   ];
 
@@ -30,11 +23,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     LoginPageComponent,
-    HomepageComponent,
-    ItemDetailComponent,
-    UserProfileComponent,
-    SwapUiComponent,
-    SentOffersComponent
+    HomepageComponent
   ],
   imports: [
     BrowserModule,
