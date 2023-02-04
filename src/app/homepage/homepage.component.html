@@ -1,7 +1,24 @@
-<a>I Want to Swap for...</a>
-<mat-form-field class="login-credentials-input">
-    <input matInput type="username" [(ngModel)]="swapFor" placeholder="Swap For">
-    <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''">
-      <mat-icon>close</mat-icon>
-    </button>
-</mat-form-field>
+<div class="homepage">
+    <div class="text-and-form">
+        <a class="swapText">Swap</a>
+
+        <mat-form-field  class="swap-for-input">
+        <input class="SwapFor" matInput [(ngModel)]="userSwapFor" placeholder='{{swapFor}}' (keydown.enter)="swap()">
+        <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''" >
+        <mat-icon>close</mat-icon>
+        </button>
+        </mat-form-field>
+
+        <a class="swapText">for</a>
+
+        <mat-form-field class="swap-for-input">
+        <input class="SwapFor" matInput [(ngModel)]="userSwapWith" placeholder='{{swapWith}}' (keydown.enter)="swap()">
+        <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''" >
+        <mat-icon>close</mat-icon>
+        </button>
+        </mat-form-field>
+
+        <button mat-button class="swap" (click)="swap()">Swap!</button>
+    </div>
+</div>
+

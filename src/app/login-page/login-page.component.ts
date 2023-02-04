@@ -29,7 +29,7 @@ export class LoginPageComponent {
         console.log(this.userName, this.userPassword);
         if(this.authService.login(this.userName, this.userPassword) === true)
         {
-            this.router.navigate(['home'], {relativeTo: this.route});
+            this.router.navigate(['../home'], {relativeTo: this.route});
             return true;
         }
         else
