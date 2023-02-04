@@ -1,1 +1,7 @@
-<p>homepage works!</p>
+<a>I Want to Swap for...</a>
+<mat-form-field class="login-credentials-input">
+    <input matInput type="username" [(ngModel)]="swapFor" placeholder="Swap For">
+    <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''">
+      <mat-icon>close</mat-icon>
+    </button>
+</mat-form-field>
