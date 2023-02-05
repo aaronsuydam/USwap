@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SwapNarrowComponent } from './swap-narrow.component';
+import { SwapNarrowComponent } from './swap-final.component';
 
 describe('SwapNarrowComponent', () => {
   let component: SwapNarrowComponent;
