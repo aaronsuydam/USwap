@@ -1,0 +1,55 @@
+#page-grid {
+    width: 100%;
+    height: 96%;
+    display: grid;
+    grid-template-areas: "center";
+    align-items: center;
+}
+
+#main-grid-container {
+    grid-area: center;
+    width: 100%;
+    height: 75%;
+    display: grid;
+    grid-template-areas:    "left center right"
+                            "bottom bottom bottom";
+    grid-template-columns: 33% 300px 33%;
+    grid-template-rows: 90% auto;
+    text-align: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#grid-bottom {
+    grid-area: bottom;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+#grid-left {
+    grid-area: left;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+#grid-center {
+    grid-area: center;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#grid-right {
+    grid-area: right;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#confirm-swap {
+    font-size: xx-large;
+}
