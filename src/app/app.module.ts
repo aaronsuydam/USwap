@@ -17,6 +17,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { SwapUiComponent } from './swap-ui/swap-ui.component';
 import { SentOffersComponent } from './sent-offers/sent-offers.component';
 import { SwapFinalComponent } from './swap-final/swap-final.component';
+import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.component';
+import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 
 const appRoutes: Routes = [
     { path: 'home', component: HomepageComponent },
@@ -24,7 +26,8 @@ const appRoutes: Routes = [
     { path: 'user-profile', component:UserProfileComponent},
     { path: 'swap-ui', component:SwapUiComponent},
     { path: 'sent-offers', component:SentOffersComponent},
-    { path: 'swapNarrow', component:SwapFinalComponent},
+    { path: 'swap-narrow', component:SwapNarrowDownComponent},
+    { path: 'swap-final', component:SwapFinalComponent},
     { path: '**', component: HomepageComponent}, // Will Definitely need to update this in the future.
   ];
 
@@ -37,7 +40,9 @@ const appRoutes: Routes = [
     UserProfileComponent,
     SwapUiComponent,
     SentOffersComponent,
-    SwapFinalComponent
+    SwapFinalComponent,
+    SwapNarrowDownComponent,
+    SmallSwapUiComponent
   ],
   imports: [
     BrowserModule,

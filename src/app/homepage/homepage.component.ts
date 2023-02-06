@@ -17,6 +17,6 @@ export class HomepageComponent {
 
     swap(): void {
         console.log("attempt");
-        this.router.navigate(['../swapNarrow'], {relativeTo: this.route});
+        this.router.navigate(['../swap-narrow'], {relativeTo: this.route});
     }
 }
