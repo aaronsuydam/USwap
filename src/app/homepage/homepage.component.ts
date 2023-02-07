@@ -6,6 +6,7 @@ export interface Tile {
   rows: number;
   text: string;
 }
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-homepage',
@@ -18,5 +19,16 @@ export class HomepageComponent {
     {text: 'Two', cols: 1, rows: 2, color: 'lightgreen'},
     {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
     {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
-  ];
+  ];    swapFor: string = "something";
+    swapWith: string = "better thing";
+
+    userSwapFor: string = "";
+    userSwapWith: string = "";
+
+    constructor(private router: Router, private route: ActivatedRoute) {}
+
+    swap(): void {
+        console.log("attempt");
+        this.router.navigate(['../swap-narrow'], {relativeTo: this.route});
+    }
 }

@@ -1,0 +1,33 @@
+#main-grid {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-areas: "main";
+    justify-content: center;
+    align-items: center;
+
+}
+
+#swap-ui-grid {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-areas:    "top"
+                            "row-2"
+                            "row-3";
+    grid-template-rows: 70% auto 22%;
+}
+
+#grid-top {
+    grid-area: top;
+}
+
+#grid-row-2 {
+    grid-area: row-2;
+    font-size: xx-large;
+}
+
+#grid-row-3 {
+    grid-area: row-3;
+    font-size: x-large;
+}
