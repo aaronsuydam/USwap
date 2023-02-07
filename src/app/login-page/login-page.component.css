@@ -1,5 +1,3 @@
-
-
 .element {
     display: grid;
     align-items: center;
@@ -8,10 +6,10 @@
 }
 
 button {
-    display: block;
+    width: auto;
 }
 
-.login_ux {
+.login-ux {
     display: grid;
     align-items: center;
     justify-content: center;
@@ -26,7 +24,7 @@ button {
 
 .login-credentials-input {
     margin: 0px 10px 0px 10px;
-}   
+}
 
 input::placeholder {
     text-align: center;
