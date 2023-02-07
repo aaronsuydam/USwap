@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -53,6 +54,7 @@ const appRoutes: Routes = [
     MatInputModule,
     MatIconModule,
     MatFormFieldModule,
+    MatCardModule,
     RouterModule.forRoot(
         appRoutes,
         {enableTracing: true} // Debug only
