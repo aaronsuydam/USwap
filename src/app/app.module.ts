@@ -19,13 +19,14 @@ import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.com
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 
 const appRoutes: Routes = [
-    { path: '**', component: HomepageComponent},
+    { path: '', component: HomepageComponent},
     { path: 'login', component: LoginPageComponent },
     { path: 'user-profile', component:UserProfileComponent},
     { path: 'swap-ui', component:SwapUiComponent},
     { path: 'sent-offers', component:SentOffersComponent},
     { path: 'swap-narrow', component:SwapNarrowDownComponent},
     { path: 'swap-final', component:SwapFinalComponent},
+    { path: '**', component: HomepageComponent} // Can direct to an about page or error page
   ];
 
 @NgModule({
