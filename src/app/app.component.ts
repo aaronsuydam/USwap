@@ -8,7 +8,7 @@ import {HelloWorldService} from './hello-world.service';
 })
 export class AppComponent implements OnInit {
   title: any;
-  field = 'title';
+  field: string = 'title';
 
   constructor(private hw: HelloWorldService) {}
 
