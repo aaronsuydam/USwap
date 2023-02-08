@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 
@@ -9,7 +9,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { HomepageComponent } from './homepage/homepage.component';
+<<<<<<< HEAD
 import { TopBarComponent } from './top-bar/top-bar.component';
+=======
+import { APIInterceptor } from './interceptor.service';
+>>>>>>> rest
 
 const appRoutes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -35,7 +39,13 @@ const appRoutes: Routes = [
         {enableTracing: true} // Debug only
     ),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: APIInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
