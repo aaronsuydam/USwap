@@ -115,19 +115,38 @@ The official login page is almost complete, however it just needs to be connecte
 The swap page and landing page need to be revamped UI wise, but everything else works.
 We still need to add the filter. Have not had the time to implement so far.
 
-## Not Completed and Why? + Difficulties Faced
+## Not Completed and Why?
 ### Backend:
 #4 Connect SQL database with frontend
+
 We have not yet merged the newest front-end designs with the backend. However, test pages we have created are able to communicate with the backend server which is connected and communicating with our SQL database.
 
 #7 Setup Product Database as Nested Tables Within User Database
+
 This was more of a stretch goal for this Sprint. We did not have time to achieve this task this time around, but now that we have a better grasp on creating SQL queries and creating tables in SQL this should not be a difficult task for early on in Sprint 2.
 
 
 ### Frontend
 #2 
+
 It actually turned out to be quite a hassle getting user data properly uploaded into the database, wherein when a string was inputed to the table it would simply read as '0'.Varchar was not working when attempting to input strings. Eventually a workaround was found wherein upon creation of the table variables that would contain strings were declared as "text" variables but within GOLANG code were declared as "string" variables. 
 #3
+
 Querying user data went faster than uploading but we did run into issues with querying properly and recieving usernames properly.
 #4
 We ran into some issues referencing the database properly but eventually got it up.
+
+## Difficulties Faced + Lessons Learned
+### Backend
+#1:
+
+It was initially a bit difficult to get SQL and Golang to interact properly, it was some issue with the package interacting with the local host. Eventually, the server was established using an online server hosting platform. Also, there is a lot of outdated documentation for golang along with many functions being deprecated which caused a bit of confusion.
+
+#2 
+
+It actually turned out to be quite a hassle getting user data properly uploaded into the database, wherein when a string was imputed to the table it would simply read as '0'.Varchar was not working when attempting to input strings. Eventually a workaround was found wherein upon creation of the table variables that would contain strings were declared as "text" variables but within Golang code were declared as "string" variables. 
+
+
+#4
+
+Angular's http client was being very difficult to work with. We found that the client would prefix any url with its own file path within the src directory including the front end port, making it impossible to make calls to the backend as these could not be edited. After a while we found that we could construct an http interceptor to intercept all http calls from angular and fix the server url to them. 
