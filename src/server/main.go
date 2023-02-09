@@ -9,6 +9,8 @@ import (
 
 	"time"
 
+	_ "text/template"
+
 	"github.com/atxfjrotc/uswap/src/server/utils"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -69,9 +71,9 @@ func dbConnection() (*sql.DB, error) {
 	return db, nil
 }
 
-func createProductTable(db *sql.DB) error {
-	query := `CREATE TABLE IF NOT EXISTS users(user_id int primary key, user_name text, user_email text,
-        product_price int)`
+func createUserTable(db *sql.DB) error {
+	query := `CREATE TABLE IF NOT EXISTS users2(user_id int, user_name text,user_email text,
+        user_password text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -91,17 +93,49 @@ func createProductTable(db *sql.DB) error {
 	return nil
 }
 
+type user struct {
+	userId int
+	userN  string
+	userE  string
+	userP  string
+}
+
+func manuallyAdd(db *sql.DB) error {
+
+	u1 := user{
+		userId: 1234568790,
+		userN:  "Test user",
+		userE:  "testuser@test.com",
+		userP:  "password",
+	}
+
+	query := `INSERT INTO users2 (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
+	//query := "INSERT INTO product(product_name, product_price) VALUES (?, ?)"
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := db.PrepareContext(ctx, query)
+	if err != nil {
+		log.Printf("Error %s when preparing SQL statement", err)
+		return err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.ExecContext(ctx, u1.userId, u1.userN, u1.userE, u1.userP)
+	if err != nil {
+		log.Printf("Error %s when inserting row into user table", err)
+		return err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Printf("Error %s when finding rows affected", err)
+		return err
+	}
+	log.Printf("%d products created ", rows)
+
+	return nil
+}
 func main() {
-	/*r := mux.NewRouter()
 
-	r.HandleFunc("/hello-world", helloWorld)
-
-	// Solver Cross Origin Access Issue
-	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:4200"},
-	})
-	handler := c.Handler(r)
-	*/
 	//BEGIN DATABASE CODE
 	db, err := dbConnection()
 	if err != nil {
@@ -110,12 +144,18 @@ func main() {
 	}
 	defer db.Close()
 	log.Printf("Successfully connected to database")
-	err = createProductTable(db)
+	err = createUserTable(db)
 	if err != nil {
 		log.Printf("Create user table failed with error %s", err)
 		return
 	}
-	//CREATE TABLE IF NOT EXISTS users(student_id int primary key, user_name text, user_email text, created_at datetime default CURRENT_TIMESTAMP, updated_at datetime default CURRENT_TIMESTAMP)
+
+	err = manuallyAdd(db)
+	if err != nil {
+		log.Printf("Manually add user FAILED with error %s", err)
+		return
+	}
+
 	//END DATABASE CODE
 
 }
