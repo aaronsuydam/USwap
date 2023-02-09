@@ -28,6 +28,29 @@ As a college student/user, I expect that the website will be able to communicate
 
 Task: Connect front-end and back-end. Store user data from fron-tend into back-end
 
+
+Frontend User Stories:
+
+#1
+As a user, I expect to be able to sign up and login into my account.
+
+Task: Create a login page for users to access their account.
+
+#2
+As a college student, I want to trade my toaster for someone's blender, so that I can make protein shakes instead of bagels for breakfast.
+
+Task: Create a UI for users to swap their items for other items from different users.
+
+#3
+As a user, I want to see all the available items available to trade.
+
+Task: Present users with an initial landing page showcasing items in a grid.
+
+#4
+As a user, I want to be able to filter items so I can find the items that interest me.
+
+Task: Add a filter UI component with labels that users can select and deselect to filter by.
+
 ## Issues
 Backend:
 #1 Create Initial Backend storage of users:
@@ -41,6 +64,17 @@ Once tables -with test user data- were created next step was to work on querying
 
 #4 Connect SQL database with frontend:
 Once base functionality was created to send and recieve user data from the DB, next step was to connect it to the front-end and parse data back and forth.
+
+Frontend:
+#1 Login page
+Sending user input from the frontend to the backend to verify authentication.
+
+#2 Swap functionality
+Need to set up a mock backend to switch items in the database.
+
+#3 Landing page
+Making sure the items are presented cleanly and inline.
+
 ## Completed
 Backend:
 All backend issue were completed, complications arose with all of them however.
@@ -54,4 +88,7 @@ Querying user data went faster than uploading but we did run into issues with qu
 #4
 We ran into some issues referencing the database properly but eventually got it up.
 
-## Why
+Frontend:
+The login page is almost complete, however it just needs to be connected to the backend
+The swap page and landing page need to be revamped UI wise, but everything else works.
+We still need to add the filter. Have not had the time to implement so far.
