@@ -101,9 +101,13 @@ Making sure the items are presented cleanly and inline.
 ## Completed
 ### Backend:
 #1 Complete Initial Backend Storage of Users
+
 #2 Push Users to Database
+
 #3 Query User Data from Database
+
 #5 Test Signup and Login Functionality
+
 #6 Setup REST API (For Login, Signup, Home
 
 ### Frontend:
@@ -115,6 +119,7 @@ We still need to add the filter. Have not had the time to implement so far.
 ### Backend:
 #4 Connect SQL database with frontend
 We have not yet merged the newest front-end designs with the backend. However, test pages we have created are able to communicate with the backend server which is connected and communicating with our SQL database.
+
 #7 Setup Product Database as Nested Tables Within User Database
 This was more of a stretch goal for this Sprint. We did not have time to achieve this task this time around, but now that we have a better grasp on creating SQL queries and creating tables in SQL this should not be a difficult task for early on in Sprint 2.
 
