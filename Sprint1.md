@@ -89,6 +89,6 @@ Querying user data went faster than uploading but we did run into issues with qu
 We ran into some issues referencing the database properly but eventually got it up.
 
 ### Frontend:
-The login page is almost complete, however it just needs to be connected to the backend
+The login page is almost complete, however it just needs to be connected to the backend.
 The swap page and landing page need to be revamped UI wise, but everything else works.
 We still need to add the filter. Have not had the time to implement so far.
