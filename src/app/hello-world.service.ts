@@ -10,6 +10,6 @@ export class HelloWorldService {
   constructor(private http: HttpClient) {}
 
   public get() {
-    return this.http.get(`${environment.serverUrl}/hello-world`);
+    return this.http.get("/hello-world");
   }
 }

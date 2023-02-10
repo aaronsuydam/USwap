@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 
@@ -17,6 +17,7 @@ import { SentOffersComponent } from './sent-offers/sent-offers.component';
 import { SwapFinalComponent } from './swap-final/swap-final.component';
 import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.component';
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
+import { APIInterceptor } from './interceptor.service';
 
 const appRoutes: Routes = [
     { path: '', component: HomepageComponent},
@@ -54,7 +55,13 @@ const appRoutes: Routes = [
         {enableTracing: true} // Debug only
     ),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: APIInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
