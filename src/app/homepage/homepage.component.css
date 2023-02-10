@@ -1,3 +1,29 @@
-.container {
+.homepage {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 900px;
+}
+
+.text-and-form {
+    display: grid;
+    font-size: 70pt;
+    align-items: center;
+    justify-items: center;
+    height: 600px;
+}
+
+input::placeholder {
     text-align: center;
+}
+
+.swap-for-input
+.swapText {
+    width: auto;
+}
+
+.swap {
+    width: 220px;
+    height: 80px;
+    font-size: 45pt;
 }
