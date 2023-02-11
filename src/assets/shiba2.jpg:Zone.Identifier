@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=http://localhost:4200/
+HostUrl=https://material.angular.io/assets/img/examples/shiba2.jpg

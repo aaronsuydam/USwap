@@ -18,6 +18,7 @@ import { SwapFinalComponent } from './swap-final/swap-final.component';
 import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.component';
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 import { APIInterceptor } from './interceptor.service';
+import { MyItemsComponent } from './my-items/my-items.component';
 
 const appRoutes: Routes = [
     { path: '', component: HomepageComponent},
@@ -42,7 +43,8 @@ const appRoutes: Routes = [
     SentOffersComponent,
     SwapFinalComponent,
     SwapNarrowDownComponent,
-    SmallSwapUiComponent
+    SmallSwapUiComponent,
+    MyItemsComponent
   ],
   imports: [
     BrowserModule,
