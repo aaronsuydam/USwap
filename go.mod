@@ -2,6 +2,11 @@ module github.com/atxfjrotc/uswap
 
 go 1.19
 
+
+require github.com/go-sql-driver/mysql v1.7.0
+
+require golang.org/x/text v0.7.0 // indirect
+
 require github.com/gorilla/mux v1.8.0
 
 require (
@@ -19,3 +24,4 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/urfave/cli v1.22.12 // indirect
 )
+
