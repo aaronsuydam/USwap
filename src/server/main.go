@@ -1,18 +1,18 @@
 package main
 
 import (
-	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-
 	"time"
 
 	_ "text/template"
 
 	"github.com/atxfjrotc/uswap/src/server/utils"
+
 	_ "github.com/go-sql-driver/mysql"
+  "github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -25,6 +25,7 @@ const (
 func dsn(dbName string) string {
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
 }
+
 
 func dbConnection() (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn(""))
@@ -107,7 +108,16 @@ func manuallyAdd(db *sql.DB) error {
 		userN:  "Test user",
 		userE:  "testuser@test.com",
 		userP:  "password",
-	}
+func dsn(dbName string) string {
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
+}
+
+func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
+	var data = struct {
+		Title string `json:"title"`
+	}{
+		Title: "HELLO WORLD",
+}
 
 	query := `INSERT INTO users2 (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
 	//query := "INSERT INTO product(product_name, product_price) VALUES (?, ?)"
@@ -160,11 +170,11 @@ func main() {
 
 }
 
-func helloWorld(w http.ResponseWriter, r *http.Request) {
+func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var data = struct {
-		Title string `json:"title"`
+		LoginSuccess string `json:"loginSuccess"`
 	}{
-		Title: "Golang + Angular Starter Kit",
+		LoginSuccess: "False",
 	}
 
 	jsonBytes, err := utils.StructToJSON(data)
@@ -174,5 +184,24 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonBytes)
-	return
+}
+
+func main() {
+
+	// Routes
+	r := mux.NewRouter()
+
+	r.HandleFunc("/", HelloWorldHandler)
+	r.HandleFunc("/hello-world", HelloWorldHandler)
+	r.HandleFunc("/login", LoginPost).Methods("POST")
+	r.HandleFunc("/login", LoginPost)
+
+	srv := &http.Server{
+		Handler:      handlers.CORS()(r),
+		Addr:         "127.0.0.1:4201",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+	log.Fatal(srv.ListenAndServe())
 }

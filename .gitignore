@@ -29,7 +29,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
+.angular
 .sass-cache/
 /connect.lock
 /coverage
@@ -42,5 +42,9 @@ testem.log
 Thumbs.db
 
 # Executables
+<<<<<<< HEAD
 *.exe
 gin-bin
+=======
+*.exe
+>>>>>>> rest

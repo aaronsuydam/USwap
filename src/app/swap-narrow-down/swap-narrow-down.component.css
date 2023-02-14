@@ -1,0 +1,78 @@
+#meta-grid {
+    height: 95%;
+    width: 100%;
+    display: grid;
+    grid-template-areas: "main";
+    align-items: center;
+}
+
+#main-grid-container {
+    grid-area: main;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-areas:    "top top"
+                            "left right";
+    grid-template-columns: 25% 70%;
+    grid-template-rows: 15% auto;
+    gap: 7px;
+}
+
+#grid-top {
+    grid-area: top;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    font-size: 50pt;
+}
+
+#grid-left {
+    grid-area: left;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    font-size: xxx-large;
+}
+
+#grid-right {
+    grid-area: right;
+    margin-left: 100px;
+    display: grid;
+    grid-template-areas:    "one two three"
+                            "four five six";
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 50% 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+#grid-right-one {
+    grid-area: one;
+    height: 100%;
+}
+
+#grid-right-two {
+    grid-area: two;
+    height: 100%;
+}
+
+#grid-right-three {
+    grid-area: three;
+    height: 100%;
+}
+
+#grid-right-four {
+    grid-area: four;
+    height: 100%;
+}
+
+#grid-right-five {
+    grid-area: five;
+    height: 100%;
+}
+
+#grid-right-six {
+    grid-area: six;
+    height: 100%;
+}
+
