@@ -12,6 +12,7 @@ export class LoginPageComponent {
     userName: string = "";
     userPassword: string = "";
     loginSuccess: boolean = false;
+    value: string = 'Clear me';
 
     constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute ) {}
 
@@ -27,13 +28,10 @@ export class LoginPageComponent {
     loginAttempt(): boolean {
         console.log("attempt");
         console.log(this.userName, this.userPassword);
-        if(this.authService.login(this.userName, this.userPassword) === true)
-        {
-            this.router.navigate(['home'], {relativeTo: this.route});
+        if (this.authService.login(this.userName, this.userPassword) === true) {
+            this.router.navigate(['../'], {relativeTo: this.route});
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -42,8 +40,7 @@ export class LoginPageComponent {
         this.loginSuccess = this.loginAttempt();
         this.userName = "";
         this.userPassword = "";
-        if(this.loginSuccess)
-        {
+        if (this.loginSuccess) {
             console.log("Logging you in");
             // Navigate to the new page.
         }

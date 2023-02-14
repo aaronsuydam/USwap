@@ -1,1 +1,36 @@
-<p>homepage works!</p>
+<!-- <div class="container">
+    <p>Todo: Grid of images, Filter bar</p>
+    <mat-grid-list cols="4" rowHeight="100px">
+        <mat-grid-tile
+            *ngFor="let tile of tiles"
+            [colspan]="tile.cols"
+            [rowspan]="tile.rows"
+            [style.background]="tile.color">
+            {{tile.text}}
+        </mat-grid-tile>
+    </mat-grid-list>
+</div> -->
+<div class="homepage">
+    <div class="text-and-form">
+        <a class="swapText">Swap</a>
+
+        <mat-form-field  class="swap-for-input">
+        <input class="SwapFor" matInput [(ngModel)]="userSwapFor" placeholder='{{swapFor}}' (keydown.enter)="swap()">
+        <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''" >
+        <mat-icon>close</mat-icon>
+        </button>
+        </mat-form-field>
+
+        <a class="swapText">for</a>
+
+        <mat-form-field class="swap-for-input">
+        <input class="SwapFor" matInput [(ngModel)]="userSwapWith" placeholder='{{swapWith}}' (keydown.enter)="swap()">
+        <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''" >
+        <mat-icon>close</mat-icon>
+        </button>
+        </mat-form-field>
+
+        <button mat-button class="swap" (click)="swap()">Swap!</button>
+    </div>
+</div>
+

@@ -15,20 +15,18 @@ export class AuthService {
   loginUrl: string = `/login`;
   
 
-  login(userName: string, userPassword: string): boolean
-  {
+  login(userName: string, userPassword: string): boolean {
     console.log(userName, userPassword);
     this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginAuthorized = {loginSuccess : (data as any).loginSuccess}); 
-    // Debug Line
+
     this.getLoginSuccess(userName, userPassword).subscribe(data => console.log(data));
+
     this.loginAuthorized.loginSuccess = true;
-    if(this.loginAuthorized)
-    {
+    if(this.loginAuthorized) {
         console.log("AuthService: Credentials Accepted, Logging In...");
         return true;
     }
-    else
-    {
+    else {
         console.log("AuthService: Credentials Refused, Please Enter Valid Credentials");
         return false;
     }

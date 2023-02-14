@@ -10,9 +10,13 @@ import (
 	"net/http"
 	"time"
 
+	_ "text/template"
+
 	"github.com/atxfjrotc/uswap/src/server/utils"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
+
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -76,9 +80,9 @@ func dbConnection() (*sql.DB, error) {
 	return db, nil
 }
 
-func createProductTable(db *sql.DB) error {
-	query := `CREATE TABLE IF NOT EXISTS users(user_id int primary key, user_name text, user_email text,
-        product_price int)`
+func createUserTable(db *sql.DB) error {
+	query := `CREATE TABLE IF NOT EXISTS users2(user_id int, user_name text,user_email text,
+        user_password text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -96,6 +100,13 @@ func createProductTable(db *sql.DB) error {
 
 	log.Printf("Rows affected when creating table: %d", rows)
 	return nil
+}
+
+type user struct {
+	userId       int
+	userName     string
+	userEmail    string
+	userPassword string
 }
 
 func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
@@ -129,13 +140,6 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-type user struct {
-	userId int
-	userN  string
-	userE  string
-	userP  string
-}
-
 func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -157,10 +161,10 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 
 	// Creates ID for next user in database
 	u1 := user{
-		userId: count + 1,
-		userN:  login.Username,
-		userE:  "testuser@test.com",
-		userP:  hash,
+		userId:       count + 1,
+		userName:     login.Username,
+		userEmail:    "testuser@test.com",
+		userPassword: hash,
 	}
 
 	query := `INSERT INTO users2 (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
@@ -173,7 +177,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, u1.userId, u1.userN, u1.userE, u1.userP)
+	_, err = stmt.ExecContext(ctx, u1.userId, u1.userName, u1.userEmail, u1.userPassword)
 
 	if err != nil {
 		log.Printf("Error %s when inserting row into user table", err)
@@ -237,7 +241,7 @@ func main() {
 	}*/
 	defer db.Close()
 	log.Printf("Successfully connected to database")
-	err := createProductTable(db)
+	err := createUserTable(db)
 	if err != nil {
 		log.Printf("Create user table failed with error %s", err)
 		return
@@ -262,5 +266,4 @@ func main() {
 	}
 
 	log.Fatal(srv.ListenAndServe())
-	return
 }
