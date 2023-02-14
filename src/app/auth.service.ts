@@ -18,6 +18,7 @@ export class AuthService {
   login(userName: string, userPassword: string): boolean {
     console.log(userName, userPassword);
     this.getLoginSuccess(userName, userPassword).subscribe(data => this.loginAuthorized = {loginSuccess : (data as any).loginSuccess}); 
+
     this.getLoginSuccess(userName, userPassword).subscribe(data => console.log(data));
 
     this.loginAuthorized.loginSuccess = true;

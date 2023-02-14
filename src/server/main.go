@@ -1,7 +1,11 @@
 package main
 
 import (
+	"context"
+	"database/sql"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -11,21 +15,25 @@ import (
 	"github.com/atxfjrotc/uswap/src/server/utils"
 
 	_ "github.com/go-sql-driver/mysql"
-  "github.com/gorilla/handlers"
+	"github.com/gorilla/handlers"
+
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
+	// Move to environment variables
 	username = "sql9595555"
 	password = "xXEPeR9JDl"
 	hostname = "sql9.freesqldatabase.com"
 	dbname   = "sql9595555"
 )
 
+var db *sql.DB
+
 func dsn(dbName string) string {
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
 }
-
 
 func dbConnection() (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn(""))
@@ -95,21 +103,10 @@ func createUserTable(db *sql.DB) error {
 }
 
 type user struct {
-	userId int
-	userN  string
-	userE  string
-	userP  string
-}
-
-func manuallyAdd(db *sql.DB) error {
-
-	u1 := user{
-		userId: 1234568790,
-		userN:  "Test user",
-		userE:  "testuser@test.com",
-		userP:  "password",
-func dsn(dbName string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
+	userId       int
+	userName     string
+	userEmail    string
+	userPassword string
 }
 
 func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
@@ -117,65 +114,113 @@ func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 		Title string `json:"title"`
 	}{
 		Title: "HELLO WORLD",
+	}
+	jsonBytes, err := utils.StructToJSON(data)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
 }
 
+type Login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+// Hashing functionality
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+func SignUpPost(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var login Login
+	json.Unmarshal(body, &login)
+	fmt.Println(login.Username)
+
+	hash, _ := HashPassword(string(login.Password))
+	rows, err := db.Query("SELECT COUNT(*) as count FROM users2")
+	if err != nil {
+		log.Fatal(err)
+	}
+	count := 0
+	for rows.Next() {
+		rows.Scan(&count)
+	}
+
+	// Creates ID for next user in database
+	u1 := user{
+		userId:       count + 1,
+		userName:     login.Username,
+		userEmail:    "testuser@test.com",
+		userPassword: hash,
+	}
+
 	query := `INSERT INTO users2 (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
-	//query := "INSERT INTO product(product_name, product_price) VALUES (?, ?)"
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := db.PrepareContext(ctx, query)
 	if err != nil {
 		log.Printf("Error %s when preparing SQL statement", err)
-		return err
+		log.Fatal(err)
 	}
 	defer stmt.Close()
 
-	res, err := stmt.ExecContext(ctx, u1.userId, u1.userN, u1.userE, u1.userP)
+	_, err = stmt.ExecContext(ctx, u1.userId, u1.userName, u1.userEmail, u1.userPassword)
+
 	if err != nil {
 		log.Printf("Error %s when inserting row into user table", err)
-		return err
+		log.Fatal(err)
 	}
-	rows, err := res.RowsAffected()
-	if err != nil {
-		log.Printf("Error %s when finding rows affected", err)
-		return err
-	}
-	log.Printf("%d products created ", rows)
-
-	return nil
-}
-func main() {
-
-	//BEGIN DATABASE CODE
-	db, err := dbConnection()
-	if err != nil {
-		log.Printf("Error %s when getting db connection", err)
-		return
-	}
-	defer db.Close()
-	log.Printf("Successfully connected to database")
-	err = createUserTable(db)
-	if err != nil {
-		log.Printf("Create user table failed with error %s", err)
-		return
-	}
-
-	err = manuallyAdd(db)
-	if err != nil {
-		log.Printf("Manually add user FAILED with error %s", err)
-		return
-	}
-
-	//END DATABASE CODE
-
 }
 
 func LoginPost(w http.ResponseWriter, r *http.Request) {
-	var data = struct {
-		LoginSuccess string `json:"loginSuccess"`
-	}{
-		LoginSuccess: "False",
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
 	}
+	var login Login
+	json.Unmarshal(body, &login)
+
+	// Test user database named user2
+	rows, err := db.Query("SELECT user_password FROM users2 WHERE user_name = ?", login.Username)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+	var hash string
+	for rows.Next() {
+		if err := rows.Scan(&hash); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	success := CheckPasswordHash(login.Password, string(hash))
+
+	var data struct {
+		LoginSuccess string `json:"loginSuccess"`
+	}
+	if success {
+		data.LoginSuccess = `True`
+	} else {
+		data.LoginSuccess = `False`
+	}
+
+	// Just for testing
+	fmt.Println(data.LoginSuccess)
 
 	jsonBytes, err := utils.StructToJSON(data)
 	if err != nil {
@@ -188,6 +233,22 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
+	// Establish Database Connection
+	db, _ = dbConnection()
+	/*if err != nil {
+		log.Printf("Error %s when getting db connection", err)
+		return
+	}*/
+	defer db.Close()
+	log.Printf("Successfully connected to database")
+	err := createUserTable(db)
+	if err != nil {
+		log.Printf("Create user table failed with error %s", err)
+		return
+	}
+	//CREATE TABLE IF NOT EXISTS users(student_id int primary key, user_name text, user_email text, created_at datetime default CURRENT_TIMESTAMP, updated_at datetime default CURRENT_TIMESTAMP)
+	//END DATABASE CODE
+
 	// Routes
 	r := mux.NewRouter()
 
@@ -195,6 +256,7 @@ func main() {
 	r.HandleFunc("/hello-world", HelloWorldHandler)
 	r.HandleFunc("/login", LoginPost).Methods("POST")
 	r.HandleFunc("/login", LoginPost)
+	r.HandleFunc("/signup", SignUpPost).Methods("POST")
 
 	srv := &http.Server{
 		Handler:      handlers.CORS()(r),

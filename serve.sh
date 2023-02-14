@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ng serve &
+ng serve --open &
 go run ./src/server/main.go &
 
 wait
