@@ -28,8 +28,8 @@ export class HomepageComponent {
 
     constructor(private router: Router, private route: ActivatedRoute) {}
 
-    swap(): void {
+    login(): void {
         console.log("attempt");
-        this.router.navigate(['../swap-narrow'], {relativeTo: this.route});
+        this.router.navigate(['../login'], {relativeTo: this.route});
     }
 }
