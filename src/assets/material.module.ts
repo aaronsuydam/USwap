@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatCheckboxModule } from '@angular/material/checkbox'; 
 
 @NgModule({
   declarations: [],
@@ -20,6 +22,8 @@ import { MatCardModule } from '@angular/material/card';
     MatToolbarModule,
     MatGridListModule,
     MatCardModule,
+    MatSidenavModule,
+    MatCheckboxModule
   ],
   exports: [
     MatButtonModule,
@@ -29,6 +33,8 @@ import { MatCardModule } from '@angular/material/card';
     MatToolbarModule,
     MatGridListModule,
     MatCardModule,
+    MatSidenavModule,
+    MatCheckboxModule
   ]
 })
 export class MaterialModule { }

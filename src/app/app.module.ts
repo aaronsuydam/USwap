@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from '../assets/material/material.module';
+import { MaterialModule } from '../assets/material.module';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./swap-narrow-down.component.css']
 })
 export class SwapNarrowDownComponent {
-
+    swapFor: string = "";
 }

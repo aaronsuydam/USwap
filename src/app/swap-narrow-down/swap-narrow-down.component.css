@@ -1,78 +1,71 @@
-#meta-grid {
-    height: 95%;
-    width: 100%;
-    display: grid;
-    grid-template-areas: "main";
-    align-items: center;
-}
-
 #main-grid-container {
-    grid-area: main;
-    height: 100%;
-    width: 100%;
     display: grid;
-    grid-template-areas:    "top top"
-                            "left right";
-    grid-template-columns: 25% 70%;
-    grid-template-rows: 15% auto;
-    gap: 7px;
+    height: 90%;
+    width: 100%;
+    justify-content: center;
+    align-items: middle;
+    margin-top: 15px;
+
+    grid-template-areas: "top top"
+                         "bl br";
+    grid-template-columns: 20% 75%;
+    grid-template-rows: 12% 88%;
+    row-gap: 30px;
+    column-gap: 50px;
 }
 
-#grid-top {
+#top {
     grid-area: top;
     display: grid;
-    align-items: center;
-    text-align: center;
-    font-size: 50pt;
-}
-
-#grid-left {
-    grid-area: left;
-    display: grid;
-    align-items: center;
-    justify-content: center;
-    font-size: xx-large;
-}
-
-#grid-right {
-    grid-area: right;
-    margin-left: 100px;
-    display: grid;
-    grid-template-areas:    "one two three"
-                            "four five six";
-    grid-template-columns: 33% 33% 33%;
-    grid-template-rows: 50% 50%;
-    align-items: center;
+    align-items: middle;
     justify-content: center;
 }
 
-#grid-right-one {
+#input {
+    display: grid;
+    width: 750px;
+}
+
+#bottom-left {
+    grid-area: bl;
+}
+
+#filters {
+    display: grid;
+}
+
+#bottom-right {
+    grid-area: br;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-areas: "one two three"
+                         "four five six";
+    grid-template-columns: 32% 32% 32%;
+    gap: 20px;
+    align-items: middle;
+}
+
+#1 {
     grid-area: one;
-    height: 100%;
 }
 
-#grid-right-two {
+#2 {
     grid-area: two;
-    height: 100%;
 }
 
-#grid-right-three {
+#3 {
     grid-area: three;
-    height: 100%;
 }
 
-#grid-right-four {
+#4 {
     grid-area: four;
-    height: 100%;
 }
 
-#grid-right-five {
+#5 {
     grid-area: five;
-    height: 100%;
 }
 
-#grid-right-six {
+#6 {
     grid-area: six;
-    height: 100%;
 }
-
