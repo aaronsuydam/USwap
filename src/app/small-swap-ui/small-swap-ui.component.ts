@@ -8,10 +8,21 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SmallSwapUiComponent {
 
-    constructor(private router: Router, private route: ActivatedRoute) {}
+
+    swappingFor: boolean = true;
+    constructor(private router: Router, private route: ActivatedRoute) {
+        if(this.router.url !== "/swap-narrow")
+        {
+            this.swappingFor = false;
+        }
+    }
 
 
-    onClick(): void{
+    onClickSwapFor(): void{
         this.router.navigate(['../user-profile'], {relativeTo: this.route});
+    }
+
+    onClickSwapWith(): void{
+        this.router.navigate(['../swap-final'], {relativeTo: this.route});
     }
 }

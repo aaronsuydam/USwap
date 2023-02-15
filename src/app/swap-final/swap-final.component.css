@@ -39,7 +39,10 @@
     display: grid;
     align-items: center;
     justify-content: center;
+}
 
+#swap-icon {
+    font-size: 200px;
 }
 
 #grid-right {
