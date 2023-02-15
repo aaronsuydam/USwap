@@ -29,7 +29,7 @@ export class LoginPageComponent {
         console.log("attempt");
         console.log(this.userName, this.userPassword);
         if (this.authService.login(this.userName, this.userPassword) === true) {
-            this.router.navigate(['../'], {relativeTo: this.route});
+            this.router.navigate(['../swap-narrow'], {relativeTo: this.route});
             return true;
         } else {
             return false;

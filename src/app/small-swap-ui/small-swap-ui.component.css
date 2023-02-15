@@ -1,33 +1,14 @@
-#main-grid {
+mat-card-actions {
     display: grid;
-    height: 100%;
-    width: 100%;
-    grid-template-areas: "main";
-    justify-content: center;
+    grid-template-areas: "one two";
     align-items: center;
-
+    gap: 50px;
 }
 
-#swap-ui-grid {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-areas:    "top"
-                            "row-2"
-                            "row-3";
-    grid-template-rows: 70% auto 22%;
+#swapForButton {
+    background-color: rgba(255, 153, 0, 0.215);
 }
 
-#grid-top {
-    grid-area: top;
-}
-
-#grid-row-2 {
-    grid-area: row-2;
-    font-size: xx-large;
-}
-
-#grid-row-3 {
-    grid-area: row-3;
-    font-size: x-large;
+#likeButton {
+    background-color: rgba(0, 102, 255, 0.215);
 }

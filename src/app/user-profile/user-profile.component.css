@@ -1,0 +1,66 @@
+#main-grid {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-areas:    "topleft topright"
+                            "bottom bottom";
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 40% 60%;
+}
+
+#top-left {
+    grid-area: topleft;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 50pt;
+}
+
+#profile-photo {
+    border-radius: 50%;
+}
+
+#top-right {
+    grid-area: topright;
+    margin-top: 50px;
+    display: grid;
+    grid-template-areas: "top-right-top"
+                         "top-right-bottom";
+}
+
+#username {
+    grid-area: top-right-top;
+    font-size: 45pt;
+}
+
+#top-right-bottom {
+    grid-area: top-right-bottom;
+
+}
+
+
+#member-info {
+    font-size: 15pt;
+}
+
+#interest-info {
+    font-size: 13pt;
+}
+
+#bottom {
+    grid-area: bottom;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-areas: "grid-actions";
+    grid-template-columns: 21% 21% 21% 21%;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
+    background-color: rgba(47, 109, 0, 0.255);
+    font-size: 18pt;
+}

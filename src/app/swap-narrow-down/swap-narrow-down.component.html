@@ -1,20 +1,31 @@
-<div id="meta-grid">
-    <div id="main-grid-container">
-        <div id="grid-top">
-            <!-- Some sort of arrow shape here-->
-            <a>I want to Swap something for better thing</a>
+<div id="main-grid-container">
+    <div id="top">
+        <div id="input">
+            <mat-form-field class="login-credentials-input">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="query" [(ngModel)]="swapFor" id="swap-for-input" placeholder="I want to swap for...">
+            <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''">
+                <mat-icon>close</mat-icon>
+            </button>
+            </mat-form-field>
         </div>
-        <div id="grid-left">
-            <!-- Some sort of arrow shape here-->
-            <a>placeholder for filter</a>
-        </div>  
-        <div id="grid-right">
-            <app-small-swap-ui id="grid-right-one"></app-small-swap-ui>
-            <app-small-swap-ui id="grid-right-two"></app-small-swap-ui> 
-            <app-small-swap-ui id="grid-right-three"></app-small-swap-ui> 
-            <app-small-swap-ui id="grid-right-four"></app-small-swap-ui> 
-            <app-small-swap-ui id="grid-right-five"></app-small-swap-ui> 
-            <app-small-swap-ui id="grid-right-six"></app-small-swap-ui> 
-        </div>
+    </div>
+
+    <div id="bottom-left">
+        <section id="filters">
+            <mat-checkbox>Filter 1</mat-checkbox>
+            <mat-checkbox>Filter 2</mat-checkbox>
+            <mat-checkbox>Filter 3</mat-checkbox>
+            <mat-checkbox>Filter 4</mat-checkbox>
+        </section>
+    </div>
+
+    <div id="bottom-right">
+        <app-small-swap-ui id="1">Item Details</app-small-swap-ui>
+        <app-small-swap-ui id="2">Item Details</app-small-swap-ui>
+        <app-small-swap-ui id="3">Item Details</app-small-swap-ui>
+        <app-small-swap-ui id="4">Item Details</app-small-swap-ui>
+        <app-small-swap-ui id="5">Item Details</app-small-swap-ui>
+        <app-small-swap-ui id="6">Item Details</app-small-swap-ui>
     </div>
 </div>

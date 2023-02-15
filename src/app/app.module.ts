@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from './material/material.module';
+import { MaterialModule } from '../assets/material.module';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,7 +13,6 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { SwapUiComponent } from './swap-ui/swap-ui.component';
-import { SentOffersComponent } from './sent-offers/sent-offers.component';
 import { SwapFinalComponent } from './swap-final/swap-final.component';
 import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.component';
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
@@ -24,7 +23,6 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginPageComponent },
     { path: 'user-profile', component:UserProfileComponent},
     { path: 'swap-ui', component:SwapUiComponent},
-    { path: 'sent-offers', component:SentOffersComponent},
     { path: 'swap-narrow', component:SwapNarrowDownComponent},
     { path: 'swap-final', component:SwapFinalComponent},
     { path: '**', component: HomepageComponent} // Can direct to an about page or error page
@@ -39,10 +37,9 @@ const appRoutes: Routes = [
     ItemDetailComponent,
     UserProfileComponent,
     SwapUiComponent,
-    SentOffersComponent,
     SwapFinalComponent,
     SwapNarrowDownComponent,
-    SmallSwapUiComponent
+    SmallSwapUiComponent,
   ],
   imports: [
     BrowserModule,
