@@ -1,21 +1,11 @@
-#meta-grid {
-    height: 100%;
-    width: 100%;
-    background-color: rgb(255, 247, 237);
-    display: grid;
-    grid-template-areas: "main";
-    align-items: center;
-}
-
 #main-grid {
-    grid-area: main;
     height: 100%;
     width: 100%;
     display: grid;
     grid-template-areas:    "topleft topright"
                             "bottom bottom";
-    grid-template-columns: auto 80%;
-    grid-template-rows: 40% auto;
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 40% 60%;
 }
 
 #top-left {
@@ -64,8 +54,8 @@
     height: 100%;
     width: 100%;
     grid-template-areas: "grid-actions";
-    grid-template-columns: 20% 20% auto 20% 20%;
-    gap: 30px;
+    grid-template-columns: 21% 21% 21% 21%;
+    gap: 20px;
     align-items: center;
     justify-content: center;
 }

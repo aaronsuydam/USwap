@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-small-swap-ui',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class SmallSwapUiComponent {
 
+    constructor(private router: Router, private route: ActivatedRoute) {}
+
+
+    onClick(): void{
+        this.router.navigate(['../user-profile'], {relativeTo: this.route});
+    }
 }
