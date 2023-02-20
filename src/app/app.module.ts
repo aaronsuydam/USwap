@@ -22,7 +22,7 @@ import { authGuard, AuthService } from './auth.service';
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
     { path: 'login', title: "Login - USwap", component: LoginPageComponent },
-    { path: 'user-profile', title: "Profile and Items - USwap", canActivate: [authGuard], component:UserProfileComponent},
+    { path: 'user-profile', title: "Profile and Items - USwap", component:UserProfileComponent},
     { path: 'swap-narrow', title: "Swap For Anything! - USwap", canActivate: [authGuard], component:SwapNarrowDownComponent},
     { path: 'swap-final', title: "Confirm Swap - USwap", canActivate: [authGuard], component:SwapFinalComponent},
     { path: '**', redirectTo: '', pathMatch: 'full'} // Can direct to an about page or error page
