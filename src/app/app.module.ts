@@ -21,7 +21,7 @@ import { authGuard, AuthService } from './auth.service';
 
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
-    { path: 'login', title: "Login - USwap", canActivate: [authGuard], component: LoginPageComponent },
+    { path: 'login', title: "Login - USwap", component: LoginPageComponent },
     { path: 'user-profile', title: "Profile and Items - USwap", canActivate: [authGuard], component:UserProfileComponent},
     { path: 'swap-narrow', title: "Swap For Anything! - USwap", canActivate: [authGuard], component:SwapNarrowDownComponent},
     { path: 'swap-final', title: "Confirm Swap - USwap", canActivate: [authGuard], component:SwapFinalComponent},
