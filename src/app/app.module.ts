@@ -18,10 +18,12 @@ import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.com
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 import { APIInterceptor } from './interceptor.service';
 import { authGuard, AuthService } from './auth.service';
+import { SignupPageComponent } from './signup-page/signup-page.component';
 
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
     { path: 'login', title: "Login - USwap", component: LoginPageComponent },
+    { path: 'signup', title: "Signup - USwap", component: SignupPageComponent },
     { path: 'user-profile', title: "Profile and Items - USwap", canActivate: [authGuard], component:UserProfileComponent},
     { path: 'swap-narrow', title: "Swap For Anything! - USwap", canActivate: [authGuard], component:SwapNarrowDownComponent},
     { path: 'swap-final', title: "Confirm Swap - USwap", canActivate: [authGuard], component:SwapFinalComponent},
@@ -40,6 +42,7 @@ const appRoutes: Routes = [
     SwapFinalComponent,
     SwapNarrowDownComponent,
     SmallSwapUiComponent,
+    SignupPageComponent,
   ],
   imports: [
     BrowserModule,

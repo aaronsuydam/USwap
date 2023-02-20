@@ -1,0 +1,35 @@
+<div class="signup-container">
+    <div class="flex-element">
+
+        <h1>Enter your information below:</h1>
+
+        <mat-form-field>
+            <mat-label>Enter a username</mat-label>
+            <input matInput type="username" [(ngModel)]="userName" placeholder="Username" required>
+            <!-- add error checking -->
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Enter an email</mat-label>
+            <input matInput type="email" name="email" [(ngModel)]="userEmail" ngModel [email]="true" placeholder="john.smith@ufl.edu" required>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Enter a password</mat-label>
+            <input matInput [(ngModel)]="userPassword" [type]="hide ? 'password' : 'text'" placeholder="Password" required>
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Re-enter your password</mat-label>
+            <input matInput [(ngModel)]="validatePassword" [type]="confirmHide ? 'password' : 'text'" placeholder="Password" required>
+            <button mat-icon-button matSuffix (click)="confirmHide = !confirmHide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                <mat-icon>{{confirmHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+        </mat-form-field>
+        <button mat-button id="credentials-submit" type="button" (click)="onClick()">Register</button>
+        <p *ngIf="(userPassword && validatePassword) && userPassword !== validatePassword">Passwords don't match!</p>
+    </div>
+</div>
