@@ -17,7 +17,7 @@ import { SwapFinalComponent } from './swap-final/swap-final.component';
 import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.component';
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 import { APIInterceptor } from './interceptor.service';
-import { authGuard, AuthService } from './auth.service';
+import { authGuard } from './auth.service';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 
 const appRoutes: Routes = [

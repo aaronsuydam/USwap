@@ -4,6 +4,8 @@
     </button>
     <a class="home" mat-button routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">USwap</a>
     <span class="spacer"></span>
-    <a class="login" mat-button routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
-    <a class="profile" mat-button routerLink="/user-profile" routerLinkActive="active" ariaCurrentWhenActive="page">Profile</a>
+    <a *ngIf="!this.isAuthenticated" class="login" mat-button routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
+    <button mat-icon-button class="profile-icon" routerLink="/user-profile" routerLinkActive="active" aria-hidden="false" arial-label="Profile picture">
+        <mat-icon>person</mat-icon>
+    </button>
 </mat-toolbar>

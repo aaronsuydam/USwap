@@ -5,7 +5,6 @@ import { ServerRequestLogin } from './server-request-login';
 import { Router } from '@angular/router';
 import { inject } from '@angular/core';
 
-
 // This function should access the local cached information of whether or not the user is logged in,
 // and return true or false accordingly
 export const authGuard = () => {
@@ -44,6 +43,7 @@ export class AuthService {
     this.loginAuthorized.loginSuccess = true;
     if(this.loginAuthorized) {
         console.log("AuthService: Credentials Accepted, Logging In...");
+        localStorage.setItem('isLoggedIn', 'true');
         this.isLoggedIn = true;
         return true;
     }
@@ -59,7 +59,12 @@ export class AuthService {
     return this.httpClient.get(this.loginUrl);
   }
 
+  isAuthenticated(): boolean {
+    if (localStorage.getItem('isLoggedIn')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-
-  
 }
