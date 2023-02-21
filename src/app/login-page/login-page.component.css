@@ -1,13 +1,14 @@
-
 .element {
     display: grid;
     align-items: center;
     justify-content: center;
     height: 650px;
+    margin-bottom: -70px;
 }
 
 button {
     width: auto;
+    font-size: medium;
 }
 
 .login-ux {
@@ -34,4 +35,8 @@ input::placeholder {
 #credentials-submit {
     margin: auto;
     width: 150px;
+}
+
+.signup {
+    text-align: center;
 }
