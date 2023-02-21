@@ -25,8 +25,10 @@
     grid-area: topright;
     margin-top: 50px;
     display: grid;
-    grid-template-areas: "top-right-top"
-                         "top-right-bottom";
+    grid-template-areas: "top-right-top top-right-right"
+                         "top-right-bottom top-right-right";
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 40% 60%;
 }
 
 #username {
@@ -36,7 +38,21 @@
 
 #top-right-bottom {
     grid-area: top-right-bottom;
+}
 
+#top-right-right {
+    grid-area: top-right-right;
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-areas: trrmain;
+    align-items: middle;
+    justify-content: center;
+}
+
+#add-items {
+    grid-area: trrmain;
+    font-size: 16pt;
 }
 
 
@@ -60,7 +76,3 @@
     justify-content: center;
 }
 
-button {
-    background-color: rgba(47, 109, 0, 0.255);
-    font-size: 18pt;
-}
