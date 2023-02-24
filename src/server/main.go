@@ -15,8 +15,8 @@ import (
 	"github.com/atxfjrotc/uswap/src/server/utils"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/handlers"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -109,17 +109,25 @@ type user struct {
 	userPassword string
 }
 
+type Person struct {
+	Name string `json:"Name"`
+	Email string `json:"Email"`
+	Password string `json:"Password"`
+}
+
 func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	var data = struct {
 		Title string `json:"title"`
 	}{
 		Title: "HELLO WORLD",
 	}
+
 	jsonBytes, err := utils.StructToJSON(data)
 	if err != nil {
 		fmt.Print(err)
 	}
 
+	enableCors(&w)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonBytes)
 }
@@ -140,7 +148,13 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func SignUpPost(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -183,10 +197,11 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error %s when inserting row into user table", err)
 		log.Fatal(err)
 	}
+
+	w.Header().Set("Content-Type", "application/json")
 }
 
 func LoginPost(w http.ResponseWriter, r *http.Request) {
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -231,6 +246,21 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
+func TestEndpoint(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodOptions {
+		return
+	}
+	w.Write([]byte("foo"))
+
+	// p1 := &Person{}
+	// utils.GetJson("http://localhost:4201/test", p1)
+	// println(p1.Email)
+
+	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
+	fmt.Println(w.Header())
+}
+
 func main() {
 
 	// Establish Database Connection
@@ -252,14 +282,17 @@ func main() {
 	// Routes
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", HelloWorldHandler)
-	r.HandleFunc("/hello-world", HelloWorldHandler)
+	// r.Use(mux.CORSMethodMiddleware(r))
+	r.HandleFunc("/", HelloWorldHandler).Methods("GET", "POST")
 	r.HandleFunc("/login", LoginPost).Methods("POST")
 	r.HandleFunc("/login", LoginPost)
-	r.HandleFunc("/signup", SignUpPost).Methods("POST")
+	r.HandleFunc("/signup", SignUpPost).Methods("GET", "POST")
+	r.HandleFunc("/test", TestEndpoint).Methods(http.MethodGet, http.MethodPost)
+
+	r.Use(mux.CORSMethodMiddleware(r))
 
 	srv := &http.Server{
-		Handler:      handlers.CORS()(r),
+		Handler:	  handlers.CORS()(r),
 		Addr:         "127.0.0.1:4201",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
