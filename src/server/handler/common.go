@@ -103,10 +103,40 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, u1.userId, u1.userName, u1.userEmail, u1.userPassword)
+	query1 := `INSERT INTO userItems (user_items, user_id) VALUES (?, ?)` //creates blank userItems table
+	ctx1, cancelfunc1 := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc1()
+	stmt1, err1 := db.DB.PrepareContext(ctx1, query1)
+	if err1 != nil {
+		log.Printf("Error %s when preparing SQL statement", err)
+		log.Fatal(err)
+	}
+	defer stmt1.Close()
+
+	_, err = stmt.ExecContext(ctx, u1.userId, u1.userName, u1.userEmail, u1.userPassword) //exec to create usertable
+
+	_, err1 = stmt1.ExecContext(ctx1, u1.userId, "null") //exec to create userItems table
+
+	query2 := `ALTER TABLE usersItems ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users2(user_id)` //updates userItems table to include a column called fk_user_id
+	ctx2, cancelfunc2 := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc2()
+	stmt2, err2 := db.DB.PrepareContext(ctx2, query2)
+	if err2 != nil {
+		log.Printf("Error %s when preparing SQL statement", err)
+		log.Fatal(err)
+	}
+	_, err2 = stmt2.ExecContext(ctx2, query2) //exec to change UserItems table
 
 	if err != nil {
 		log.Printf("Error %s when inserting row into user table", err)
 		log.Fatal(err)
+	}
+	if err1 != nil {
+		log.Printf("Error %s when inserting row into userItems table", err1)
+		log.Fatal(err1)
+	}
+	if err2 != nil {
+		log.Printf("Error %s when inserting constraint into userItems table", err2)
+		log.Fatal(err1)
 	}
 }
