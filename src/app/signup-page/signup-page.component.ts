@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SignupService } from './signup.service';
 import { User } from '../interfaces/UserInterface';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup-page',
@@ -20,7 +21,7 @@ export class SignupPageComponent {
   };
 
   constructor(private router: Router, private route: ActivatedRoute, private signupService: SignupService ) {}
-  
+
   // check if username is taken in database
   checkUsername() {
     return true;
@@ -42,19 +43,22 @@ export class SignupPageComponent {
   }
 
   // create new user in database
-  async registerUser() {
-    this.signupService
-    .registerUser(this.user)
-    .subscribe(user => console.log(user));
+  async addUser() {
+    this.signupService.addUser(this.user).subscribe(
+      data => {
+        console.log(data);
+      }
+    );
   }
 
   onClick() {
-    this.registerUser();
+    this.addUser();
+    //this.router.navigate(['../login'], {relativeTo: this.route});
     if (this.checkUsername()) {
       if (this.checkEmail()) {
         if (this.checkPassword()) {
           console.log("Registered");
-          this.registerUser();
+          this.addUser();
           this.router.navigate(['../login'], {relativeTo: this.route});
         }
       }
