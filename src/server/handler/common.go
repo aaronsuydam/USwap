@@ -27,7 +27,6 @@ type user struct {
 
 func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Executing middleware", r.Method)
 
 		if r.Method == "OPTIONS" {
 			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -38,7 +37,6 @@ func CorsMiddleware(next http.Handler) http.Handler {
 		}
 
 		next.ServeHTTP(w, r)
-		log.Println("Executing middleware again")
 	})
 }
 
