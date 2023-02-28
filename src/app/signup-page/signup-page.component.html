@@ -5,18 +5,18 @@
 
         <mat-form-field>
             <mat-label>Enter a username</mat-label>
-            <input matInput type="username" [(ngModel)]="userName" placeholder="Username" required>
+            <input matInput type="username" [(ngModel)]="user.username" placeholder="Username" required>
             <!-- add error checking -->
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Enter an email</mat-label>
-            <input matInput type="email" name="email" [(ngModel)]="userEmail" ngModel [email]="true" placeholder="john.smith@ufl.edu" required>
+            <input matInput type="email" name="email" [(ngModel)]="user.email" ngModel [email]="true" placeholder="john.smith@ufl.edu" required>
         </mat-form-field>
 
         <mat-form-field>
             <mat-label>Enter a password</mat-label>
-            <input matInput [(ngModel)]="userPassword" [type]="hide ? 'password' : 'text'" placeholder="Password" required>
+            <input matInput [(ngModel)]="user.password" [type]="hide ? 'password' : 'text'" placeholder="Password" required>
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
@@ -30,6 +30,6 @@
             </button>
         </mat-form-field>
         <button mat-button id="credentials-submit" type="button" (click)="onClick()">Register</button>
-        <p *ngIf="(userPassword && validatePassword) && userPassword !== validatePassword">Passwords don't match!</p>
+        <p *ngIf="(user.password && validatePassword) && user.password !== validatePassword">Passwords don't match!</p>
     </div>
 </div>

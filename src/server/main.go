@@ -15,18 +15,18 @@ import (
 	"github.com/atxfjrotc/uswap/src/server/utils"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/handlers"
 
+	//"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
 
 const (
 	// Move to environment variables
-	username = "sql9595555"
-	password = "xXEPeR9JDl"
+	username = "sql9600821"
+	password = "pbK4HDuGPn"
 	hostname = "sql9.freesqldatabase.com"
-	dbname   = "sql9595555"
+	dbname   = "sql9600821"
 )
 
 var db *sql.DB
@@ -109,19 +109,10 @@ type user struct {
 	userPassword string
 }
 
-func HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	var data = struct {
-		Title string `json:"title"`
-	}{
-		Title: "HELLO WORLD",
-	}
-	jsonBytes, err := utils.StructToJSON(data)
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonBytes)
+type User struct {
+	Username string `json:"Username"`
+	Email string `json:"Email"`
+	Password string `json:"Password"`
 }
 
 type Login struct {
@@ -140,7 +131,13 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+}
+
 func SignUpPost(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -183,10 +180,13 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error %s when inserting row into user table", err)
 		log.Fatal(err)
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	return
 }
 
 func LoginPost(w http.ResponseWriter, r *http.Request) {
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -231,8 +231,45 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
-func main() {
+func TestHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
+	
+	user := &User{}
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
+	userJson, err := json.Marshal(user)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(userJson)
+}
+
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Executing middleware", r.Method)
+   
+		if r.Method == "OPTIONS" {
+			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type")
+			w.Header().Set("Content-Type", "application/json")
+		return
+		}
+
+		next.ServeHTTP(w, r)
+		log.Println("Executing middleware again")
+	})
+}
+   
+
+func main() {
 	// Establish Database Connection
 	db, _ = dbConnection()
 	/*if err != nil {
@@ -251,16 +288,16 @@ func main() {
 
 	// Routes
 	r := mux.NewRouter()
-
-	r.HandleFunc("/", HelloWorldHandler)
-	r.HandleFunc("/hello-world", HelloWorldHandler)
+	r.Use(corsMiddleware)
+	
 	r.HandleFunc("/login", LoginPost).Methods("POST")
 	r.HandleFunc("/login", LoginPost)
-	r.HandleFunc("/signup", SignUpPost).Methods("POST")
+	r.HandleFunc("/signup", SignUpPost).Methods("OPTIONS", "POST")
+	r.HandleFunc("/test", TestHandler).Methods("OPTIONS", "POST")
 
 	srv := &http.Server{
-		Handler:      handlers.CORS()(r),
-		Addr:         "127.0.0.1:4201",
+		Addr:         ":4201",
+		Handler:	  r,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
