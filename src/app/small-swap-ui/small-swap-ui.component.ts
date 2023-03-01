@@ -7,8 +7,6 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./small-swap-ui.component.css']
 })
 export class SmallSwapUiComponent {
-
-
     swappingFor: boolean = true;
     constructor(private router: Router, private route: ActivatedRoute) {
         if(this.router.url !== "/swap-narrow")

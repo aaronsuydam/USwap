@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../assets/material.module';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -50,17 +52,19 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
-    RouterModule.forRoot(
-        appRoutes,
-        {enableTracing: true} // Debug only
-    ),
+    RouterModule.forRoot(appRoutes),
+    HttpClientTestingModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: APIInterceptor,
       multi: true
-    }
+    },
+    HttpClientModule,
+    APIInterceptor,
+    RouterTestingModule,
+    HttpClientTestingModule
   ],
   bootstrap: [AppComponent]
 })
