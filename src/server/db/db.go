@@ -34,6 +34,11 @@ func init() {
 		log.Printf("Create user table failed with error %s", err)
 		return
 	}
+	err = createUserItemsTable(DB)
+	if err != nil {
+		log.Printf("Create userItems table failed with error %s", err)
+		return
+	}
 
 	//END DATABASE CODE
 }
@@ -94,7 +99,7 @@ func createUserTable(db *sql.DB) error {
 	return nil
 }
 func createUserItemsTable(db *sql.DB) error {
-	query := `CREATE TABLE IF NOT EXISTS userItems(user_items text, user_id int)`
+	query := `CREATE TABLE IF NOT EXISTS userItems1(row_num int, item_name text,item_description text, user_id int)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
