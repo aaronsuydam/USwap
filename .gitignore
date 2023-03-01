@@ -10,6 +10,7 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+pnpm-lock.yaml
 
 # IDEs and editors
 .idea/
@@ -36,6 +37,8 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+/cypress
+cypress.config.ts
 
 # System files
 .DS_Store
