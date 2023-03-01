@@ -6,7 +6,7 @@
     "start": "./serve.sh",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "./test.sh",
     "install-dependencies": "npm install && go get github.com/codegangsta/gin && go get ./src/server/"
   },
   "private": true,

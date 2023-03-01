@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SwapNarrowComponent } from './swap-final.component';
+import { SwapFinalComponent } from './swap-final.component';
 
 describe('SwapNarrowComponent', () => {
-  let component: SwapNarrowComponent;
-  let fixture: ComponentFixture<SwapNarrowComponent>;
+  let component: SwapFinalComponent;
+  let fixture: ComponentFixture<SwapFinalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SwapNarrowComponent ]
+      declarations: [ SwapFinalComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SwapNarrowComponent);
+    fixture = TestBed.createComponent(SwapFinalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
