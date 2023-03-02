@@ -55,3 +55,16 @@ The dual table functionality is accomplished using a process similar to a foreig
 Each user_id item in the User table is unique and is the primary key.
 Thus, we can pass values into the UserItems table with the user_id as a column, allowing us to cross reference the tables.
 By cross referencing the User table with the UserItems table we can then find all the items of a particular user.
+
+## Frontend Work Completed
+Creation of unit tests.
+Functioning signup page for registering new users by sending data to backend.
+Created a user profile to view items in inventory.
+Improved UI by adding filters and search bar components.
+Implemented basic flow of swapping items.
+
+## Frontend Unit Tests
+Components: Test all components and root app to ensure they are created successfully.
+Signup Service: Service is successfully posting user object to backend and receiving it back.
+Cypress Test: Create e2e unit test to test post functionality of signup service.
+Form: Validate user input into signup form fields.
