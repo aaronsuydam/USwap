@@ -97,6 +97,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := db.DB.PrepareContext(ctx, query)
+
 	if err != nil {
 		log.Printf("Error %s when preparing SQL statement", err)
 		log.Fatal(err)
