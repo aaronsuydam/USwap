@@ -1,34 +1,49 @@
 Sprint 2 file
-# Back end functionality/documentation:
+
+## Backend Work Completed - Work accomplished this sprint:  
+
+Creation and population of userItems table
+Linking of Items table with Users table.
+Fixed blocking issues revolving around CORs middleware with implementation of own middleware.
+Unit tests for database, utils, and handlers.
+Refactoring and organization of code for better project structure
 
 
-Server: Our test server runs on Golang’s Gorilla Mux on port 4201. It implements CORS for cross origin resource sharing. REST API All calls to the backend will be made via https calls with json body encoding.
+## Backend Unit Tests
+Database: Added unit tests for database configuration, database connection, table creation, and pinging the database after setup.
+Hashing: Added unit tests to ensure success of utils hashing functionality and password entry.
+Handling: Added mockups of route testing. Need to look into test mocking for Go as the database may not be started during these tests. 
 
-NOTE: For site urls, please leave the base url off of any backend calls. Angular prefixes its own base url depending on folder setup which causes discrepancies in http calls. All calls have been fixed to go through a network interceptor which prefixes the correct server url automatically. 
+## Backend Documentation:
+### Pages
+All pages require json formatted data
 
-
-Pages Login (/login) 
+Login (/login) 
 Calls: 
-  PUT: Enter user login information in json format. Includes "username" and "password"
+POST: Submit credentials to log a user in. 
+Args - “username”, “password”
 
 
-Signup (/signup) 
-Calls: 
-  PUT: Enter signup information in json format. Includes "username", "email", and "password."
+Signup (/signup)  
 
-
-
-  Post - Provide args username and password
+Calls:  
+POST:: Submit credentials to create a new account. 
+Args - "username", "email", and "password."
   
-Home (/, /home) Home/dashboard page. Holds links to login and will hold an intro dashboard. Calls
+Home (/, /home) Home/dashboard page. Holds links to login and will hold an intro dashboard.  
+Calls:  
 
-None right now. Future Calls:
+None right now.   
+Future Calls:  
+
 Get - Receive item postings
 Item (/item)
 
 Profile (/profile)
+None right now.  
+Future Calls:  
 
-      
+Get - Requests profile info and items belonging to user
 
 ## Database Tables:
 
@@ -42,5 +57,3 @@ The dual table functionality is accomplished using a process similar to a foreig
 Each user_id item in the User table is unique and is the primary key.
 Thus, we can pass values into the UserItems table with the user_id as a column, allowing us to cross reference the tables.
 By cross referencing the User table with the UserItems table we can then find all the items of a particular user.
-
-
