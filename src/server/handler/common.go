@@ -23,6 +23,7 @@ type user struct {
 	userName     string
 	userEmail    string
 	userPassword string
+	itemRow      int
 }
 
 func LoginPost(w http.ResponseWriter, r *http.Request) {
@@ -107,6 +108,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	query1 := `INSERT INTO userItems1 (row_num, item_name,item_description, user_id) VALUES (?, ?, ?, ?)` //query to insert to userItems table
 	ctx1, cancelfunc1 := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc1()
+
 	stmt1, err1 := db.DB.PrepareContext(ctx1, query1)
 	if err1 != nil {
 		log.Printf("Error %s when insert into UserItems", err)
@@ -119,7 +121,16 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 
 	_, err = stmt.ExecContext(ctx, u1.userId, u1.userName, u1.userEmail, u1.userPassword) //exec to insert into usertable
 
-	_, err1 = stmt1.ExecContext(ctx1, 1, "name", "description", u1.userId) //exec to insert into userItems table
+	rows, err5 := db.DB.Query("SELECT COUNT(*) as count FROM userItems1")
+	if err5 != nil {
+		log.Fatal(err5)
+	}
+	countR := 0
+	for rows.Next() {
+		rows.Scan(&countR)
+	}
+
+	_, err1 = stmt1.ExecContext(ctx1, countR+1, "name", "description", u1.userId) //exec to insert into userItems table
 
 	/*query2 := `ALTER TABLE usersItems ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users2(user_id) VALUES (?)` //updates userItems table to include a column called fk_user_id
 	ctx2, cancelfunc2 := context.WithTimeout(context.Background(), 5*time.Second)
