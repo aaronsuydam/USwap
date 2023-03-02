@@ -93,12 +93,3 @@ func createUserTable(db *sql.DB) error {
 	}
 	return nil
 }
-
-func Test() {
-	err := DB.Ping()
-	if err != nil {
-		fmt.Println("Error pinging from test")
-	} else {
-		fmt.Println("Successfully pinging from test")
-	}
-}
