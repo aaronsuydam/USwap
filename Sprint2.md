@@ -6,10 +6,17 @@ Server: Our test server runs on Golang’s Gorilla Mux on port 4201. It implemen
 
 NOTE: For site urls, please leave the base url off of any backend calls. Angular prefixes its own base url depending on folder setup which causes discrepancies in http calls. All calls have been fixed to go through a network interceptor which prefixes the correct server url automatically. 
 
-Pages Login (/login) Calls:
 
- Post - Provide args username and password.
-Signup (/signup) Calls:
+Pages Login (/login) 
+Calls: 
+  PUT: Enter user login information in json format. Includes "username" and "password"
+
+
+Signup (/signup) 
+Calls: 
+  PUT: Enter signup information in json format. Includes "username", "email", and "password."
+
+
 
   Post - Provide args username and password
   
