@@ -27,7 +27,8 @@ Profile (/profile)
 
 Table functionality:
 Utilizing a dual table functionality consisting of a User Table and a UserItems table.
-User Table stores: user_id,user_name,user_email and user_password
+User Table stores: user_id,user_name,user_email and user_password  
+
 UserItems Table stores: row_num, item_name,item_description and user_id
 
 The dual table functionality is essentially accomplished using a foreign key constraint.
