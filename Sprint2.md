@@ -1,5 +1,3 @@
-Sprint 2 file
-
 ## Backend Work Completed - Work accomplished this sprint:  
 
 Creation and population of userItems table
