@@ -1,5 +1,11 @@
 package handler
 
+import (
+	_ "net/http"
+	_ "net/http/httpnet"
+	_ "test"
+)
+
 /* Mock this test
 func TestLogin(t *testing.T) {
 	r, _ := http.NewRequest("PUT", "/login", nil)
