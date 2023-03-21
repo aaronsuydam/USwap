@@ -42,9 +42,5 @@ testem.log
 Thumbs.db
 
 # Executables
-<<<<<<< HEAD
 *.exe
 gin-bin
-=======
-*.exe
->>>>>>> rest

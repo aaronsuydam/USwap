@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent {
-
+    
+    //TODO: Add Child Route, Add Routing, Create Component
+    addItemsOnClick() {
+        
+    }
 }
