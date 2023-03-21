@@ -23,7 +23,6 @@ type user struct {
 	userName     string
 	userEmail    string
 	userPassword string
-	itemRow      int
 }
 
 func CorsMiddleware(next http.Handler) http.Handler {
