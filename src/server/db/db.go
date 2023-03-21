@@ -34,7 +34,12 @@ func init() {
 		log.Printf("Create user table failed with error %s", err)
 		return
 	}
-	//CREATE TABLE IF NOT EXISTS users(student_id int primary key, user_name text, user_email text, created_at datetime default CURRENT_TIMESTAMP, updated_at datetime default CURRENT_TIMESTAMP)
+	err = createUserItemsTable(DB)
+	if err != nil {
+		log.Printf("Create userItems table failed with error %s", err)
+		return
+	}
+
 	//END DATABASE CODE
 }
 
@@ -93,3 +98,40 @@ func createUserTable(db *sql.DB) error {
 	}
 	return nil
 }
+
+func createUserItemsTable(db *sql.DB) error {
+	query := `CREATE TABLE IF NOT EXISTS userItems1(row_num int, item_name text,item_description text, user_id int)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+
+	_, err := db.ExecContext(ctx, query)
+	if err != nil {
+		log.Printf("Error %s when creating user table", err)
+		return err
+	}
+	return nil
+}
+
+func addItems(id int, item string, db *sql.DB) {
+	query := `INSERT INTO usersItems (user_items text, user_id int) VALUES (?, ?)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := db.PrepareContext(ctx, query)
+	if err != nil {
+		log.Printf("Error %s when preparing SQL statement", err)
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.ExecContext(ctx, item, id) //exec to create usertable
+
+}
+
+func Test() {
+	err := DB.Ping()
+	if err != nil {
+		fmt.Println("Error pinging from test")
+	} else {
+		fmt.Println("Successfully pinging from test")
+	}
+}
+
