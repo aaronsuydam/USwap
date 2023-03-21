@@ -7,13 +7,13 @@
             <div id="input-fields">
                 <mat-form-field class="login-credentials-input">
                     <input matInput type="username" [(ngModel)]="userName" id="email-input" placeholder="Username">
-                    <button *ngIf="userName" matSuffix mat-icon-button aria-label="Clear" (click)="userName=''">
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="userName=''">
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
                 <mat-form-field class="login-credentials-input">
                     <input matInput type="password" [(ngModel)]="userPassword" id="password-input" placeholder="Password">
-                    <button *ngIf="userPassword" matSuffix mat-icon-button aria-label="Clear" (click)="userPassword=''">
+                    <button matSuffix mat-icon-button aria-label="Clear" (click)="userPassword=''">
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
