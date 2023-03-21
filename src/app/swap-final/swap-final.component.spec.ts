@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { SwapFinalComponent } from './swap-final.component';
 
@@ -8,7 +9,8 @@ describe('SwapNarrowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SwapFinalComponent ]
+      declarations: [ SwapFinalComponent ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

@@ -11,15 +11,11 @@ export const authGuard = () => {
     const authService = inject(AuthService);
     const router = inject(Router);
     console.log('authGuard#canActivate called');
-    if(authService.isLoggedIn)
-    {
+    if(authService.isLoggedIn) {
         return true;
-    }
-    else 
-    {
+    } else {
         return router.parseUrl('/login');
     }
-    
 };
 
 @Injectable({

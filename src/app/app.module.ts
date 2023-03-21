@@ -54,6 +54,7 @@ const appRoutes: Routes = [
     MaterialModule,
     FormsModule,
     RouterModule.forRoot(appRoutes),
+    HttpClientTestingModule,
   ],
   providers: [
     {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SignupService } from './signup.service';
 import { User } from '../interfaces/UserInterface';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup-page',

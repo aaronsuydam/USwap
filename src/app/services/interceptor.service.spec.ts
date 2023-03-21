@@ -2,11 +2,16 @@ import { TestBed } from '@angular/core/testing';
 
 import { APIInterceptor } from './interceptor.service';
 
-describe('APIInterceptorService', () => {
+describe('InterceptorService', () => {
   let service: APIInterceptor;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        APIInterceptor,
+      ],
+    });
+
     service = TestBed.inject(APIInterceptor);
   });
 
