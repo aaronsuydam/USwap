@@ -21,6 +21,7 @@ func main() {
 	r.HandleFunc("/login", handler.LoginPost)
 	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST")
 
+
 	srv := &http.Server{
 		Addr:         ":4201",
 		Handler:	  r,

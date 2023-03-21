@@ -11,6 +11,7 @@ describe('InterceptorService', () => {
         APIInterceptor,
       ],
     });
+
     service = TestBed.inject(APIInterceptor);
   });
 
