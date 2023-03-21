@@ -16,6 +16,7 @@ import (
 func main() {
 
 	r := mux.NewRouter()
+	r.Use(handler.CorsMiddleware)
 	r.HandleFunc("/login", handler.LoginPost).Methods("POST")
 	r.HandleFunc("/login", handler.LoginPost)
 	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST")
