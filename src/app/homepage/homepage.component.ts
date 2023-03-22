@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-homepage',
   templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.scss']
+  styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent {
   // tiles: Tile[] = [

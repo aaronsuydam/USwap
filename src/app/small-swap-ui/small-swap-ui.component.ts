@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-small-swap-ui',
   templateUrl: './small-swap-ui.component.html',
-  styleUrls: ['./small-swap-ui.component.scss']
+  styleUrls: ['./small-swap-ui.component.css']
 })
 export class SmallSwapUiComponent {
     swappingFor: boolean = true;
