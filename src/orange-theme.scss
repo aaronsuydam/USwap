@@ -16,4 +16,17 @@ $uf-orange-light-theme: mat.define-light-theme((
  density: 0,
 ));
 
+$uf-orange-dark-theme: mat.define-dark-theme((
+    color: (
+   primary: $my-primary-dark,
+   accent: $my-accent-dark,
+ ),
+ typography: mat.define-typography-config(),
+ density: 0,
+));
+
 @include mat.all-component-themes($uf-orange-light-theme);
+
+.darkMode {
+    @include mat.all-component-themes($uf-orange-dark-theme);
+}
