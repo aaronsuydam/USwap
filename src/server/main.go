@@ -31,8 +31,8 @@ func main() {
 	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST")
 
 	srv := &http.Server{
-		Handler:      handlers.CORS()(r),
-		Addr:         "127.0.0.1:4201",
+		Addr:         ":4201",
+		Handler:	  r,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

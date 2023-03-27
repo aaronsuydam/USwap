@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SmallSwapUiComponent } from '../small-swap-ui/small-swap-ui.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { UserProfileComponent } from './user-profile.component';
 
@@ -8,7 +11,14 @@ describe('UserProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserProfileComponent ]
+      imports: [
+        RouterTestingModule
+      ],
+      declarations: [ 
+        UserProfileComponent,
+        SmallSwapUiComponent,
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 

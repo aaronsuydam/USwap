@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -44,6 +44,10 @@ export class LoginPageComponent {
             console.log("Logging you in");
             // Navigate to the new page.
         }
+    }
+
+    signUp() {
+        this.router.navigate(['../signup'], {relativeTo: this.route});
     }
 
 }
