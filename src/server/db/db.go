@@ -5,24 +5,25 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const (
-	// Move to environment variables
-	username = "sql9600821"
-	password = "pbK4HDuGPn"
-	hostname = "sql9.freesqldatabase.com"
-	dbname   = "sql9600821"
-)
-
 // Global variable to hold DB connection
 var DB *sql.DB
+var username string
+var password string
+var hostname string
+var dbname string
 
-func init() {
+func Init() {
 	// Establish Database Connection
+	username = os.Getenv("DBUSERNAME")
+	password = os.Getenv("DBPASSWORD")
+	hostname = os.Getenv("DBHOSTNAME")
+	dbname = os.Getenv("DBNAME")
 	var err error
 	DB, err = dbConnection()
 	if err != nil {
@@ -38,12 +39,12 @@ func init() {
 	//END DATABASE CODE
 }
 
-func dsn(dbName string) string {
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbName)
+func dsn() string {
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s", username, password, hostname, dbname)
 }
 
 func dbConnection() (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn(""))
+	db, err := sql.Open("mysql", dsn())
 	if err != nil {
 		log.Printf("Error %s when opening DB\n", err)
 		return nil, err
@@ -59,7 +60,7 @@ func dbConnection() (*sql.DB, error) {
 	}
 
 	db.Close()
-	db, err = sql.Open("mysql", dsn(dbname))
+	db, err = sql.Open("mysql", dsn())
 	if err != nil {
 		log.Printf("Error %s when opening DB", err)
 		return nil, err
