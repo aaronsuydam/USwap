@@ -35,10 +35,17 @@ Get(item ID)
 Profile (/profile)
 
 
-Database
+Database Info
+
 Users Table
-* User objects containing a base of user_id, user_name, user_email and user_password
-* The above framework allows us to quickly store a user based on their basic login     information
+* The above framework allows us to quickly store a user based on their basic login information
+* Passwords are encrypted with Bcrypt and hashes are stored in the database.
+Contains:
+- user_id
+- user_name
+- user_email
+- user_password
+
 
 Items Table
 Contains:
@@ -55,6 +62,3 @@ Contains:
 - sender_item_id
 - receiver_id
 - receiver_item_id
-
-Password Storage
-* Passwords are encrypted with Bcrypt and hashes are stored in the database.
