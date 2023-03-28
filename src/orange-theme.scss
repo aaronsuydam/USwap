@@ -28,5 +28,5 @@ $uf-orange-dark-theme: mat.define-dark-theme((
 @include mat.all-component-themes($uf-orange-light-theme);
 
 .darkMode {
-    @include mat.all-component-themes($uf-orange-dark-theme);
+    @include mat.all-component-colors($uf-orange-dark-theme);
 }
