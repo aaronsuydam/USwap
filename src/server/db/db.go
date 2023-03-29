@@ -198,16 +198,97 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 }
 
 // Complete these
-func GetUser(userID string) {
-	temp := 1
-	temp += 1
-}
-func GetItem(itemID string) {
-	temp := 1
-	temp += 1
+type User struct {
+	user_id       string
+	user_name     string
+	user_email    string
+	user_password string
 }
 
-func GetSwapRequest(swapID string) {
+func GetUser(userID string) (User, error) {
+
+	var user User
+
+	row := DB.QueryRow("SELECT * FROM users2 WHERE user_id = ?", userID)
+	if err := row.Scan(&user.user_id, &user.user_name, &user.user_email, &user.user_password); err != nil {
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("userById %d: no such user", userID)
+		}
+		return user, fmt.Errorf("userById %d: %v", userID, err)
+	}
+
 	temp := 1
 	temp += 1
+	return user, nil
+}
+
+type Item struct {
+	item_id          string
+	item_name        string
+	item_description string
+	user_id          string
+	image_path       string
+}
+
+func GetItem(itemDesc string, userID string) (Item, error) {
+	var item Item
+
+	row := DB.QueryRow("SELECT * FROM items WHERE user_id = ? & WHERE item_description=?", userID, itemDesc)
+	if err := row.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+		if err == sql.ErrNoRows {
+			return item, fmt.Errorf("getItem %d: no such item", itemDesc)
+		}
+		return item, fmt.Errorf("getItem %d: %v", itemDesc, err)
+	}
+
+	temp := 1
+	temp += 1
+	return item, nil
+}
+
+type Swap struct {
+	swap_id          string
+	sender_id        string
+	sender_item_id   string
+	receiver_id      string
+	receiver_item_id string
+}
+
+func GetSwapRequest(swapID string) (Swap, error) {
+	var swap Swap
+
+	row := DB.QueryRow("SELECT * FROM swap WHERE swap_id = ? ", swapID)
+	if err := row.Scan(&swap.swap_id, &swap.sender_id, &swap.sender_item_id, &swap.receiver_id, &swap.receiver_item_id); err != nil {
+		if err == sql.ErrNoRows {
+			return swap, fmt.Errorf("getItem %d: no such swap", swapID)
+		}
+		return swap, fmt.Errorf("getItem %d: %v", swapID, err)
+	}
+
+	temp := 1
+	temp += 1
+	return swap, nil
+}
+
+func getUserItems(userID string) ([]Item, error) {
+	var items []Item
+
+	rows, err := DB.Query("SELECT * FROM items WHERE user_id = ?", userID)
+	if err != nil {
+		return nil, fmt.Errorf("alluserItems %q: %v", userID, err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var item Item
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+			return nil, fmt.Errorf("alluserItems %q: %v", userID, err)
+		}
+		items = append(items, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("alluserItems %q: %v", userID, err)
+	}
+	return items, nil
+
 }
