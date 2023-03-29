@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/atxfjrotc/uswap/src/server/handler"
-	"github.com/gorilla/handlers"
+	_ "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
 	_ "fmt"
@@ -20,10 +20,11 @@ func main() {
 	r.HandleFunc("/login", handler.LoginPost).Methods("POST")
 	r.HandleFunc("/login", handler.LoginPost)
 	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST")
+	r.HandleFunc("/createlisting", handler.CreateListing).Methods("POST")
 
 	srv := &http.Server{
 		Addr:         ":4201",
-		Handler:	  r,
+		Handler:      r,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
