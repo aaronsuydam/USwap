@@ -1,0 +1,12 @@
+mat-app-background {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-areas:    "top-bar"
+                            "app-root";
+    grid-template-rows: 10% 90%;
+
+    app-top-bar {
+        
+    }
+}
