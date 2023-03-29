@@ -36,6 +36,12 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
+/cypress
+cypress.config.ts
+
+# Keys
+*.key
+.env
 
 # System files
 .DS_Store

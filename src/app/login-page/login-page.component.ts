@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-login-page',
@@ -8,46 +10,43 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent {
-    loginField = document.querySelector("input");
-    userName: string = "";
-    userPassword: string = "";
-    loginSuccess: boolean = false;
-    value: string = 'Clear me';
+    form: FormGroup;
+    isLoggedIn = false;
 
-    constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute ) {}
-
-    /**
-     * Ok so we are going to have some kind of loginService. this login service will need to
-     * take in user credentials, interface with the backend, determine if the login attempt 
-     * is valid, and return the result. Something like the following:
-     * 
-     * login_attempt(): boolean {
-     *      return true if loginService.login()===true;
-     * }
-     */
-    loginAttempt(): boolean {
-        console.log("attempt");
-        console.log(this.userName, this.userPassword);
-        if (this.authService.login(this.userName, this.userPassword) === true) {
-            this.router.navigate(['../swap-narrow'], {relativeTo: this.route});
-            return true;
-        } else {
-            return false;
-        }
+    constructor(private authService: AuthService,
+                private storageService: StorageService,
+                private router: Router,
+                private fb: FormBuilder ) {
+        
+        this.form = this.fb.group({
+            username: ['', Validators.required],
+            password: ['', Validators.required]
+        });
     }
 
-    onClick() {
-        this.loginSuccess = this.loginAttempt();
-        this.userName = "";
-        this.userPassword = "";
-        if (this.loginSuccess) {
-            console.log("Logging you in");
-            // Navigate to the new page.
+    login() {
+        const val = this.form.value;
+
+        if (val.username && val.password) {
+            this.authService.login(val.username, val.password)
+                .subscribe(
+                    data => {
+                        this.storageService.saveUser(data)
+                        this.isLoggedIn = true;
+                        this.reloadPage();
+                        this.router.navigate(['/swap-narrow']);
+                    }
+                )
         }
     }
 
     signUp() {
-        this.router.navigate(['../signup'], {relativeTo: this.route});
+        this.router.navigate(['/signup']);
     }
 
+    reloadPage(): void {
+        setTimeout(()=>{
+            window.location.reload();
+        }, 100);
+    }
 }

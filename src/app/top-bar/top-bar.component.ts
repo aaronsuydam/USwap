@@ -1,5 +1,5 @@
-import { Component, isStandalone, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -7,11 +7,11 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./top-bar.component.css']
 })
 export class TopBarComponent implements OnInit {
-  constructor(private authService: AuthService) {};
-  isAuthenticated: boolean = false;
+  constructor(private storageService: StorageService) {};
+  isLoggedIn: boolean = false;
   
   ngOnInit(): void {
-    this.isAuthenticated = this.authService.isAuthenticated();
+    this.isLoggedIn = this.storageService.isLoggedIn();
   }
-  
+
 }

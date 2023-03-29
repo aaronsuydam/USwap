@@ -44,9 +44,7 @@ export class SignupPageComponent {
 
   // create new user in database
   async addUser() {
-    this.signupService.addUser(this.user).subscribe(
-      data => {}
-    );
+    this.signupService.addUser(this.user).subscribe();
   }
 
   onClick() {

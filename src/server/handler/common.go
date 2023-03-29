@@ -6,7 +6,11 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
+	"os"
 
+	// "github.com/joho/godotenv"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/atxfjrotc/uswap/src/server/db"
 	"github.com/atxfjrotc/uswap/src/server/utils"
 )
@@ -35,7 +39,16 @@ type Login struct {
 	Password string `json:"password"`
 }
 
+type Claims struct {
+	Username string `json:"username"`
+	jwt.RegisteredClaims
+}
+
+var jwtKey = []byte(os.Getenv("RSA_PRIVATE_KEY"))
+
 func LoginPost(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -43,7 +56,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users2 WHERE user_name = ?", login.Username)
+	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
 	if err != nil {
 		fmt.Println("Error with creating db query")
 		log.Fatal(err)
@@ -59,23 +72,41 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 
 	success := utils.CheckPasswordHash(login.Password, string(hash))
 
-	var data struct {
-		LoginSuccess string `json:"loginSuccess"`
-	}
-	if success {
-		data.LoginSuccess = `True`
-	} else {
-		data.LoginSuccess = `False`
+	if (!success) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 
-	jsonBytes, err := utils.StructToJSON(data)
+	expirationTime := time.Now().Add(time.Minute)
+
+	claims := &Claims{
+		Username: login.Username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
-		fmt.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
+		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	enableCors(&w)
-	w.Write(jsonBytes)
+	http.SetCookie(w, &http.Cookie{
+		Name:	"token",
+		Value:	tokenString,
+		Expires: expirationTime,
+	})
+
+	loginJson, err := json.Marshal(login)
+	if err != nil {
+		panic(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(loginJson)
 }
 
 type SignUp struct {
