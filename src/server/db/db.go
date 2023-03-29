@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os/exec"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -29,14 +30,19 @@ func init() {
 		return
 	}
 	log.Printf("Successfully connected to database")
-	err = createUserTable(DB)
+	err = createUserTable()
 	if err != nil {
 		log.Printf("Create user table failed with error %s", err)
 		return
 	}
-	err = createUserItemsTable(DB)
+	err = createItemsTable()
 	if err != nil {
 		log.Printf("Create userItems table failed with error %s", err)
+		return
+	}
+	err = createSwapTable()
+	if err != nil {
+		log.Printf("Create swap table failed with error %s", err)
 		return
 	}
 
@@ -85,13 +91,14 @@ func dbConnection() (*sql.DB, error) {
 	return db, nil
 }
 
-func createUserTable(db *sql.DB) error {
-	query := `CREATE TABLE IF NOT EXISTS users2(user_id int, user_name text,user_email text,
+// User table maintains all users
+func createUserTable() error {
+	query := `CREATE TABLE IF NOT EXISTS users(user_id text, user_name text,user_email text,
         user_password text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
-	_, err := db.ExecContext(ctx, query)
+	_, err := DB.ExecContext(ctx, query)
 	if err != nil {
 		log.Printf("Error %s when creating user table", err)
 		return err
@@ -99,12 +106,13 @@ func createUserTable(db *sql.DB) error {
 	return nil
 }
 
-func createUserItemsTable(db *sql.DB) error {
-	query := `CREATE TABLE IF NOT EXISTS userItems1(row_num int, item_name text,item_description text, user_id int)`
+// Items table maintains all actively listed items
+func createItemsTable() error {
+	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id int, image_path text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
-	_, err := db.ExecContext(ctx, query)
+	_, err := DB.ExecContext(ctx, query)
 	if err != nil {
 		log.Printf("Error %s when creating user table", err)
 		return err
@@ -112,26 +120,94 @@ func createUserItemsTable(db *sql.DB) error {
 	return nil
 }
 
-func addItems(id int, item string, db *sql.DB) {
-	query := `INSERT INTO usersItems (user_items text, user_id int) VALUES (?, ?)`
+// Swap table maintains all active swap requests
+func createSwapTable() error {
+	query := `CREATE TABLE IF NOT EXISTS swap(swap_id text, sender_id int, sender_item_id int, receiver_id int, receiver_item_id int)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
-	stmt, err := db.PrepareContext(ctx, query)
+
+	_, err := DB.ExecContext(ctx, query)
 	if err != nil {
-		log.Printf("Error %s when preparing SQL statement", err)
+		log.Printf("Error %s when creating user table", err)
+		return err
+	}
+	return nil
+}
+
+// Add a user to the user table on signup
+func CreateUser(userName string, userEmail string, userPassword string) error {
+
+	// Generate a user ID
+	userID, err := exec.Command("uuidgen").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	query := `INSERT INTO users (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := DB.PrepareContext(ctx, query)
+	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.ExecContext(ctx, item, id) //exec to create usertable
 
+	_, err = stmt.ExecContext(ctx, userID, userName, userEmail, userPassword)
+	return err
 }
 
-func Test() {
-	err := DB.Ping()
+// Add an item to the items table upon user listing the item
+func CreateItem(itemName string, itemDescription string, userID string, imagePath string) error {
+
+	// Generate an item ID
+	itemID, err := exec.Command("uuidgen").Output()
 	if err != nil {
-		fmt.Println("Error pinging from test")
-	} else {
-		fmt.Println("Successfully pinging from test")
+		log.Fatal(err)
 	}
+
+	query := `INSERT INTO items (item_id int, item_name text, item_description text, user_id int, image_path text) VALUES (?, ?, ?, ?, ?)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := DB.PrepareContext(ctx, query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.ExecContext(ctx, itemID, itemName, itemDescription, userID, imagePath)
+	return err
 }
 
+// Add a swap request into swap table
+func CreateSwapRequest(senderID string, senderItemID string, receiverID string, receiverItemID string) error {
+	// Generate an item ID
+	swapID, err := exec.Command("uuidgen").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id) VALUES (?, ?, ?, ?, ?)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := DB.PrepareContext(ctx, query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.ExecContext(ctx, swapID, senderID, senderItemID, receiverID, receiverItemID)
+	return err
+}
+
+// Complete these
+func GetUser(userID string) {
+	temp := 1
+	temp += 1
+}
+func GetItem(itemID string) {
+	temp := 1
+	temp += 1
+}
+
+func GetSwapRequest(swapID string) {
+	temp := 1
+	temp += 1
+}
