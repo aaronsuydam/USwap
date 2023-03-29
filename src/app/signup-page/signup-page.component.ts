@@ -45,20 +45,16 @@ export class SignupPageComponent {
   // create new user in database
   async addUser() {
     this.signupService.addUser(this.user).subscribe(
-      data => {
-        console.log(data);
-      }
+      data => {}
     );
   }
 
   onClick() {
-    this.addUser();
-    //this.router.navigate(['../login'], {relativeTo: this.route});
     if (this.checkUsername()) {
       if (this.checkEmail()) {
         if (this.checkPassword()) {
-          console.log("Registered");
           this.addUser();
+          console.log("Registered");
           this.router.navigate(['../login'], {relativeTo: this.route});
         }
       }

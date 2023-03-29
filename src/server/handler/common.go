@@ -26,6 +26,10 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+}
+
 type Login struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -70,6 +74,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	enableCors(&w)
 	w.Write(jsonBytes)
 }
 
@@ -92,6 +97,8 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Failed to sign up user")
 	}
+
+	enableCors(&w)
 }
 
 type Item struct {

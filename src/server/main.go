@@ -17,10 +17,9 @@ func main() {
 
 	r := mux.NewRouter()
 	r.Use(handler.CorsMiddleware)
-	r.HandleFunc("/login", handler.LoginPost).Methods("POST")
-	r.HandleFunc("/login", handler.LoginPost)
-	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST")
-	r.HandleFunc("/createlisting", handler.CreateListing).Methods("POST")
+	r.HandleFunc("/login", handler.LoginPost).Methods("POST", "OPTIONS")
+	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST", "OPTIONS")
+	r.HandleFunc("/createlisting", handler.CreateListing).Methods("POST", "OPTIONS")
 
 	srv := &http.Server{
 		Addr:         ":4201",

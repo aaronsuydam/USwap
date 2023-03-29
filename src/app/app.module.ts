@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MaterialModule } from '../assets/material.module';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -53,7 +51,6 @@ const appRoutes: Routes = [
     MaterialModule,
     FormsModule,
     RouterModule.forRoot(appRoutes),
-    HttpClientTestingModule,
   ],
   providers: [
     {
@@ -63,8 +60,6 @@ const appRoutes: Routes = [
     },
     HttpClientModule,
     APIInterceptor,
-    RouterTestingModule,
-    HttpClientTestingModule
   ],
   bootstrap: [AppComponent]
 })

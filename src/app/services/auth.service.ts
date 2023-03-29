@@ -26,7 +26,7 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
   loginAuthorized: ServerRequestLogin = {loginSuccess : false};
-  loginUrl: string = `/login`;
+  loginUrl: string = `login`;
   isLoggedIn: boolean = false;
   
 
