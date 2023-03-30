@@ -15,7 +15,7 @@ func TestDatabaseConfig(t *testing.T) {
 }
 
 func TestUserTableCreation(t *testing.T) {
-	err := createUserTable(DB)
+	err := createUserTable()
 	if err != nil {
 		t.Fatal("Error during user table creation")
 	}
