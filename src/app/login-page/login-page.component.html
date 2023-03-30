@@ -7,19 +7,19 @@
             <div class="login-ux">
                 <div id="input-fields">
                     <mat-form-field class="login-credentials-input">
-                        <input matInput type="username" formControlName="username" placeholder="Username">
+                        <input matInput name="username" type="username" formControlName="username" placeholder="Username">
                         <button *ngIf="form.get('username')" matSuffix mat-icon-button aria-label="Clear">
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-form-field>
                     <mat-form-field class="login-credentials-input">
-                        <input matInput type="password" formControlName="password" placeholder="Password">
+                        <input matInput name="password" type="password" formControlName="password" placeholder="Password">
                         <button matSuffix mat-icon-button aria-label="Clear">
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-form-field>
                 </div>
-                <button mat-raised-button color="primary" id="credentials-submit" type="button" (click)="login()">Login</button>
+                <button mat-raised-button data-cy="login" color="primary" id="credentials-submit" type="button" (click)="login()">Login</button>
             </div>
         </div>
     </div>

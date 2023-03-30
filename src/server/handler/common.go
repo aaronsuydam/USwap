@@ -116,6 +116,8 @@ type SignUp struct {
 }
 
 func SignUpPost(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -129,7 +131,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Failed to sign up user")
 	}
 
-	enableCors(&w)
+	w.WriteHeader(http.StatusOK)
 }
 
 type Item struct {

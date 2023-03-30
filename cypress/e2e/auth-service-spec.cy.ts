@@ -1,6 +1,7 @@
+import { StorageService } from "src/app/services/storage.service";
 
 describe('AuthService', () => {
-    let username = 'ebob';
+    let username = 'erob';
     let password = 'test';
 
     it("should login", () => {
