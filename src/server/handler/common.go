@@ -88,7 +88,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(body, &signup)
 
 	signup.Password, _ = utils.HashPassword(string(signup.Password)) // Hash password
-	err = db.CreateUser(signup.Username, signup.Email, signup.Password)
+	_, err = db.CreateUser(signup.Username, signup.Email, signup.Password)
 	if err != nil {
 		log.Fatal("Failed to sign up user")
 	}
@@ -109,7 +109,7 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	var item Item
 	json.Unmarshal(body, &item)
 
-	err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
+	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
 	if err != nil {
 		log.Fatal("Failed to create item listing")
 	}
@@ -153,7 +153,7 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	var swap Swap
 	json.Unmarshal(body, &swap)
 
-	err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
+	_, err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
 	if err != nil {
 		log.Fatal("Failed to create the swap request")
 	}
