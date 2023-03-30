@@ -42,5 +42,6 @@ describe('LoginPageComponent', () => {
           })
         )
     })
+    expect(storageService.isLoggedIn()).to.eq(true)
   })
 })
