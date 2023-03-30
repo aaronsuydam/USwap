@@ -15,7 +15,12 @@ Auth Service: Service is successfully logging a user in and assigning a JWT.
 Cypress Test: Created e2e unit test to test post functionality of signup service and auth service.
 Form: Validate user input into signup form fields.
 
-# Backend Documentation
+# Backend Changes and Documentation
+
+Sprint 3 changes:
+Added a bunch of new routes for creating and gettings users, items and swap requests, along with unit tests. Added functionality to accept or reject swap rejects, which swaps the owner of items in the items database. Implemented real uuids instead of counting rows for ids in all tables. Significantly cleaned up handler and database code to handle all queries in the database package instead of in the routes thmselves. Added tests for everything.
+
+More info on our documentation and changes is below: 
 
 Server Our test server runs on Golang’s Gorilla Mux on port 4201. It implements CORS for cross origin resource sharing. REST API All calls to the backend will be made via https calls with json body encoding.
 NOTE: For site urls, please leave the base url off of any backend calls. Angular prefixes its own base url depending on folder setup which causes discrepancies in http calls. All calls have been fixed to go through a network interceptor which prefixes the correct server url automatically.
