@@ -18,7 +18,7 @@ Form: Validate user input into signup form fields.
 # Backend Changes and Documentation
 
 Sprint 3 changes:
-Added a bunch of new routes for creating and gettings users, items and swap requests, along with unit tests. Added functionality to accept or reject swap rejects, which swaps the owner of items in the items database. Implemented real uuids instead of counting rows for ids in all tables. Significantly cleaned up handler and database code to handle all queries in the database package instead of in the routes thmselves. Added tests for everything.
+Added a bunch of new routes for creating and gettings users, items and swap requests, along with unit tests. Added functionality to accept or reject swap rejects, which swaps the owner of items in the items database. Implemented real uuids instead of counting rows for ids in all tables. Significantly cleaned up handler and database code to handle all queries in the database package instead of in the routes thmselves. Added tests for everything, including  tests cross-referencing and making edits between tables.
 
 More info on our documentation and changes is below: 
 
