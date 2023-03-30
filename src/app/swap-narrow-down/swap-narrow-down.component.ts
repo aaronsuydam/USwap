@@ -4,7 +4,7 @@ import { StorageService } from '../services/storage.service';
 @Component({
   selector: 'app-swap-narrow-down',
   templateUrl: './swap-narrow-down.component.html',
-  styleUrls: ['./swap-narrow-down.component.css']
+  styleUrls: ['./swap-narrow-down.component.scss']
 })
 export class SwapNarrowDownComponent {
     swapFor: string = "";

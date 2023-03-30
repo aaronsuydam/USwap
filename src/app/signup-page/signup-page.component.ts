@@ -6,7 +6,7 @@ import { User } from '../interfaces/UserInterface';
 @Component({
   selector: 'app-signup-page',
   templateUrl: './signup-page.component.html',
-  styleUrls: ['./signup-page.component.css']
+  styleUrls: ['./signup-page.component.scss']
 })
 export class SignupPageComponent {
   hide: boolean = true;
