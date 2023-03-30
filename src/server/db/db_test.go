@@ -74,7 +74,7 @@ func TestSwapRequestCreation(t *testing.T) {
 func TestSwapRequestAccept(t *testing.T) {
 	/*userid2, err := CreateUser("testuser2", "testemail2@testemail.com", "testpassword2")
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal("Error during get Swap")
 	}
 	userid3, _ := CreateUser("testuser3", "testemail3@testemail.com", "testpassword3")
 	itemid2, _ := CreateItem("testitem2", "testitemdescription2", userid2, "fdjaifja")
