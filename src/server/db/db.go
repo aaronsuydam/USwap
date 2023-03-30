@@ -141,7 +141,7 @@ func CreateUser(userName string, userEmail string, userPassword string) (userID 
 	if err != nil {
 		log.Fatal(err)
 	}
-	userID = string(byteUserID[:])
+	userID = byteUserID.String()
 
 	query := `INSERT INTO users (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -167,7 +167,7 @@ func CreateItem(itemName string, itemDescription string, userID string, imagePat
 	if err != nil {
 		log.Fatal(err)
 	}
-	itemID = string(byteItemID[:])
+	itemID = byteItemID.String()
 
 	query := `INSERT INTO items (item_id int, item_name text, item_description text, user_id int, image_path text) VALUES (?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -188,7 +188,7 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 	if err != nil {
 		log.Fatal(err)
 	}
-	swapID = string(byteSwapID[:])
+	swapID = byteSwapID.String()
 
 	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text, complete int) VALUES (?, ?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
