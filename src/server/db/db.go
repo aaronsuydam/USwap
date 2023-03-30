@@ -107,7 +107,7 @@ func createUserTable() error {
 
 // Items table maintains all actively listed items
 func createItemsTable() error {
-	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id int, image_path text)`
+	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image_path text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -121,7 +121,7 @@ func createItemsTable() error {
 
 // Swap table maintains all active swap requests
 func createSwapTable() error {
-	query := `CREATE TABLE IF NOT EXISTS swap(swap_id text, sender_id int, sender_item_id int, receiver_id int, receiver_item_id int)`
+	query := `CREATE TABLE IF NOT EXISTS swap(swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -190,7 +190,7 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 	}
 	swapID = byteSwapID.String()
 
-	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text, complete int) VALUES (?, ?, ?, ?, ?, ?)`
+	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text) VALUES (?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := DB.PrepareContext(ctx, query)
