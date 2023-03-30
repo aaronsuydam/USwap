@@ -23,18 +23,18 @@ func TestUserTableCreation(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
-	user, err := GetUser("3")
+	user, err := GetUser("0ec19c70-2491-4e13-b84f-10db98cea14d")
 	if err != nil {
-		t.Fatal("Error during Get User Item")
+		t.Fatal("Error during Get User")
 	}
 	fmt.Print(user.user_name)
 }
 
 func TestGetUserItem(t *testing.T) {
-	CreateItem("testItem", "thisisatest", "2", "testpath")
-	item, err := GetItem("2")
+
+	item, err := GetItem("74a8898b-d970-4359-5ad0-479d69d1081c")
 	if err != nil {
-		t.Fatal("Error during Get User Item")
+		t.Fatal(err)
 	}
 	fmt.Print(item.item_name)
 }
@@ -54,7 +54,7 @@ func TestGetUserItems(t *testing.T) {
 func TestGetSwapRequest(t *testing.T) {
 	swap, err := GetSwapRequest("2")
 	if err != nil {
-		t.Fatal("Error during get All of User's Items")
+		t.Fatal("Error during get Swap")
 	}
 	fmt.Print(swap.receiver_id)
 }
