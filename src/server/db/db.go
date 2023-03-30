@@ -163,7 +163,7 @@ func CreateItem(itemName string, itemDescription string, userID string, imagePat
 		log.Fatal(err)
 	}
 
-	query := `INSERT INTO items (item_id int, item_name text, item_description text, user_id int, image_path text) VALUES (?, ?, ?, ?, ?)`
+	query := `INSERT INTO items (item_id text, item_name text, item_description text, user_id text, image_path text) VALUES (?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := DB.PrepareContext(ctx, query)
