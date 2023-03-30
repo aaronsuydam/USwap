@@ -5,8 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os/exec"
 	"time"
+
+	uuid "github.com/nu7hatch/gouuid"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -133,13 +134,14 @@ func createSwapTable() error {
 }
 
 // Add a user to the user table on signup
-func CreateUser(userName string, userEmail string, userPassword string) error {
+func CreateUser(userName string, userEmail string, userPassword string) (userID string, err error) {
 
 	// Generate a user ID
-	userID, err := exec.Command("uuidgen").Output()
+	byteUserID, err := uuid.NewV4()
 	if err != nil {
 		log.Fatal(err)
 	}
+	userID = string(byteUserID[:])
 
 	query := `INSERT INTO users (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -151,17 +153,21 @@ func CreateUser(userName string, userEmail string, userPassword string) error {
 	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx, userID, userName, userEmail, userPassword)
-	return err
-}
-
-// Add an item to the items table upon user listing the item
-func CreateItem(itemName string, itemDescription string, userID string, imagePath string) error {
-
-	// Generate an item ID
-	itemID, err := exec.Command("uuidgen").Output()
 	if err != nil {
 		log.Fatal(err)
 	}
+	return userID, err
+}
+
+// Add an item to the items table upon user listing the item
+func CreateItem(itemName string, itemDescription string, userID string, imagePath string) (itemID string, err error) {
+
+	// Generate an item ID
+	byteItemID, err := uuid.NewV4()
+	if err != nil {
+		log.Fatal(err)
+	}
+	itemID = string(byteItemID[:])
 
 	query := `INSERT INTO items (item_id text, item_name text, item_description text, user_id text, image_path text) VALUES (?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -172,16 +178,17 @@ func CreateItem(itemName string, itemDescription string, userID string, imagePat
 	}
 	defer stmt.Close()
 	_, err = stmt.ExecContext(ctx, itemID, itemName, itemDescription, userID, imagePath)
-	return err
+	return itemID, err
 }
 
 // Add a swap request into swap table
-func CreateSwapRequest(senderID string, senderItemID string, receiverID string, receiverItemID string) error {
+func CreateSwapRequest(senderID string, senderItemID string, receiverID string, receiverItemID string) (swapID string, err error) {
 	// Generate an item ID
-	swapID, err := exec.Command("uuidgen").Output()
+	byteSwapID, err := uuid.NewV4()
 	if err != nil {
 		log.Fatal(err)
 	}
+	swapID = string(byteSwapID[:])
 
 	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text, complete int) VALUES (?, ?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
@@ -195,7 +202,7 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 	if err != nil {
 		log.Fatal(err)
 	}
-	return err
+	return swapID, err
 }
 
 type User struct {
