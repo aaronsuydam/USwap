@@ -115,6 +115,29 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type ItemID struct {
+	ItemID string `json:"itemID"`
+}
+
+func GetItem(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var itemID ItemID
+	json.Unmarshal(body, &itemID)
+
+	item, err := db.GetItem(itemID.ItemID)
+
+	jsonBytes, err := utils.StructToJSON(item)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+}
+
 type Swap struct {
 	SenderID       string `json:"senderID"`
 	SenderItemID   string `json:"senderItemID"`
@@ -133,5 +156,56 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
 	if err != nil {
 		log.Fatal("Failed to create the swap request")
+	}
+}
+
+type SwapID struct {
+	SwapID string `json:"swapID"`
+}
+
+func GetSwapRequest(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var swapID SwapID
+	json.Unmarshal(body, &swapID)
+
+	swapRequest, err := db.GetItem(swapID.SwapID)
+
+	jsonBytes, err := utils.StructToJSON(swapRequest)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+}
+
+func AcceptSwapRequest(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var swapID SwapID
+	json.Unmarshal(body, &swapID)
+
+	err = db.AcceptSwapRequest(swapID.SwapID)
+	if err != nil {
+		log.Panic("Failed to accept swap request")
+	}
+}
+
+func RejectSwapRequest(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var swapID SwapID
+	json.Unmarshal(body, &swapID)
+
+	err = db.RejectSwapRequest(swapID.SwapID)
+	if err != nil {
+		log.Panic("Failed to accept swap request")
 	}
 }

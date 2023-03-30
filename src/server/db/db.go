@@ -45,8 +45,6 @@ func init() {
 		log.Printf("Create swap table failed with error %s", err)
 		return
 	}
-
-	//END DATABASE CODE
 }
 
 func dsn(dbName string) string {
@@ -185,7 +183,7 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 		log.Fatal(err)
 	}
 
-	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id) VALUES (?, ?, ?, ?, ?)`
+	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text, complete int) VALUES (?, ?, ?, ?, ?, ?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := DB.PrepareContext(ctx, query)
@@ -194,10 +192,12 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 	}
 	defer stmt.Close()
 	_, err = stmt.ExecContext(ctx, swapID, senderID, senderItemID, receiverID, receiverItemID)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return err
 }
 
-// Complete these
 type User struct {
 	user_id       string
 	user_name     string
@@ -209,16 +209,14 @@ func GetUser(userID string) (User, error) {
 
 	var user User
 
-	row := DB.QueryRow("SELECT * FROM users2 WHERE user_id = ?", userID)
+	row := DB.QueryRow("SELECT * FROM users WHERE user_id = ?", userID)
 	if err := row.Scan(&user.user_id, &user.user_name, &user.user_email, &user.user_password); err != nil {
 		if err == sql.ErrNoRows {
-			return user, fmt.Errorf("userById %d: no such user", userID)
+			return user, fmt.Errorf("userById %v: no such user", userID)
 		}
-		return user, fmt.Errorf("userById %d: %v", userID, err)
+		return user, fmt.Errorf("userById %v: %v", userID, err)
 	}
 
-	temp := 1
-	temp += 1
 	return user, nil
 }
 
@@ -230,19 +228,17 @@ type Item struct {
 	image_path       string
 }
 
-func GetItem(itemDesc string, userID string) (Item, error) {
+func GetItem(itemID string) (Item, error) {
 	var item Item
 
-	row := DB.QueryRow("SELECT * FROM items WHERE user_id = ? & WHERE item_description=?", userID, itemDesc)
+	row := DB.QueryRow("SELECT * FROM items WHERE item_id = ?", itemID)
 	if err := row.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
 		if err == sql.ErrNoRows {
-			return item, fmt.Errorf("getItem %d: no such item", itemDesc)
+			return item, fmt.Errorf("getItem %v: no such item", itemID)
 		}
-		return item, fmt.Errorf("getItem %d: %v", itemDesc, err)
+		return item, fmt.Errorf("getItem %v: %v", itemID, err)
 	}
 
-	temp := 1
-	temp += 1
 	return item, nil
 }
 
@@ -260,35 +256,80 @@ func GetSwapRequest(swapID string) (Swap, error) {
 	row := DB.QueryRow("SELECT * FROM swap WHERE swap_id = ? ", swapID)
 	if err := row.Scan(&swap.swap_id, &swap.sender_id, &swap.sender_item_id, &swap.receiver_id, &swap.receiver_item_id); err != nil {
 		if err == sql.ErrNoRows {
-			return swap, fmt.Errorf("getItem %d: no such swap", swapID)
+			return swap, fmt.Errorf("getItem %v: no such swap", swapID)
 		}
-		return swap, fmt.Errorf("getItem %d: %v", swapID, err)
+		return swap, fmt.Errorf("getItem %v: %v", swapID, err)
 	}
 
-	temp := 1
-	temp += 1
 	return swap, nil
 }
 
-func getUserItems(userID string) ([]Item, error) {
+func GetUserItems(userID string) ([]Item, error) {
 	var items []Item
 
 	rows, err := DB.Query("SELECT * FROM items WHERE user_id = ?", userID)
 	if err != nil {
-		return nil, fmt.Errorf("alluserItems %q: %v", userID, err)
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 	}
 	defer rows.Close()
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
 		var item Item
 		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
-			return nil, fmt.Errorf("alluserItems %q: %v", userID, err)
+			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 		}
 		items = append(items, item)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("alluserItems %q: %v", userID, err)
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 	}
 	return items, nil
 
+}
+
+func AcceptSwapRequest(swapID string) (err error) {
+	swap, err := GetSwapRequest(swapID)
+	if err != nil {
+		log.Fatalf("Swap ID %v not found in swap table", swapID)
+		return err
+	}
+	senderItem, err := GetItem(swap.sender_item_id)
+	if err != nil {
+		log.Fatalf("Item ID %v not found in items table", swap.sender_item_id)
+	}
+	receiverItem, err := GetItem(swap.receiver_item_id)
+	if err != nil {
+		log.Fatalf("Item ID %v not found in items table", swap.receiver_item_id)
+	}
+
+	query := `UPDATE items SET user_id=? WHERE item_id=?`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := DB.PrepareContext(ctx, query)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	// Swap user IDs associated with the items
+	_, err = stmt.ExecContext(ctx, receiverItem.user_id, senderItem.item_id)
+	if err != nil {
+		log.Fatal("Updating items table failed")
+	}
+	_, err = stmt.ExecContext(ctx, senderItem.user_id, receiverItem.item_id)
+	if err != nil {
+		log.Fatal("Updating items table failed")
+	}
+
+	return err
+}
+
+func RejectSwapRequest(swapID string) (err error) {
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	_, err = DB.ExecContext(ctx, "DELETE FROM swap WHERE swap_id = ?", swapID)
+	if err != nil {
+		log.Fatalf("Failed to reject Swap Request with id %v", swapID)
+	}
+	return err
 }
