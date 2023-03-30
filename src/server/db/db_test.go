@@ -31,6 +31,7 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestGetUserItem(t *testing.T) {
+	err := CreateItem("testItem", "thisisatest", "2", "testpath")
 	item, err := GetItem("2")
 	if err != nil {
 		t.Fatal("Error during Get User Item")
@@ -39,11 +40,13 @@ func TestGetUserItem(t *testing.T) {
 }
 
 func TestGetUserItems(t *testing.T) {
+
+	CreateItem("testItem", "thisisatest", "2", "testpath")
 	item, err := GetUserItems("2")
 	if err != nil {
 		t.Fatal("Error during get All of User's Items")
 	}
-	if len(item) == 3 {
+	if len(item) == 4 {
 		fmt.Print("Great success!")
 	}
 }
