@@ -28,15 +28,37 @@ Future Calls:
 
 
 Item (/item)
+Get(item ID)
+- Returns itemID, itemName, itemDescription, userID, and imagePath from Items table
 
 
 Profile (/profile)
 
 
-Database
+Database Info
+
 Users Table
-* User objects containing a base of user_id, user_name, user_email and user_password
-* The above framework allows us to quickly store a user based on their basic login     information
-* Eventually, there will be a table of items contained within each User row, a nested table will allow for easy access to user items and easy item management
-Password Storage
+* The above framework allows us to quickly store a user based on their basic login information
 * Passwords are encrypted with Bcrypt and hashes are stored in the database.
+Contains:
+- user_id
+- user_name
+- user_email
+- user_password
+
+
+Items Table
+Contains:
+- item_id
+- item_name
+- item_description
+- user_id
+- image_path
+
+Swap Table
+Contains:
+- swap_id
+- sender_id
+- sender_item_id
+- receiver_id
+- receiver_item_id
