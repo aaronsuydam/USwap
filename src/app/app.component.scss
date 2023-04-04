@@ -1,0 +1,16 @@
+body {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-areas:    "top-bar"
+                            "router-outlet";
+    grid-template-rows: 10% 90%;
+
+    app-top-bar {
+        grid-area: "top-bar";
+    }
+
+    router-outlet {
+        grid-area: "router-outlet";
+    }
+}

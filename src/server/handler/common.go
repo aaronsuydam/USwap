@@ -1,29 +1,19 @@
 package handler
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"time"
+	"os"
 
+	// "github.com/joho/godotenv"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/atxfjrotc/uswap/src/server/db"
 	"github.com/atxfjrotc/uswap/src/server/utils"
 )
-
-type Login struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
-
-type user struct {
-	userId       int
-	userName     string
-	userEmail    string
-	userPassword string
-}
 
 func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +30,25 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:4200")
+}
+
+type Login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.RegisteredClaims
+}
+
+var jwtKey = []byte(os.Getenv("RSA_PRIVATE_KEY"))
+
 func LoginPost(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -48,7 +56,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users2 WHERE user_name = ?", login.Username)
+	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
 	if err != nil {
 		fmt.Println("Error with creating db query")
 		log.Fatal(err)
@@ -64,16 +72,104 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 
 	success := utils.CheckPasswordHash(login.Password, string(hash))
 
-	var data struct {
-		LoginSuccess string `json:"loginSuccess"`
-	}
-	if success {
-		data.LoginSuccess = `True`
-	} else {
-		data.LoginSuccess = `False`
+	if (!success) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
 	}
 
-	jsonBytes, err := utils.StructToJSON(data)
+	expirationTime := time.Now().Add(time.Minute)
+
+	claims := &Claims{
+		Username: login.Username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:	"token",
+		Value:	tokenString,
+		Expires: expirationTime,
+	})
+
+	loginJson, err := json.Marshal(login)
+	if err != nil {
+		panic(err)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(loginJson)
+}
+
+type SignUp struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func SignUpPost(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var signup SignUp
+	json.Unmarshal(body, &signup)
+
+	signup.Password, _ = utils.HashPassword(string(signup.Password)) // Hash password
+	_, err = db.CreateUser(signup.Username, signup.Email, signup.Password)
+	if err != nil {
+		log.Fatal("Failed to sign up user")
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+type Item struct {
+	Name        string `json:"itemName"`
+	Description string `json:"itemDescription"`
+	UserID      string `json:"userID"`
+	ImagePath   string `json:"imagePath"`
+}
+
+func CreateListing(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var item Item
+	json.Unmarshal(body, &item)
+
+	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
+	if err != nil {
+		log.Fatal("Failed to create item listing")
+	}
+}
+
+type ItemID struct {
+	ItemID string `json:"itemID"`
+}
+
+func GetItem(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var itemID ItemID
+	json.Unmarshal(body, &itemID)
+
+	item, err := db.GetItem(itemID.ItemID)
+
+	jsonBytes, err := utils.StructToJSON(item)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -82,92 +178,74 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
-func SignUpPost(w http.ResponseWriter, r *http.Request) {
+type Swap struct {
+	SenderID       string `json:"senderID"`
+	SenderItemID   string `json:"senderItemID"`
+	ReceiverID     string `json:"receiverID"`
+	ReceiverItemID string `json:"receiverItemID"`
+}
+
+func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
 	}
-	var login Login
-	json.Unmarshal(body, &login)
+	var swap Swap
+	json.Unmarshal(body, &swap)
 
-	hash, _ := utils.HashPassword(string(login.Password))
-	rows, err := db.DB.Query("SELECT COUNT(*) as count FROM users2")
+	_, err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Failed to create the swap request")
 	}
-	count := 0
-	for rows.Next() {
-		rows.Scan(&count)
-	}
+}
 
-	// Creates ID for next user in database
-	u1 := user{
-		userId:       count + 1,
-		userName:     login.Username,
-		userEmail:    "testuser@test.com",
-		userPassword: hash,
-	}
+type SwapID struct {
+	SwapID string `json:"swapID"`
+}
 
-	query := `INSERT INTO users2 (user_id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
-	stmt, err := db.DB.PrepareContext(ctx, query)
-
+func GetSwapRequest(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Printf("Error %s when preparing SQL statement", err)
-		log.Fatal(err)
+		panic(err)
 	}
-	defer stmt.Close()
+	var swapID SwapID
+	json.Unmarshal(body, &swapID)
 
-	query1 := `INSERT INTO userItems1 (row_num, item_name,item_description, user_id) VALUES (?, ?, ?, ?)` //query to insert to userItems table
-	ctx1, cancelfunc1 := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc1()
+	swapRequest, err := db.GetItem(swapID.SwapID)
 
-	stmt1, err1 := db.DB.PrepareContext(ctx1, query1)
-	if err1 != nil {
-		log.Printf("Error %s when insert into UserItems", err)
-		log.Fatal(err)
-	}
-	defer stmt1.Close()
-
-	log.Printf("prine ")
-	log.Printf("printname " + u1.userName)
-
-	_, err = stmt.ExecContext(ctx, u1.userId, u1.userName, u1.userEmail, u1.userPassword) //exec to insert into usertable
-
-	rows, err5 := db.DB.Query("SELECT COUNT(*) as count FROM userItems1")
-	if err5 != nil {
-		log.Fatal(err5)
-	}
-	countR := 0
-	for rows.Next() {
-		rows.Scan(&countR)
-	}
-
-	_, err1 = stmt1.ExecContext(ctx1, countR+1, "name", "description", u1.userId) //exec to insert into userItems table
-
-	/*query2 := `ALTER TABLE usersItems ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users2(user_id) VALUES (?)` //updates userItems table to include a column called fk_user_id
-	ctx2, cancelfunc2 := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc2()
-	stmt2, err2 := db.DB.PrepareContext(ctx2, query2) //insert constraint
-	if err2 != nil {
-		log.Printf("Error %s when altering UserItems", err)
-		log.Fatal(err)
-	}*/
-
-	//_, err2 = stmt2.ExecContext(ctx2, query2) //exec to change UserItems table
-
+	jsonBytes, err := utils.StructToJSON(swapRequest)
 	if err != nil {
-		log.Printf("Error %s when inserting row into user table", err)
-		log.Fatal(err)
+		fmt.Print(err)
 	}
-	if err1 != nil {
-		log.Printf("Error %s when inserting row into userItems table", err1)
 
-		log.Fatal(err1)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+}
+
+func AcceptSwapRequest(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
 	}
-	/*if err2 != nil {
-		log.Printf("Error %s when inserting constraint into userItems table", err2)
-		log.Fatal(err1)
-	}*/
+	var swapID SwapID
+	json.Unmarshal(body, &swapID)
+
+	err = db.AcceptSwapRequest(swapID.SwapID)
+	if err != nil {
+		log.Panic("Failed to accept swap request")
+	}
+}
+
+func RejectSwapRequest(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	var swapID SwapID
+	json.Unmarshal(body, &swapID)
+
+	err = db.RejectSwapRequest(swapID.SwapID)
+	if err != nil {
+		log.Panic("Failed to accept swap request")
+	}
 }

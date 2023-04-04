@@ -7,7 +7,7 @@ import { User } from '../interfaces/UserInterface';
   providedIn: 'root'
 })
 export class SignupService {
-  baseUrl: string = 'test';
+  baseUrl: string = 'signup';
   constructor(private http: HttpClient) {}
   
   readonly headers = new HttpHeaders().set('Content-Type', 'application/json');
@@ -15,7 +15,6 @@ export class SignupService {
   addUser(user: User): Observable<User> {
     return this.http.post<User>(this.baseUrl, user, {headers: this.headers})
     .pipe(
-      tap(user => console.log("user: " + JSON.stringify(user))),
       catchError(this.handleError(user))
     );
   };

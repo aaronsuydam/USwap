@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../assets/material.module';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AppComponent } from './app.component';
@@ -19,16 +18,16 @@ import { SwapFinalComponent } from './swap-final/swap-final.component';
 import { SwapNarrowDownComponent } from './swap-narrow-down/swap-narrow-down.component';
 import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 import { APIInterceptor } from './services/interceptor.service';
-import { authGuard } from './services/auth.service';
 import { SignupPageComponent } from './signup-page/signup-page.component';
+import { AuthGuard } from './auth/auth.guard';
 
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
     { path: 'login', title: "Login - USwap", component: LoginPageComponent },
     { path: 'signup', title: "Signup - USwap", component: SignupPageComponent },
-    { path: 'user-profile', title: "Profile and Items - USwap", canActivate: [authGuard], component:UserProfileComponent},
-    { path: 'swap-narrow', title: "Swap For Anything! - USwap", canActivate: [authGuard], component:SwapNarrowDownComponent},
-    { path: 'swap-final', title: "Confirm Swap - USwap", canActivate: [authGuard], component:SwapFinalComponent},
+    { path: 'user-profile', title: "Profile and Items - USwap", canActivate:[AuthGuard], component:UserProfileComponent},
+    { path: 'swap-narrow', title: "Swap For Anything! - USwap", canActivate:[AuthGuard], component:SwapNarrowDownComponent},
+    { path: 'swap-final', title: "Confirm Swap - USwap", canActivate:[AuthGuard], component:SwapFinalComponent},
     { path: '**', redirectTo: '', pathMatch: 'full'} // Can direct to an about page or error page
   ];
 
@@ -52,9 +51,11 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
-    HttpClientTestingModule,
+    HttpClientTestingModule
   ],
+  exports: [RouterModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -63,8 +64,7 @@ const appRoutes: Routes = [
     },
     HttpClientModule,
     APIInterceptor,
-    RouterTestingModule,
-    HttpClientTestingModule
+    HttpClientTestingModule,
   ],
   bootstrap: [AppComponent]
 })
