@@ -8,6 +8,7 @@ require (
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.5.1
+	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	golang.org/x/crypto v0.6.0
 )
 
