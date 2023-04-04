@@ -1,9 +1,5 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# Credentials
-*.env
-*.key
-
 # Compiled output
 /dist
 /tmp
@@ -45,6 +41,7 @@ testem.log
 # Keys
 *.key
 .env
+src/server/.env
 
 # System files
 .DS_Store
