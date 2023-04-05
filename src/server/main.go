@@ -18,7 +18,7 @@ import (
 
 func main() {
 	// Environment Vars
-	err := godotenv.Load("src/server/.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -27,18 +27,18 @@ func main() {
 	r := mux.NewRouter()
 	r.Use(handler.CorsMiddleware)
 
-	r.HandleFunc("/login", handler.LoginPost).Methods("POST")
-	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST")
+	r.HandleFunc("/login", handler.LoginPost).Methods("POST", "OPTIONS")
+	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST", "OPTIONS")
 
 	r.HandleFunc("/item", handler.GetItem).Methods("GET")
-	r.HandleFunc("/item/create", handler.CreateListing).Methods("POST")
+	r.HandleFunc("/item/create", handler.CreateListing).Methods("POST", "OPTIONS")
 	//r.HandleFunc("/item/delete", handler.DeleteListing).Methods("POST") // Delete an item
 	//r.HandleFunc("/item/modify", handler.ModifyItem).Methods("PUT") // Modify an item
 
 	r.HandleFunc("/swap", handler.AcceptSwapRequest).Methods("GET")
 	r.HandleFunc("/swap/create", handler.AcceptSwapRequest).Methods("GET")
-	r.HandleFunc("/swap/accept", handler.AcceptSwapRequest).Methods("POST")
-	r.HandleFunc("/swap/reject", handler.AcceptSwapRequest).Methods("POST")
+	r.HandleFunc("/swap/accept", handler.AcceptSwapRequest).Methods("POST", "OPTIONS")
+	r.HandleFunc("/swap/reject", handler.AcceptSwapRequest).Methods("POST", "OPTIONS")
 
 	srv := &http.Server{
 		Addr:         ":4201",

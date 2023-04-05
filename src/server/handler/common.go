@@ -142,6 +142,8 @@ type Item struct {
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -153,6 +155,8 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Failed to create item listing")
 	}
+
+	w.Write([]byte("success"))
 }
 
 type ItemID struct {
@@ -186,6 +190,8 @@ type Swap struct {
 }
 
 func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -223,6 +229,8 @@ func GetSwapRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func AcceptSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -237,6 +245,8 @@ func AcceptSwapRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func RejectSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)

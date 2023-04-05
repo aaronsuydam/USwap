@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -7,8 +8,9 @@ import { Component } from '@angular/core';
 })
 export class UserProfileComponent {
     
-    //TODO: Add Child Route, Add Routing, Create Component
-    addItemsOnClick() {
-        
+    constructor(private router: Router) {}
+
+    onClick() {
+      this.router.navigate(['/add']);
     }
 }
