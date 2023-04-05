@@ -1,0 +1,25 @@
+<div class="form-container">
+    <h1 class="header">Start your listing</h1>
+
+    <form class="form-container" [formGroup]="form">
+        <mat-form-field class="form-item-input">
+            <input matInput type="text" formControlName="itemName" placeholder="Item name">
+        </mat-form-field>
+
+        <mat-form-field class="form-item-textarea">
+            <textarea matInput type="text" formControlName="itemDescription" placeholder="Item description"></textarea>
+        </mat-form-field>
+
+        <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+
+        <div class="file-upload">
+            {{fileName || "No file uploaded yet."}}
+
+            <button mat-mini-fab class="btn-upload" (click)="fileUpload.click()">
+                <mat-icon>attach_file</mat-icon>
+            </button>
+        </div>
+
+        <button mat-raised-button type="submit" (click)="addItem()">Submit listing</button>
+    </form>
+</div>

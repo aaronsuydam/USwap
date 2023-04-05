@@ -1,0 +1,28 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.form-item-input {
+    min-width: none;
+    max-width: 350px;
+    width: 100%;
+}
+.form-item-textarea {
+    width: 100%;
+}
+.file-input {
+    display: none;
+}
+.file-upload {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1rem;
+}
+.btn-upload {
+    margin-left: 1rem;
+}
