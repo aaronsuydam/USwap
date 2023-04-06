@@ -20,7 +20,7 @@
                             "site-details"
                             "join";
     grid-template-columns: 45%;
-    grid-template-rows: 75px 75px 25px 100px 150px 50px;
+    grid-template-rows: 75px 75px 25px 100px 150px 175px;
     justify-content: center;
     align-items: center;
 }
@@ -60,19 +60,26 @@
     text-align: center;
     font-size: 25pt;
 }
-                            
-#join {
-    grid-area: join;    
+            
+.join {
     display: grid;
-    height: 100%;
-    gap: 10px;
+    width: 100%;
+    grid-template-areas:    "join-top join-top join-top"
+                            "left join-bottom right";
+    grid-template-rows: 50px 75px;
+    grid-template-columns: auto 25% auto;
+    justify-content: center;
 }
 
+
 #join-hook {
+    grid-area: join-top;
     text-align: center;
     font-size: 20pt;
 }
 
-#join-login-button {
+#join-login-button { 
+    grid-area: join-bottom;
     font-size: 15pt;
+
 }
