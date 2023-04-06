@@ -22,4 +22,8 @@
 
         <button mat-raised-button type="submit" (click)="addItem()">Submit listing</button>
     </form>
+    <div class="required">
+        <div *ngIf="f['itemName'].errors?.['required']">Name is required</div>
+        <div *ngIf="!fileUploaded">Image is required</div>
+    </div>
 </div>

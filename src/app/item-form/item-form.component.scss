@@ -26,3 +26,12 @@
 .btn-upload {
     margin-left: 1rem;
 }
+.required {
+    padding-top: 1rem;
+}
+.ng-valid[required], .ng-valid.required {
+    border-left: 2px solid #42A948;
+}
+// .ng-invalid:not(form) {
+//     border-left: 5px solid #a94442;
+// }
