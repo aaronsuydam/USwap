@@ -39,7 +39,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users2 WHERE user_name = ?", login.Username)
+	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
 	if err != nil {
 		fmt.Println("Error with creating db query")
 		log.Fatal(err)

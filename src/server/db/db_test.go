@@ -43,22 +43,21 @@ func TestUserCreation(t *testing.T) {
 }
 
 func TestGetUserItems(t *testing.T) {
-	/*
-		itemid, err := CreateItem("testitem1", "testitem1description", "testuser1", "testimagepath1")
-		if err != nil {
-			t.Fatal("Failed to create test user")
-		}
-		item, err := GetItem(itemid)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if itemid != item.item_id {
-			t.Fatal("Retrieved user does not match the passed in test user")
-		}*/
+	itemid, err := CreateItem("testitem1", "testitem1description", "testuser1", "testimagepath1")
+	if err != nil {
+		t.Fatal("Failed to create test user")
+	}
+	item, err := GetItem(itemid)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if itemid != item.item_id {
+		t.Fatal("Retrieved user does not match the passed in test user")
+	}
 }
 
 func TestSwapRequestCreation(t *testing.T) {
-	/*swapid, err := CreateSwapRequest("testuser1", "testitem1", "testuser2", "testitem2")
+	swapid, err := CreateSwapRequest("testuser1", "testitem1", "testuser2", "testitem2")
 	if err != nil {
 		t.Fatal("Failed to create test user")
 	}
@@ -68,11 +67,11 @@ func TestSwapRequestCreation(t *testing.T) {
 	}
 	if swapRequest.swap_id != swapid || swapRequest.sender_id != "testuser1" || swapRequest.sender_item_id != "testitem1" || swapRequest.receiver_id != "testuser2" || swapRequest.receiver_item_id != "testitem2" {
 		t.Fatal("Retrieved swap request does not match the passed in test swap request")
-	}*/
+	}
 }
 
 func TestSwapRequestAccept(t *testing.T) {
-	/*userid2, err := CreateUser("testuser2", "testemail2@testemail.com", "testpassword2")
+	userid2, err := CreateUser("testuser2", "testemail2@testemail.com", "testpassword2")
 	if err != nil {
 		t.Fatal("Error during get Swap")
 	}
@@ -97,7 +96,7 @@ func TestSwapRequestAccept(t *testing.T) {
 	item3New, _ := GetItem(itemid3)
 	if item2New.user_id != userid3 && item3New.user_id != userid2 {
 		t.Fatal("Failed to swap user IDs on items")
-	}*/
+	}
 }
 
 func TestSwapRequestDeny(t *testing.T) {}
