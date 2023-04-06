@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { SignupService } from './signup.service';
 import { User } from '../interfaces/UserInterface';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup-page',
   templateUrl: './signup-page.component.html',
-  styleUrls: ['./signup-page.component.css']
+  styleUrls: ['./signup-page.component.scss']
 })
 export class SignupPageComponent {
   hide: boolean = true;
@@ -20,7 +19,7 @@ export class SignupPageComponent {
     password: ""
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, private signupService: SignupService ) {}
+  constructor(private router: Router, private signupService: SignupService ) {}
 
   // check if username is taken in database
   checkUsername() {
@@ -44,22 +43,16 @@ export class SignupPageComponent {
 
   // create new user in database
   async addUser() {
-    this.signupService.addUser(this.user).subscribe(
-      data => {
-        console.log(data);
-      }
-    );
+    this.signupService.addUser(this.user).subscribe();
   }
 
   onClick() {
-    this.addUser();
-    //this.router.navigate(['../login'], {relativeTo: this.route});
     if (this.checkUsername()) {
       if (this.checkEmail()) {
         if (this.checkPassword()) {
-          console.log("Registered");
           this.addUser();
-          this.router.navigate(['../login'], {relativeTo: this.route});
+          console.log("Registered");
+          this.router.navigate(['/login']);
         }
       }
     }
