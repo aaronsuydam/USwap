@@ -1,5 +1,6 @@
 #meta-grid-container {
     display: grid;
+    background-color: green;
     height: 90%;
     width: 100%;
     grid-template-areas: "main";
@@ -10,32 +11,56 @@
 
 #main-grid-container {
     grid-area: main;
-    background-color: aqua;
+    background-color: blue;
     display: grid;
-    height: 70%;
+    height: auto;
     width: 100%;
     grid-template-areas:    "row-1"
                             "row-2"
                             "row-3";
-    grid-template-columns: 15% auto 15%;
-    grid-template-rows: 1 5 1;
+    grid-template-columns: 100%;
+    grid-template-rows: 200px 750px 200px;
     justify-content: center;
-    align-items: center;
 }
 
 .welcome {
     grid-area: row-1;
-    background-color: blue;
+    display: grid;
+    height: 100%;
+    align-items: center;
+    background-color: purple;
     text-align: center;
-    font-size: 140pt;
     font-weight: lighter;
+    
+    #first {
+        font-size: 50pt;
+    }
+
+    #second {
+        margin-top: -65px;
+        font-size: 36pt;
+    }
 }
-                           
-                                                  
-#site-desctiption {
+                                                                  
+.site-description {
     grid-area: row-2;
+    display: grid;
+    background-color: red;
+    grid-template-areas: "left right";
     text-align: center;
     font-size: 25pt;
+
+    #site-description-left {
+        grid-area: left;
+        background-color: green;
+    }
+
+    #site-description-right {
+        grid-area: right;
+        display: grid;
+        justify-content: center;
+        background-color: orange;
+    }
 }
             
 .join {
