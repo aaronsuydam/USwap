@@ -18,7 +18,6 @@
                             "row-3";
     grid-template-columns: 100%;
     grid-template-rows: 300px auto 200px;
-    background-color: #f6f6f6;
     justify-content: center;
 }
 
@@ -108,7 +107,7 @@
     grid-template-areas:    "join-top join-top join-top"
                             "left join-bottom right";
     grid-template-rows: 50px 75px;
-    grid-template-columns: auto 25% auto;
+    grid-template-columns: auto 150px auto;
     justify-content: center;
 }
 
@@ -120,6 +119,6 @@
 
 #join-login-button { 
     grid-area: join-bottom;
-    font-size: 15pt;
+    font-size: 13pt;
 
 }
