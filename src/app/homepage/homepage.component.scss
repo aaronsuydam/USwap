@@ -1,6 +1,5 @@
 #meta-grid-container {
     display: grid;
-    background-color: green;
     height: 90%;
     width: 100%;
     grid-template-areas: "main";
@@ -11,7 +10,6 @@
 
 #main-grid-container {
     grid-area: main;
-    background-color: blue;
     display: grid;
     height: auto;
     width: 100%;
@@ -19,7 +17,8 @@
                             "row-2"
                             "row-3";
     grid-template-columns: 100%;
-    grid-template-rows: 200px 750px 200px;
+    grid-template-rows: 300px auto 200px;
+    background-color: #f6f6f6;
     justify-content: center;
 }
 
@@ -28,16 +27,16 @@
     display: grid;
     height: 100%;
     align-items: center;
-    background-color: purple;
     text-align: center;
     font-weight: lighter;
     
     #first {
         font-size: 50pt;
+        margin-bottom: -83px;
     }
 
     #second {
-        margin-top: -65px;
+        margin-top: -83px;
         font-size: 36pt;
     }
 }
@@ -45,22 +44,61 @@
 .site-description {
     grid-area: row-2;
     display: grid;
-    background-color: red;
-    grid-template-areas: "left right";
+    grid-template-areas:    "left1 right1"
+                            "left2 right2"
+                            "left3 right3"
+                            "left4 right4";
+    grid-template-rows: 500px 500px 500px 500px;
+    grid-template-columns: 50% 50%;
+    justify-content: center;
     text-align: center;
     font-size: 25pt;
+}
 
-    #site-description-left {
-        grid-area: left;
-        background-color: green;
-    }
+#one {
+    grid-area: left1;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
 
-    #site-description-right {
-        grid-area: right;
-        display: grid;
-        justify-content: center;
-        background-color: orange;
-    }
+#two {
+    grid-area: right1;
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#three {
+    grid-area: right2;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#four {
+    grid-area: left2;
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#five {
+    grid-area: left3;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#six {
+    grid-area: right3;
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#seven {
+    grid-area: right4;
 }
             
 .join {
