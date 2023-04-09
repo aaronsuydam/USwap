@@ -3,12 +3,17 @@ mat-card-actions {
     grid-template-areas: "one two";
     align-items: center;
     gap: 50px;
-}
+    
+    button {
+        letter-spacing: normal;
+        font-weight: 600;
+    }
 
-#swapForButton {
-    background-color: rgba(255, 153, 0, 0.215);
-}
+    #swapForButton {
+        background-color: rgba(255, 153, 0, 0.215);
+    }
 
-#likeButton {
-    background-color: rgba(0, 102, 255, 0.215);
+    #likeButton {
+        background-color: rgba(0, 102, 255, 0.215);
+    }
 }
