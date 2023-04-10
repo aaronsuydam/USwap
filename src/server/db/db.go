@@ -20,33 +20,35 @@ var password string
 var hostname string
 var dbname string
 
-func Init() {
+func Initialize() (err error) {
 	// Establish Database Connection
 	username = os.Getenv("DBUSERNAME")
 	password = os.Getenv("DBPASSWORD")
 	hostname = os.Getenv("DBHOSTNAME")
 	dbname = os.Getenv("DBNAME")
-	var err error
 	DB, err = dbConnection()
 	if err != nil {
-		return
+		log.Fatal(err)
+		return err
 	}
 	log.Printf("Successfully connected to database")
+
 	err = createUserTable()
 	if err != nil {
 		log.Printf("Create user table failed with error %s", err)
-		return
+		return err
 	}
 	err = createItemsTable()
 	if err != nil {
 		log.Printf("Create userItems table failed with error %s", err)
-		return
+		return err
 	}
 	err = createSwapTable()
 	if err != nil {
 		log.Printf("Create swap table failed with error %s", err)
-		return
+		return err
 	}
+	return err
 }
 
 func dsn() string {
@@ -93,8 +95,7 @@ func dbConnection() (*sql.DB, error) {
 
 // User table maintains all users
 func createUserTable() error {
-	query := `CREATE TABLE IF NOT EXISTS users(user_id text, user_name text,user_email text,
-        user_password text)`
+	query := `CREATE TABLE IF NOT EXISTS users(user_id text, user_name text, user_email text, user_password text)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -170,7 +171,7 @@ func CreateItem(itemName string, itemDescription string, userID string, imagePat
 	}
 	itemID = byteItemID.String()
 
-	query := `INSERT INTO items (item_id, item_name , item_description, user_id, image_path) VALUES (?, ?, ?, ?, ?)`
+	query := `INSERT INTO items (item_id, item_name, item_description, user_id, image_path) VALUES (?,?,?,?,?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := DB.PrepareContext(ctx, query)
@@ -191,7 +192,7 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 	}
 	swapID = byteSwapID.String()
 
-	query := `INSERT INTO swap (swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text) VALUES (?, ?, ?, ?, ?)`
+	query := `INSERT INTO swap (swap_id, sender_id, sender_item_id, receiver_id, receiver_item_id) VALUES (?,?,?,?,?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := DB.PrepareContext(ctx, query)
@@ -250,6 +251,29 @@ func GetItem(itemID string) (Item, error) {
 	return item, nil
 }
 
+/*
+func searchItems(search string) ([]Item, err) {
+	var items []Item
+
+	rows, err := DB.Query("SELECT * FROM items WHERE user_id = ?", userID)
+	if err != nil {
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var item Item
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+		}
+		items = append(items, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+	}
+	return items, nil
+}*/
+
 type Swap struct {
 	swap_id          string
 	sender_id        string
@@ -292,7 +316,6 @@ func GetUserItems(userID string) ([]Item, error) {
 		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 	}
 	return items, nil
-
 }
 
 func AcceptSwapRequest(swapID string) (err error) {

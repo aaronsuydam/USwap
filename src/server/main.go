@@ -22,7 +22,10 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	db.Init()
+	err = db.Initialize()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	r := mux.NewRouter()
 	r.Use(handler.CorsMiddleware)
