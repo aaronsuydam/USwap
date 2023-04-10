@@ -98,6 +98,16 @@
 
 #seven {
     grid-area: right4;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#eight {
+    grid-area: left4;
+    display: block;
+    margin: auto auto auto auto;
 }
             
 .join {
@@ -119,6 +129,7 @@
 
 #join-login-button { 
     grid-area: join-bottom;
-    font-size: 13pt;
+    font-size: 15pt;
+    letter-spacing: normal;
 
 }
