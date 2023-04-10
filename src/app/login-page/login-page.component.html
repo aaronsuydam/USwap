@@ -1,7 +1,7 @@
 <div class="login-container" (keydown.Enter)="login()">
     <div class="element">
         <div class="logo">
-            <img  class="images" src="../../assets/logo.png"/>
+            <img  class="images" src="../../assets/transparent.png"/>
         </div>
         <div [formGroup]="form">
             <div class="login-ux">
@@ -19,7 +19,7 @@
                         </button>
                     </mat-form-field>
                 </div>
-                <button mat-raised-button data-cy="login" color="primary" id="credentials-submit" type="button" (click)="login()">Login</button>
+                <button mat-raised-button data-cy="login" color="primary" id="credentials-submit" type="button" (click)="login()" (keydown.enter)="login()">Login</button>
             </div>
         </div>
     </div>
