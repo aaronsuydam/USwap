@@ -182,6 +182,21 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonBytes)
 }
 
+func SearchItems(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	type Search struct {
+		Search string `json:"search"`
+	}
+	var search Search
+	json.Unmarshal(body, &search)
+
+}
+
 type Swap struct {
 	SenderID       string `json:"senderID"`
 	SenderItemID   string `json:"senderItemID"`
