@@ -6,13 +6,13 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"time"
 	"os"
+	"time"
 
 	// "github.com/joho/godotenv"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/atxfjrotc/uswap/src/server/db"
 	"github.com/atxfjrotc/uswap/src/server/utils"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func CorsMiddleware(next http.Handler) http.Handler {
@@ -72,7 +72,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 
 	success := utils.CheckPasswordHash(login.Password, string(hash))
 
-	if (!success) {
+	if !success {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -95,8 +95,8 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:	"token",
-		Value:	tokenString,
+		Name:    "token",
+		Value:   tokenString,
 		Expires: expirationTime,
 	})
 
@@ -142,6 +142,8 @@ type Item struct {
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -160,6 +162,8 @@ type ItemID struct {
 }
 
 func GetItem(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -186,6 +190,8 @@ type Swap struct {
 }
 
 func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -204,6 +210,8 @@ type SwapID struct {
 }
 
 func GetSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -223,6 +231,8 @@ func GetSwapRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func AcceptSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -237,6 +247,8 @@ func AcceptSwapRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func RejectSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
