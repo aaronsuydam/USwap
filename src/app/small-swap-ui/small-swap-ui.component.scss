@@ -6,14 +6,8 @@ mat-card-actions {
     
     button {
         letter-spacing: normal;
-        font-weight: 600;
+        font-weight: normal;
+        font-size: 13pt;
     }
 
-    #swapForButton {
-        background-color: rgba(255, 153, 0, 0.215);
-    }
-
-    #likeButton {
-        background-color: rgba(0, 102, 255, 0.215);
-    }
 }

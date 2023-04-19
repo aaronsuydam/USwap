@@ -10,7 +10,7 @@
             </mat-form-field>
         </div>
     </div>
-
+    
     <div id="bottom-left">
         <div id="filters">
             <mat-chip-listbox class="mat-mdc-chip-set-stacked" multiple="true" >
@@ -20,14 +20,9 @@
                 <mat-chip-option color="accent">{{filterNames[3]}}</mat-chip-option>
             </mat-chip-listbox>
         </div>
-    </div>
+    </div>   
 
-    <div id="bottom-right">
-        <app-small-swap-ui id="one">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="two">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="three">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="four">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="five">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="six">Item Details</app-small-swap-ui>
+    <div id="evenlower">
+        <app-small-swap-ui *ngFor="let item of itemsToDisplay; index as i"></app-small-swap-ui>
     </div>
 </div>

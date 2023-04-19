@@ -36,39 +36,14 @@
     align-items: center;
 }
 
-#bottom-right {
+
+
+#evenlower {
     grid-area: br;
-    display: grid;
-    height: 100%;
-    width: 100%;
-    grid-template-areas: "one two three"
-                         "four five six";
-    grid-template-columns: 32% 32% 32%;
-    gap: 20px;
-    align-items: middle;
-
-
-    #one {
-        grid-area: one;
+    display: flex;
+    flex-wrap: wrap;
+    app-small-swap-ui {
+        max-width: 32%;
     }
-
-    #two {
-        grid-area: two;
-    }
-
-    #three {
-        grid-area: three;
-    }
-
-    #four {
-        grid-area: four;
-    }
-
-    #five {
-        grid-area: five;
-    }
-
-    #six {
-        grid-area: six;
-    }
+    gap: 15px;
 }

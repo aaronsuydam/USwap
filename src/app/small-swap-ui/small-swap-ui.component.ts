@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -8,6 +8,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class SmallSwapUiComponent {
     swappingFor: boolean = true;
+
+    @Input() itemName : string = "Placeholder";
+    @Input() itemOwner : string = "Placeholder";
+    @Input() itemDescription : string = "Placeholder";
+    @Input() imageSource : string = "../../assets/shiba2.jpg";
+
+    like : string = "Like";
+
     constructor(private router: Router, private route: ActivatedRoute) {
         if(this.router.url !== "/swap-narrow")
         {
@@ -15,12 +23,14 @@ export class SmallSwapUiComponent {
         }
     }
 
-
     onClickSwapFor(): void{
         this.router.navigate(['../user-profile'], {relativeTo: this.route});
     }
 
-    onClickSwapWith(): void{
-        this.router.navigate(['../swap-final'], {relativeTo: this.route});
+    onClickLike(): void{
+        if(this.like = "Like")
+        {
+            this.like = "Liked!";
+        }
     }
 }
