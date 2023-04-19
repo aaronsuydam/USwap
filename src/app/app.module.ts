@@ -21,6 +21,7 @@ import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 import { APIInterceptor } from './services/interceptor.service';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { AuthGuard } from './auth/auth.guard';
+import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
 
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
@@ -45,6 +46,7 @@ const appRoutes: Routes = [
     SwapNarrowDownComponent,
     SmallSwapUiComponent,
     SignupPageComponent,
+    BottomBarComponent,
   ],
   imports: [
     BrowserModule,
