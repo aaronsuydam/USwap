@@ -18,7 +18,7 @@ import (
 
 // Global variable to hold DB connection
 var DB *sql.DB
-var ctx = context.Background()
+var Ctx = context.Background()
 var username string
 var password string
 var hostname string
@@ -79,11 +79,11 @@ func dbConnection() (*sql.DB, error) {
 	}
 	fmt.Printf("Connected!\n")
 
-	count, err := ReadUsers()
-    if err != nil {
-        log.Fatal("Error reading Users: ", err.Error())
-    }
-    fmt.Printf("Read %d row(s) successfully.\n", count)
+	// count, err := ReadUsers()
+    // if err != nil {
+    //     log.Fatal("Error reading Users: ", err.Error())
+    // }
+    // fmt.Printf("Read %d row(s) successfully.\n", count)
 
 	return DB, nil
 }
@@ -92,7 +92,7 @@ func dbConnection() (*sql.DB, error) {
 func createUserTable() error {
 	var err error
 
-	err = DB.PingContext(ctx); if err != nil {
+	err = DB.PingContext(Ctx); if err != nil {
 		log.Printf("Error %s when creating users table", err)
 		return err
 	}
@@ -111,7 +111,7 @@ func createUserTable() error {
 func createItemsTable() error {
 	var err error
 
-	err = DB.PingContext(ctx); if err != nil {
+	err = DB.PingContext(Ctx); if err != nil {
 		log.Printf("Error %s when creating items table", err)
 		return err
 	}
@@ -130,7 +130,7 @@ func createItemsTable() error {
 func createSwapTable() error {
 	var err error
 
-	err = DB.PingContext(ctx); if err != nil {
+	err = DB.PingContext(Ctx); if err != nil {
 		log.Printf("Error %s when creating swap table", err)
 		return err
 	}
@@ -172,7 +172,7 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 	defer query.Close()
 
 	row := query.QueryRowContext(
-		ctx,
+		Ctx,
 		sql.Named("Name", userName),
 		sql.Named("Email", userEmail),
 		sql.Named("Password", userPassword))
@@ -186,7 +186,7 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 }
 
 func ReadUsers() (int, error) {
-	err := DB.PingContext(ctx)
+	err := DB.PingContext(Ctx)
     if err != nil {
         return -1, err
     }
@@ -194,7 +194,7 @@ func ReadUsers() (int, error) {
     tsql := fmt.Sprintf("SELECT Id, Name, Email, Password FROM TestSchema.Users;")
 
     // Execute query
-    rows, err := DB.QueryContext(ctx, tsql)
+    rows, err := DB.QueryContext(Ctx, tsql)
     if err != nil {
         return -1, err
     }

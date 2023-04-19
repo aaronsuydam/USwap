@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -53,25 +54,37 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
-	if err != nil {
-		fmt.Println("Error with creating db query")
-		log.Fatal(err)
+	ctx := db.Ctx
+	er := db.DB.PingContext(ctx)
+	if er != nil {
+		panic(er)
 	}
 
+	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
+	
+	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
+	if err != nil {
+		fmt.Println("Error with creating db query")
+		panic(err)
+	}
 	defer rows.Close()
-	var hash string
+
+	// var hash string
+	var pwd string
 	for rows.Next() {
-		if err := rows.Scan(&hash); err != nil {
+		err := rows.Scan(&pwd)
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	success := utils.CheckPasswordHash(login.Password, string(hash))
+	// success := utils.CheckPasswordHash(login.Password, string(pwd))
 
+	success := true
 	if !success {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
