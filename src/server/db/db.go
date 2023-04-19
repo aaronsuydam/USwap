@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	uuid "github.com/nu7hatch/gouuid"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/microsoft/go-mssqldb"
 )
 
 // Global variable to hold DB connection
@@ -19,6 +21,8 @@ var username string
 var password string
 var hostname string
 var dbname string
+var port int
+var portS string
 
 func Initialize() (err error) {
 	// Establish Database Connection
@@ -26,6 +30,8 @@ func Initialize() (err error) {
 	password = os.Getenv("DBPASSWORD")
 	hostname = os.Getenv("DBHOSTNAME")
 	dbname = os.Getenv("DBNAME")
+	portS = os.Getenv("PORT")
+	port, err = strconv.Atoi(portS)
 	DB, err = dbConnection()
 	if err != nil {
 		log.Fatal(err)
@@ -56,41 +62,60 @@ func dsn() string {
 }
 
 func dbConnection() (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn())
-	if err != nil {
-		log.Printf("Error %s when opening DB\n", err)
-		return nil, err
-	}
-	//defer db.Close()
 
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
-	_, err = db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+dbname)
+	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;",
+		hostname, username, password, port, dbname)
+	var err error
+	// Create connection pool
+	DB, err = sql.Open("sqlserver", connString)
 	if err != nil {
-		log.Printf("Error %s when creating DB\n", err)
-		return nil, err
+		log.Fatal("Error creating connection pool: ", err.Error())
 	}
-
-	db.Close()
-	db, err = sql.Open("mysql", dsn())
+	ctx := context.Background()
+	err = DB.PingContext(ctx)
 	if err != nil {
-		log.Printf("Error %s when opening DB", err)
-		return nil, err
+		log.Fatal(err.Error())
 	}
-	//defer db.Close()
+	fmt.Printf("Connected!")
 
-	db.SetMaxOpenConns(20)
-	db.SetMaxIdleConns(20)
-	db.SetConnMaxLifetime(time.Minute * 5)
+	/*
+		db, err := sql.Open("sqlserver", dsn())
 
-	ctx, cancelfunc = context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
-	err = db.PingContext(ctx)
-	if err != nil {
-		log.Printf("Errors %s pinging DB", err)
-		return nil, err
-	}
-	return db, nil
+		if err != nil {
+			log.Printf("Error %s when opening DB\n", err)
+			return nil, err
+		}
+		//defer db.Close()
+
+		ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelfunc()
+		_, err = db.ExecContext(ctx, "CREATE DATABASE IF NOT EXISTS "+dbname)
+		if err != nil {
+			log.Printf("Error %s when creating DB\n", err)
+			return nil, err
+		}
+
+		db.Close()
+		db, err = sql.Open("sqlserver", dsn())
+		if err != nil {
+			log.Printf("Error %s when opening DB", err)
+			return nil, err
+		}
+		//defer db.Close()
+
+		db.SetMaxOpenConns(20)
+		db.SetMaxIdleConns(20)
+		db.SetConnMaxLifetime(time.Minute * 5)
+
+		ctx, cancelfunc = context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancelfunc()
+		err = db.PingContext(ctx)
+		if err != nil {
+			log.Printf("Errors %s pinging DB", err)
+			return nil, err
+		}
+	*/
+	return DB, nil
 }
 
 // User table maintains all users
