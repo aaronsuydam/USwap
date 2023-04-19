@@ -32,6 +32,8 @@
 
 #filters {
     display: grid;
+    justify-content: center;
+    align-items: center;
 }
 
 #bottom-right {
@@ -44,28 +46,29 @@
     grid-template-columns: 32% 32% 32%;
     gap: 20px;
     align-items: middle;
-}
 
-#one {
-    grid-area: one;
-}
 
-#two {
-    grid-area: two;
-}
+    #one {
+        grid-area: one;
+    }
 
-#three {
-    grid-area: three;
-}
+    #two {
+        grid-area: two;
+    }
 
-#four {
-    grid-area: four;
-}
+    #three {
+        grid-area: three;
+    }
 
-#five {
-    grid-area: five;
-}
+    #four {
+        grid-area: four;
+    }
 
-#six {
-    grid-area: six;
+    #five {
+        grid-area: five;
+    }
+
+    #six {
+        grid-area: six;
+    }
 }
