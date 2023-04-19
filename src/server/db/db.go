@@ -3,13 +3,14 @@ package db
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
-	"errors"
 
+	"github.com/atxfjrotc/uswap/src/server/utils"
 	uuid "github.com/nu7hatch/gouuid"
 
 	// _ "github.com/go-sql-driver/mysql"
@@ -79,11 +80,11 @@ func dbConnection() (*sql.DB, error) {
 	}
 	fmt.Printf("Connected!\n")
 
-	// count, err := ReadUsers()
-    // if err != nil {
-    //     log.Fatal("Error reading Users: ", err.Error())
-    // }
-    // fmt.Printf("Read %d row(s) successfully.\n", count)
+	count, err := ReadUsers()
+    if err != nil {
+        log.Fatal("Error reading Users: ", err.Error())
+    }
+    fmt.Printf("Read %d row(s) successfully.\n", count)
 
 	return DB, nil
 }
@@ -170,6 +171,8 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 		return -1, err
 	}
 	defer query.Close()
+
+	userPassword, _ = utils.HashPassword(userPassword)
 
 	row := query.QueryRowContext(
 		Ctx,

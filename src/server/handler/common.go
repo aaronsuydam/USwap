@@ -73,18 +73,16 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	// var hash string
-	var pwd string
+	var hash string
 	for rows.Next() {
-		err := rows.Scan(&pwd)
+		err := rows.Scan(&hash)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	// success := utils.CheckPasswordHash(login.Password, string(pwd))
+	success := utils.CheckPasswordHash(login.Password, string(hash))
 
-	success := true
 	if !success {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
