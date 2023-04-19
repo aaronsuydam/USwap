@@ -19,7 +19,7 @@ import (
 func main() {
 	// Environment Vars
 
-	err := godotenv.Load("C:\\Users\\andre\\.vscode\\USwap\\USwap\\src\\server\\.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}

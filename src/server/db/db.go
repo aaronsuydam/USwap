@@ -11,7 +11,7 @@ import (
 
 	uuid "github.com/nu7hatch/gouuid"
 
-	_ "github.com/go-sql-driver/mysql"
+	// _ "github.com/go-sql-driver/mysql"
 	_ "github.com/microsoft/go-mssqldb"
 )
 
@@ -120,44 +120,71 @@ func dbConnection() (*sql.DB, error) {
 
 // User table maintains all users
 func createUserTable() error {
-	query := `CREATE TABLE IF NOT EXISTS users(user_id text, user_name text, user_email text, user_password text)`
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	queryStatement := `CREATE TABLE IF NOT EXISTS users(user_id text, user_name text, user_email text, user_password text)`
 
-	_, err := DB.ExecContext(ctx, query)
-	if err != nil {
-		log.Printf("Error %s when creating user table", err)
+	query, err := DB.Prepare(queryStatement); if err != nil {
 		return err
 	}
+
+	defer query.Close()
+
 	return nil
+
+	// ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	// defer cancelfunc()
+
+	// _, err := DB.ExecContext(ctx, query)
+	// if err != nil {
+	// 	log.Printf("Error %s when creating user table", err)
+	// 	return err
+	// }
+	// return nil
 }
 
 // Items table maintains all actively listed items
 func createItemsTable() error {
-	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image_path text)`
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	queryStatement := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image_path text)`
 
-	_, err := DB.ExecContext(ctx, query)
-	if err != nil {
-		log.Printf("Error %s when creating user table", err)
+	query, err := DB.Prepare(queryStatement); if err != nil {
 		return err
 	}
+
+	defer query.Close()
+
 	return nil
+
+	// ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	// defer cancelfunc()
+
+	// _, err := DB.ExecContext(ctx, query)
+	// if err != nil {
+	// 	log.Printf("Error %s when creating user table", err)
+	// 	return err
+	// }
+	// return nil
 }
 
 // Swap table maintains all active swap requests
 func createSwapTable() error {
-	query := `CREATE TABLE IF NOT EXISTS swap(swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text)`
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	queryStatement := `CREATE TABLE IF NOT EXISTS swap(swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text)`
 
-	_, err := DB.ExecContext(ctx, query)
-	if err != nil {
-		log.Printf("Error %s when creating user table", err)
+	query, err := DB.Prepare(queryStatement); if err != nil {
 		return err
 	}
+
+	defer query.Close()
+
 	return nil
+
+	// ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	// defer cancelfunc()
+
+	// _, err := DB.ExecContext(ctx, query)
+	// if err != nil {
+	// 	log.Printf("Error %s when creating user table", err)
+	// 	return err
+	// }
+	// return nil
 }
 
 // Add a user to the user table on signup
