@@ -125,11 +125,11 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	var signup SignUp
 	json.Unmarshal(body, &signup)
 
-	signup.Password, _ = utils.HashPassword(string(signup.Password)) // Hash password
-	_, err = db.CreateUser(signup.Username, signup.Email, signup.Password)
+	createID, err := db.CreateUser(signup.Username, signup.Email, signup.Password)
 	if err != nil {
-		log.Fatal("Failed to sign up user")
+		log.Fatal("Error creating User: ", err.Error())
 	}
+	fmt.Printf("Inserted ID: %d successfully.\n", createID)
 
 	w.WriteHeader(http.StatusOK)
 }
