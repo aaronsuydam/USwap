@@ -11,68 +11,125 @@
 #main-grid-container {
     grid-area: main;
     display: grid;
-    height: 70%;
+    height: auto;
     width: 100%;
-    grid-template-areas:    "title"
-                            "subtitle"
-                            "byline"
-                            "funny"
-                            "site-details"
-                            "join";
-    grid-template-columns: 45%;
-    grid-template-rows: 75px 75px 25px 100px 150px 50px;
+    grid-template-areas:    "row-1"
+                            "row-2"
+                            "row-3";
+    grid-template-columns: 100%;
+    grid-template-rows: 300px auto 200px;
     justify-content: center;
-    align-items: center;
 }
 
-.titles {
-    grid-area: title;
-    text-align: center;
-    font-size: 80pt;
-    font-weight: bolder;
-}
-                           
-.subtitles {
-    grid-area: subtitle;
-    text-align: center;
+.welcome {
+    grid-area: row-1;
     display: grid;
+    height: 100%;
     align-items: center;
-    font-size: 30pt;
-    font-weight: bold;
-}
-                            
-.byline {
-    grid-area: byline;
     text-align: center;
-    font-size: 30pt;
-    font-weight: bold;
-}
-                                                  
-#funny {
-    grid-area: funny;
-    text-align: center;
-    font-size: 15pt;
-}
+    font-weight: lighter;
+    
+    #first {
+        font-size: 50pt;
+        margin-bottom: -83px;
+    }
 
-
-#site-details {
-    grid-area: site-details;
+    #second {
+        margin-top: -83px;
+        font-size: 36pt;
+    }
+}
+                                                                  
+.site-description {
+    grid-area: row-2;
+    display: grid;
+    grid-template-areas:    "left1 right1"
+                            "left2 right2"
+                            "left3 right3"
+                            "left4 right4";
+    grid-template-rows: 500px 500px 500px 500px;
+    grid-template-columns: 50% 50%;
+    justify-content: center;
     text-align: center;
     font-size: 25pt;
 }
-                            
-#join {
-    grid-area: join;    
+
+#one {
+    grid-area: left1;
     display: grid;
-    height: 100%;
-    gap: 10px;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#two {
+    grid-area: right1;
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#three {
+    grid-area: right2;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#four {
+    grid-area: left2;
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#five {
+    grid-area: left3;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#six {
+    grid-area: right3;
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#seven {
+    grid-area: right4;
+    display: grid;
+    text-align: center;
+    align-items: center;
+    margin: 0 0 0 0;
+}
+
+#eight {
+    grid-area: left4;
+    display: block;
+    margin: auto auto auto auto;
+}
+            
+.join {
+    grid-area: row-3;
+    display: grid;
+    width: 100%;
+    grid-template-areas:    "join-top join-top join-top"
+                            "left join-bottom right";
+    grid-template-rows: 50px 75px;
+    grid-template-columns: auto 150px auto;
+    justify-content: center;
 }
 
 #join-hook {
+    grid-area: join-top;
     text-align: center;
     font-size: 20pt;
 }
 
-#join-login-button {
+#join-login-button { 
+    grid-area: join-bottom;
     font-size: 15pt;
+    letter-spacing: normal;
+
 }

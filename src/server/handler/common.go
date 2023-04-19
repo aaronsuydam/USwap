@@ -73,7 +73,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 
 	success := utils.CheckPasswordHash(login.Password, string(hash))
 
-	if (!success) {
+	if !success {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -113,8 +113,8 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:	"token",
-		Value:	tokenString,
+		Name:    "token",
+		Value:   tokenString,
 		Expires: expirationTime,
 	})
 
@@ -190,6 +190,8 @@ type ItemID struct {
 }
 
 func GetItem(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)
@@ -206,6 +208,21 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonBytes)
+}
+
+func SearchItems(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		panic(err)
+	}
+	type Search struct {
+		Search string `json:"search"`
+	}
+	var search Search
+	json.Unmarshal(body, &search)
+
 }
 
 type Swap struct {
@@ -236,6 +253,8 @@ type SwapID struct {
 }
 
 func GetSwapRequest(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		panic(err)

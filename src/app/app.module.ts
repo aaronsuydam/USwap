@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../assets/material.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+//import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -67,7 +67,7 @@ const appRoutes: Routes = [
     },
     HttpClientModule,
     APIInterceptor,
-    // HttpClientTestingModule,
+    //HttpClientTestingModule,
   ],
   bootstrap: [AppComponent]
 })
