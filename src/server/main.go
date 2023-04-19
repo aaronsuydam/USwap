@@ -18,7 +18,7 @@ import (
 
 func main() {
 	// Environment Vars
-	err := godotenv.Load("src/server/.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -39,7 +39,7 @@ func main() {
 	//r.HandleFunc("/item/modify", handler.ModifyItem).Methods("PUT") // Modify an item
 
 	r.HandleFunc("/swap", handler.AcceptSwapRequest).Methods("GET")
-	r.HandleFunc("/swap/create", handler.AcceptSwapRequest).Methods("GET", "OPTIONS")
+	r.HandleFunc("/swap/create", handler.AcceptSwapRequest).Methods("GET")
 	r.HandleFunc("/swap/accept", handler.AcceptSwapRequest).Methods("POST", "OPTIONS")
 	r.HandleFunc("/swap/reject", handler.AcceptSwapRequest).Methods("POST", "OPTIONS")
 

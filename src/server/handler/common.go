@@ -61,9 +61,10 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Error with creating db query")
 		log.Fatal(err)
 	}
-
 	defer rows.Close()
+	
 	var hash string
+
 	for rows.Next() {
 		if err := rows.Scan(&hash); err != nil {
 			log.Fatal(err)
@@ -77,11 +78,28 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id_rows, err := db.DB.Query("SELECT user_id FROM users WHERE user_name = ?", login.Username)
+
+	if err != nil {
+		fmt.Println("Error when selecting id query")
+		log.Fatal(err)
+	}
+	defer id_rows.Close()
+
+	var sub string
+
+	for id_rows.Next() {
+		if err := id_rows.Scan(&sub); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	expirationTime := time.Now().Add(time.Minute)
 
 	claims := &Claims{
 		Username: login.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
+			Subject: sub,
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
@@ -105,8 +123,16 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	var m map[string]interface{}
+	json.Unmarshal(loginJson, &m)
+	m["id_token"] = sub
+	response, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+
 	w.WriteHeader(http.StatusOK)
-	w.Write(loginJson)
+	w.Write(response)
 }
 
 type SignUp struct {
@@ -155,6 +181,8 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Failed to create item listing")
 	}
+
+	w.Write([]byte("success"))
 }
 
 type ItemID struct {
