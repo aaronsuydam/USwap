@@ -13,12 +13,11 @@ export class SwapNarrowDownComponent {
 
     swapFor: string = "";
 
+    itemsToDisplay : string[] = [];
+
     filterNames : string[] = ["Filter 1", "Filter 2 - Longer", "Short", "Filter 4"];
 
-    // FIXME: Talk to andrew about implementation
-    getFilterNames() : void {
-        this.http.get('swap-filters').subscribe(data => this.filterNames);
-    }
+    
 }
 
 
