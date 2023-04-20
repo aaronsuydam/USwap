@@ -81,10 +81,10 @@ func dbConnection() (*sql.DB, error) {
 	fmt.Printf("Connected!\n")
 
 	count, err := ReadUsers()
-    if err != nil {
-        log.Fatal("Error reading Users: ", err.Error())
-    }
-    fmt.Printf("Read %d row(s) successfully.\n", count)
+	if err != nil {
+		log.Fatal("Error reading Users: ", err.Error())
+	}
+	fmt.Printf("Read %d row(s) successfully.\n", count)
 
 	return DB, nil
 }
@@ -93,14 +93,16 @@ func dbConnection() (*sql.DB, error) {
 func createUserTable() error {
 	var err error
 
-	err = DB.PingContext(Ctx); if err != nil {
+	err = DB.PingContext(Ctx)
+	if err != nil {
 		log.Printf("Error %s when creating users table", err)
 		return err
 	}
 
 	queryStatement := `CREATE TABLE IF NOT EXISTS users(user_id text, user_name text, user_email text, user_password text)`
 
-	query, err := DB.Prepare(queryStatement); if err != nil {
+	query, err := DB.Prepare(queryStatement)
+	if err != nil {
 		return err
 	}
 	defer query.Close()
@@ -112,14 +114,16 @@ func createUserTable() error {
 func createItemsTable() error {
 	var err error
 
-	err = DB.PingContext(Ctx); if err != nil {
+	err = DB.PingContext(Ctx)
+	if err != nil {
 		log.Printf("Error %s when creating items table", err)
 		return err
 	}
 
 	queryStatement := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image_path text)`
 
-	query, err := DB.Prepare(queryStatement); if err != nil {
+	query, err := DB.Prepare(queryStatement)
+	if err != nil {
 		return err
 	}
 	defer query.Close()
@@ -131,14 +135,16 @@ func createItemsTable() error {
 func createSwapTable() error {
 	var err error
 
-	err = DB.PingContext(Ctx); if err != nil {
+	err = DB.PingContext(Ctx)
+	if err != nil {
 		log.Printf("Error %s when creating swap table", err)
 		return err
 	}
 
 	queryStatement := `CREATE TABLE IF NOT EXISTS swap(swap_id text, sender_id text, sender_item_id text, receiver_id text, receiver_item_id text)`
 
-	query, err := DB.Prepare(queryStatement); if err != nil {
+	query, err := DB.Prepare(queryStatement)
+	if err != nil {
 		return err
 	}
 	defer query.Close()
@@ -160,7 +166,8 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 		select isNull(SCOPE_IDENTITY(), -1);
 	`
 
-	query, err := DB.Prepare(queryStatement); if err != nil {
+	query, err := DB.Prepare(queryStatement)
+	if err != nil {
 		return -1, err
 	}
 	defer query.Close()
@@ -172,9 +179,10 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 		sql.Named("Name", userName),
 		sql.Named("Email", userEmail),
 		sql.Named("Password", userPassword))
-	
+
 	var newID int64
-	err = row.Scan(&newID); if err != nil {
+	err = row.Scan(&newID)
+	if err != nil {
 		return -1, err
 	}
 
@@ -183,43 +191,47 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 
 func ReadUsers() (int, error) {
 	err := DB.PingContext(Ctx)
-    if err != nil {
-        return -1, err
-    }
+	if err != nil {
+		return -1, err
+	}
 
-    tsql := fmt.Sprintf("SELECT Id, Name, Email, Password FROM TestSchema.Users;")
+	tsql := fmt.Sprintf("SELECT Id, Name, Email, Password FROM TestSchema.Users;")
 
-    // Execute query
-    rows, err := DB.QueryContext(Ctx, tsql)
-    if err != nil {
-        return -1, err
-    }
+	// Execute query
+	rows, err := DB.QueryContext(Ctx, tsql)
+	if err != nil {
+		return -1, err
+	}
 
-    defer rows.Close()
+	defer rows.Close()
 
-    var count int
+	var count int
 
-    // Iterate through the result set.
-    for rows.Next() {
-        var name, email, password string
-        var id int
+	// Iterate through the result set.
+	for rows.Next() {
+		var name, email, password string
+		var id int
 
-        // Get values from row.
-        err := rows.Scan(&id, &name, &email, &password)
-        if err != nil {
-            return -1, err
-        }
+		// Get values from row.
+		err := rows.Scan(&id, &name, &email, &password)
+		if err != nil {
+			return -1, err
+		}
 
-        fmt.Printf("ID: %d, Name: %s, Email: %s, Password: %s\n", id, name, email, password)
-        count++
-    }
+		fmt.Printf("ID: %d, Name: %s, Email: %s, Password: %s\n", id, name, email, password)
+		count++
+	}
 
-    return count, nil
+	return count, nil
 }
 
 // Add an item to the items table upon user listing the item
+<<<<<<< HEAD
 func CreateItem(itemName string, itemDescription string, userID string, image string) (int64, error) {
 	var err error
+=======
+func CreateItem(itemName string, itemDescription string, userID int64, imagePath string) (itemID string, err error) {
+>>>>>>> 8fe54ebd8704144d18337dbe8f23688f1c28aadd
 
 	if DB == nil {
 		err = errors.New("CreateItem: db is null")
@@ -250,7 +262,7 @@ func CreateItem(itemName string, itemDescription string, userID string, image st
 }
 
 // Add a swap request into swap table
-func CreateSwapRequest(senderID string, senderItemID string, receiverID string, receiverItemID string) (swapID string, err error) {
+func CreateSwapRequest(senderID int64, senderItemID string, receiverID int64, receiverItemID string) (swapID string, err error) {
 	// Generate an item ID
 	byteSwapID, err := uuid.NewV4()
 	if err != nil {
@@ -274,13 +286,13 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 }
 
 type User struct {
-	user_id       string
+	user_id       int64
 	user_name     string
 	user_email    string
 	user_password string
 }
 
-func GetUser(userID string) (User, error) {
+func GetUser(userID int64) (User, error) {
 
 	var user User
 
@@ -299,7 +311,7 @@ type Item struct {
 	item_id          string
 	item_name        string
 	item_description string
-	user_id          string
+	user_id          int64
 	image_path       string
 }
 
