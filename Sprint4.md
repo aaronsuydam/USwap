@@ -5,6 +5,7 @@
  - updated fonts
  - updated styles
  - Added functionality to create item listings and send data to backend for storage in database
+ - Added functionality to upload images to backend
 
 
 # Frontend Unit Tests
