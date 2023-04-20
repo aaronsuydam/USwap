@@ -1,9 +1,12 @@
 package handler
 
 import (
-	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strings"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"log"
 	"net/http"
@@ -58,20 +61,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var login Login
 	json.Unmarshal(body, &login)
 
-	ctx := db.Ctx
-	er := db.DB.PingContext(ctx)
-	if er != nil {
-		panic(er)
-	}
-
-	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
-
-	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
-	if err != nil {
-		fmt.Println("Error with creating db query")
-		panic(err)
-	}
-	defer rows.Close()
+	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
 
 	var hash string
 	for rows.Next() {
@@ -88,11 +78,28 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id_rows, err := db.DB.Query("SELECT user_id FROM users WHERE user_name = ?", login.Username)
+
+	if err != nil {
+		fmt.Println("Error when selecting id query")
+		log.Fatal(err)
+	}
+	defer id_rows.Close()
+
+	var sub string
+
+	for id_rows.Next() {
+		if err := id_rows.Scan(&sub); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	expirationTime := time.Now().Add(time.Minute)
 
 	claims := &Claims{
 		Username: login.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
+			Subject: sub,
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
@@ -116,8 +123,16 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	var m map[string]interface{}
+	json.Unmarshal(loginJson, &m)
+	m["id_token"] = sub
+	response, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+
 	w.WriteHeader(http.StatusOK)
-	w.Write(loginJson)
+	w.Write(response)
 }
 
 type SignUp struct {
@@ -136,11 +151,9 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	var signup SignUp
 	json.Unmarshal(body, &signup)
 
-	createID, err := db.CreateUser(signup.Username, signup.Email, signup.Password)
-	if err != nil {
-		log.Fatal("Error creating User: ", err.Error())
-	}
-	fmt.Printf("Inserted ID: %d successfully.\n", createID)
+	signup.Password, _ = utils.HashPassword(signup.Password)
+
+	db.CreateUser(signup.Username, signup.Email, signup.Password)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -148,24 +161,49 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
-	UserID      int64  `json:"userID"`
-	ImagePath   string `json:"imagePath"`
+	UserID      string `json:"userID"`
+	ImagePath   []byte `json:"image"`
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
-	body, err := io.ReadAll(r.Body)
+	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
 	}
-	var item Item
-	json.Unmarshal(body, &item)
 
-	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
+	defer r.Body.Close()
+
+	itemName := r.FormValue("itemName")
+	itemDescription := r.FormValue("itemDescription")
+    userID := r.FormValue("userID")
+	image := r.FormValue("imageSrc")
+
+    // Decode the base64 encoded string into image data
+	imageData, err := base64.StdEncoding.DecodeString(strings.TrimSpace(image))
 	if err != nil {
-		log.Fatal("Failed to create item listing")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+
+	// Store imageData to database
+	db.CreateItem(itemName, itemDescription, userID, imageData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// Write the image data to a local file
+	// err = ioutil.WriteFile("image.jpg", imageData, 0644)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
+
+    // send response back to client
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("Item created successfully"))
 }
 
 type ItemID struct {
@@ -206,6 +244,31 @@ func SearchItems(w http.ResponseWriter, r *http.Request) {
 	var search Search
 	json.Unmarshal(body, &search)
 
+	items, _ := db.SearchItems(search.Search)
+
+	jsonBytes, err := utils.StructToJSON(items)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+
+}
+
+func GetItems(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	items, _ := db.GetItems()
+
+	jsonBytes, err := utils.StructToJSON(items)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+
 }
 
 type Swap struct {
@@ -225,6 +288,10 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	var swap Swap
 	json.Unmarshal(body, &swap)
 
+	_, err = db.CreateSwapRequest(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
+	if err != nil {
+		log.Fatal("Failed to create the swap request")
+	}
 }
 
 type SwapID struct {

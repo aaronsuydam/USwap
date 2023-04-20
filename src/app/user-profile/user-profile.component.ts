@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Item } from '../item';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -8,6 +9,7 @@ import { Item } from '../item';
 })
 export class UserProfileComponent {
     
+
     @Input() username : string = "Placeholder";
     interests : string = "";
     profilePicPath : string = "../../assets/aaron-profile-pic.jpg";
@@ -18,3 +20,9 @@ export class UserProfileComponent {
 
 }
 
+    constructor(private router: Router) {}
+
+    onClick() {
+      this.router.navigate(['/add']);
+    }
+}

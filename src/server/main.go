@@ -19,7 +19,8 @@ import (
 func main() {
 	// Environment Vars
 
-	err := godotenv.Load("/home/bubba/dev/USwap/src/server/.env")
+	err := godotenv.Load(".env")
+
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -35,12 +36,16 @@ func main() {
 	r.HandleFunc("/signup", handler.SignUpPost).Methods("POST", "OPTIONS")
 
 	r.HandleFunc("/item", handler.GetItem).Methods("GET")
+	r.HandleFunc("/items", handler.GetItems).Methods("GET")
+	r.HandleFunc("/items/search", handler.SearchItems).Methods("GET")
 	r.HandleFunc("/item/create", handler.CreateListing).Methods("POST", "OPTIONS")
 	//r.HandleFunc("/item/delete", handler.DeleteListing).Methods("POST") // Delete an item
 	//r.HandleFunc("/item/modify", handler.ModifyItem).Methods("PUT") // Modify an item
 
+	//r.HandleFunc("/")
+
 	r.HandleFunc("/swap", handler.AcceptSwapRequest).Methods("GET")
-	r.HandleFunc("/swap/create", handler.AcceptSwapRequest).Methods("GET", "OPTIONS")
+	r.HandleFunc("/swap/create", handler.AcceptSwapRequest).Methods("GET")
 	r.HandleFunc("/swap/accept", handler.AcceptSwapRequest).Methods("POST", "OPTIONS")
 	r.HandleFunc("/swap/reject", handler.AcceptSwapRequest).Methods("POST", "OPTIONS")
 

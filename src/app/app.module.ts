@@ -22,6 +22,8 @@ import { APIInterceptor } from './services/interceptor.service';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { AuthGuard } from './auth/auth.guard';
 import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
+import { ItemFormComponent } from './item-form/item-form.component';
+
 
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
@@ -30,6 +32,7 @@ const appRoutes: Routes = [
     { path: 'user-profile', title: "Profile and Items - USwap", canActivate:[AuthGuard], component:UserProfileComponent},
     { path: 'swap-narrow', title: "Swap For Anything! - USwap", canActivate:[AuthGuard], component:SwapNarrowDownComponent},
     { path: 'swap-final', title: "Confirm Swap - USwap", canActivate:[AuthGuard], component:SwapFinalComponent},
+    { path: 'add', title: "Add Item - USwap", canActivate:[AuthGuard], component:ItemFormComponent},
     { path: '**', redirectTo: '', pathMatch: 'full'} // Can direct to an about page or error page
   ];
 
@@ -47,6 +50,7 @@ const appRoutes: Routes = [
     SmallSwapUiComponent,
     SignupPageComponent,
     BottomBarComponent,
+    ItemFormComponent,
   ],
   imports: [
     BrowserModule,

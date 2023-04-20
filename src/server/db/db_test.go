@@ -54,10 +54,10 @@ func TestUserCreation(t *testing.T) {
 }
 
 func TestGetUserItems(t *testing.T) {
-	//godotenv.Load("../.env")
-	//Initialize()
-	itemid1, err := CreateItem("testitem1", "testitem1description", 2, "testimagepath1")
-	_, err = CreateItem("testitem2", "testitem2description", 2, "testimagepath2")
+	godotenv.Load("../.env")
+	Initialize()
+	itemid1, _ := CreateItem("testitem1", "testitem1description", "testuser1", []byte("testimage1"))
+	_, err := CreateItem("testitem2", "testitem2description", "testuser1", []byte("testimage2"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -101,11 +101,11 @@ func TestSwapRequestAccept(t *testing.T) {
 		t.Fatal("Error during get Swap")
 	}
 	userid3, _ := CreateUser("testuser3", "testemail3@testemail.com", "testpassword3")
-	itemid2, _ := CreateItem("testitem2", "testitemdescription2", userid2, "fdjaifja")
+	itemid2, _ := CreateItem("testitem2", "testitemdescription2", userid2, []byte("fdjaifja"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	itemid3, _ := CreateItem("testitem3", "testitemdescription3", userid3, "fjdiajfia")
+	itemid3, _ := CreateItem("testitem3", "testitemdescription3", userid3, []byte("fjdiajfia"))
 	swapid, err := CreateSwapRequest(userid2, itemid2, userid3, itemid3)
 	if err != nil {
 		t.Fatal("Failed to create swap request")
@@ -132,11 +132,11 @@ func TestSwapRequestDeny(t *testing.T) {
 		t.Fatal("Error during get Swap")
 	}
 	userid3, _ := CreateUser("testuser3", "testemail3@testemail.com", "testpassword3")
-	itemid2, _ := CreateItem("testitem2", "testitemdescription2", userid2, "fdjaifja")
+	itemid2, _ := CreateItem("testitem2", "testitemdescription2", userid2, []byte("fdjaifja"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	itemid3, _ := CreateItem("testitem3", "testitemdescription3", userid3, "fjdiajfia")
+	itemid3, _ := CreateItem("testitem3", "testitemdescription3", userid3, []byte("fjdiajfia"))
 	swapid, err := CreateSwapRequest(userid2, itemid2, userid3, itemid3)
 	if err != nil {
 		t.Fatal("Failed to create swap request")
@@ -152,5 +152,28 @@ func TestSwapRequestDeny(t *testing.T) {
 	item3New, _ := GetItem(itemid3)
 	if item2New.user_id != userid2 && item3New.user_id != userid3 {
 		t.Fatal("Item relations to users were incorrectly modified in a reject swap request.")
+	}
+}
+
+/* Current MySQL database version does not support Fulltext
+func TestSearch(t *testing.T) {
+	godotenv.Load("../.env")
+	Initialize()
+	items, err := SearchItems("test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, item := range items {
+		t.Logf("%s", item.item_name)
+	}
+}
+*/
+
+func TestSearch(t *testing.T) {
+	godotenv.Load("../.env")
+	Initialize()
+	_, err := GetItems()
+	if err != nil {
+		t.Fatal(err)
 	}
 }
