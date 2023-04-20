@@ -9,3 +9,23 @@ Evan Robinson
 ### Back End Developers
 Daniel Moraes,
 Andrew Jackson
+
+
+
+#USwap: front-page readme detailing requirements for running and using our application:
+
+Working (developer) Requirements:
+
+Packages required:
+"context"
+	"database/sql"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	uuid "github.com/nu7hatch/gouuid"
+
+	_ "github.com/go-sql-driver/mysql"
+
+
