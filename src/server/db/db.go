@@ -226,12 +226,8 @@ func ReadUsers() (int, error) {
 }
 
 // Add an item to the items table upon user listing the item
-<<<<<<< HEAD
 func CreateItem(itemName string, itemDescription string, userID string, image string) (int64, error) {
 	var err error
-=======
-func CreateItem(itemName string, itemDescription string, userID int64, imagePath string) (itemID string, err error) {
->>>>>>> 8fe54ebd8704144d18337dbe8f23688f1c28aadd
 
 	if DB == nil {
 		err = errors.New("CreateItem: db is null")
