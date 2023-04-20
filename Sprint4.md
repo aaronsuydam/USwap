@@ -1,5 +1,9 @@
 # Frontend Work Completed
-
+ - Added colored filtering chips on the lefthand side of the dashboard
+ - The like button is responsive
+ - Redesigned the whole homepage
+ - updated fonts
+ - updated styles
 
 
 # Frontend Unit Tests

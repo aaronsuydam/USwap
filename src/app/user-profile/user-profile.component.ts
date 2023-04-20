@@ -17,9 +17,6 @@ export class UserProfileComponent {
     userItems : Item[] = [];
 
 
-
-}
-
     constructor(private router: Router) {}
 
     onClick() {

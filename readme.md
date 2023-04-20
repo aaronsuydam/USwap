@@ -13,8 +13,7 @@ Andrew Jackson
 # Development Requirements
 In order to get this up and running, you'll need to have the following:
 1. Angular installed (see angular.io for more details)
-2. Go installed (see golang.org for more details)
-3. Install the following packages
-4. Clone this repo
-5. Request database access credentials and environment variable settings from maintainers if you are doing more than cosmetic work on the front end.
-6. Open a terminal to the top level directory and run <npm start>
+2. Go installed (with dependencies! see golang.org for more details)
+3. Clone this repo
+4. Request database access credentials and environment variable settings from maintainers if you are doing more than cosmetic work on the front end.
+5. Open a terminal to the top level directory and run <npm start>
