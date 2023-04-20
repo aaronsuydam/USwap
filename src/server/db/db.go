@@ -209,10 +209,10 @@ func CreateSwapRequest(senderID string, senderItemID string, receiverID string, 
 }
 
 type User struct {
-	user_id       string
-	user_name     string
-	user_email    string
-	user_password string
+	User_id       string
+	User_name     string
+	User_email    string
+	User_password string
 }
 
 func GetUser(userID string) (User, error) {
@@ -220,7 +220,7 @@ func GetUser(userID string) (User, error) {
 	var user User
 
 	row := DB.QueryRow("SELECT * FROM users WHERE user_id = ?", userID)
-	if err := row.Scan(&user.user_id, &user.user_name, &user.user_email, &user.user_password); err != nil {
+	if err := row.Scan(&user.User_id, &user.User_name, &user.User_email, &user.User_password); err != nil {
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("userById %v: no such user", userID)
 		}
@@ -231,18 +231,18 @@ func GetUser(userID string) (User, error) {
 }
 
 type Item struct {
-	item_id          string
-	item_name        string
-	item_description string
-	user_id          string
-	image            []byte
+	Item_id          string
+	Item_name        string
+	Item_description string
+	User_id          string
+	Image            []byte
 }
 
 func GetItem(itemID string) (Item, error) {
 	var item Item
 
 	row := DB.QueryRow("SELECT * FROM items WHERE item_id = ?", itemID)
-	if err := row.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
+	if err := row.Scan(&item.Item_id, &item.Item_name, &item.Item_description, &item.User_id, &item.Image); err != nil {
 		if err == sql.ErrNoRows {
 			return item, fmt.Errorf("getItem %v: no such item", itemID)
 		}
@@ -262,7 +262,7 @@ func GetItems() ([]Item, error) {
 	}
 	for rows.Next() {
 		var item Item
-		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
+		if err := rows.Scan(&item.Item_id, &item.Item_name, &item.Item_description, &item.User_id, &item.Image); err != nil {
 			log.Fatal(err)
 		}
 		items = append(items, item)
@@ -281,7 +281,7 @@ func SearchItems(search string) ([]Item, error) {
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
 		var item Item
-		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
+		if err := rows.Scan(&item.Item_id, &item.Item_name, &item.Item_description, &item.User_id, &item.Image); err != nil {
 			log.Fatal(err)
 		}
 		items = append(items, item)
@@ -294,18 +294,18 @@ func SearchItems(search string) ([]Item, error) {
 }
 
 type Swap struct {
-	swap_id          string
-	sender_id        string
-	sender_item_id   string
-	receiver_id      string
-	receiver_item_id string
+	Swap_id          string
+	Sender_id        string
+	Sender_item_id   string
+	Receiver_id      string
+	Receiver_item_id string
 }
 
 func GetSwapRequest(swapID string) (Swap, error) {
 	var swap Swap
 
 	row := DB.QueryRow("SELECT * FROM swap WHERE swap_id = ? ", swapID)
-	if err := row.Scan(&swap.swap_id, &swap.sender_id, &swap.sender_item_id, &swap.receiver_id, &swap.receiver_item_id); err != nil {
+	if err := row.Scan(&swap.Swap_id, &swap.Sender_id, &swap.Sender_item_id, &swap.Receiver_id, &swap.Receiver_item_id); err != nil {
 		if err == sql.ErrNoRows {
 			return swap, fmt.Errorf("getItem %v: no such swap", swapID)
 		}
@@ -326,7 +326,7 @@ func GetUserItems(userID string) ([]Item, error) {
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
 		var item Item
-		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
+		if err := rows.Scan(&item.Item_id, &item.Item_name, &item.Item_description, &item.User_id, &item.Image); err != nil {
 			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 		}
 		items = append(items, item)
@@ -343,13 +343,13 @@ func AcceptSwapRequest(swapID string) (err error) {
 		log.Fatalf("Swap ID %v not found in swap table", swapID)
 		return err
 	}
-	senderItem, err := GetItem(swap.sender_item_id)
+	senderItem, err := GetItem(swap.Sender_item_id)
 	if err != nil {
-		log.Fatalf("Item ID %v not found in items table", swap.sender_item_id)
+		log.Fatalf("Item ID %v not found in items table", swap.Sender_item_id)
 	}
-	receiverItem, err := GetItem(swap.receiver_item_id)
+	receiverItem, err := GetItem(swap.Receiver_item_id)
 	if err != nil {
-		log.Fatalf("Item ID %v not found in items table", swap.receiver_item_id)
+		log.Fatalf("Item ID %v not found in items table", swap.Receiver_item_id)
 	}
 
 	query := `UPDATE items SET user_id=? WHERE item_id=?`
@@ -362,11 +362,11 @@ func AcceptSwapRequest(swapID string) (err error) {
 	defer stmt.Close()
 
 	// Swap user IDs associated with the items
-	_, err = stmt.ExecContext(ctx, receiverItem.user_id, senderItem.item_id)
+	_, err = stmt.ExecContext(ctx, receiverItem.User_id, senderItem.Item_id)
 	if err != nil {
 		log.Fatal("Updating items table failed")
 	}
-	_, err = stmt.ExecContext(ctx, senderItem.user_id, receiverItem.item_id)
+	_, err = stmt.ExecContext(ctx, senderItem.User_id, receiverItem.Item_id)
 	if err != nil {
 		log.Fatal("Updating items table failed")
 	}

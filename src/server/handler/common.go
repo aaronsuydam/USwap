@@ -4,13 +4,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"strings"
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	// "github.com/joho/godotenv"
@@ -99,7 +99,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	claims := &Claims{
 		Username: login.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Subject: sub,
+			Subject:   sub,
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
@@ -162,7 +162,7 @@ type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
 	UserID      string `json:"userID"`
-	ImagePath   []byte `json:"image"`
+	Image       []byte `json:"image"`
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
@@ -171,17 +171,17 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
+		return
 	}
 
 	defer r.Body.Close()
 
 	itemName := r.FormValue("itemName")
 	itemDescription := r.FormValue("itemDescription")
-    userID := r.FormValue("userID")
+	userID := r.FormValue("userID")
 	image := r.FormValue("imageSrc")
 
-    // Decode the base64 encoded string into image data
+	// Decode the base64 encoded string into image data
 	imageData, err := base64.StdEncoding.DecodeString(strings.TrimSpace(image))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -201,9 +201,9 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
-    // send response back to client
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("Item created successfully"))
+	// send response back to client
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Item created successfully"))
 }
 
 type ItemID struct {
@@ -258,17 +258,15 @@ func SearchItems(w http.ResponseWriter, r *http.Request) {
 
 func GetItems(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-
 	items, _ := db.GetItems()
 
-	jsonBytes, err := utils.StructToJSON(items)
+	itemsJson, err := json.Marshal(items)
 	if err != nil {
 		fmt.Print(err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(jsonBytes)
-
+	w.Write(itemsJson)
 }
 
 type Swap struct {

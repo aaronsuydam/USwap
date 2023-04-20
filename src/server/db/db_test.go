@@ -48,14 +48,14 @@ func TestUserCreation(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if user.user_id != userid || user.user_name != "testuser1" || user.user_email != "testemail1@testemail.com" || user.user_password != "testpassword1" {
+	if user.User_id != userid || user.User_name != "testuser1" || user.User_email != "testemail1@testemail.com" || user.User_password != "testpassword1" {
 		t.Fatal("Retrieved user does not match the passed in test user")
 	}
 }
 
 func TestGetUserItems(t *testing.T) {
-	godotenv.Load("../.env")
-	Initialize()
+	//godotenv.Load("../.env")
+	//Initialize()
 	itemid1, _ := CreateItem("testitem1", "testitem1description", "testuser1", []byte("testimage1"))
 	_, err := CreateItem("testitem2", "testitem2description", "testuser1", []byte("testimage2"))
 	if err != nil {
@@ -65,7 +65,7 @@ func TestGetUserItems(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if itemid1 != item1.item_id {
+	if itemid1 != item1.Item_id {
 		t.Fatal("Retrieved user does not match the passed in test user")
 	}
 	items, err := GetUserItems("testuser1")
@@ -80,7 +80,7 @@ func TestGetUserItems(t *testing.T) {
 func TestSwapRequestCreation(t *testing.T) {
 	//godotenv.Load("../.env")
 	//Initialize()
-	swapid, err := CreateSwapRequest(2, "testitem1", 3, "testitem2")
+	swapid, err := CreateSwapRequest("testuser1", "testitem1", "testuser2", "testitem2")
 	if err != nil {
 		t.Fatal("Failed to create test user")
 	}
@@ -88,7 +88,7 @@ func TestSwapRequestCreation(t *testing.T) {
 	if err != nil {
 		t.Fatal("Failed to get swap request")
 	}
-	if swapRequest.swap_id != swapid || swapRequest.sender_id != "testuser1" || swapRequest.sender_item_id != "testitem1" || swapRequest.receiver_id != "testuser2" || swapRequest.receiver_item_id != "testitem2" {
+	if swapRequest.Swap_id != swapid || swapRequest.Sender_id != "testuser1" || swapRequest.Sender_item_id != "testitem1" || swapRequest.Receiver_id != "testuser2" || swapRequest.Receiver_item_id != "testitem2" {
 		t.Fatal("Retrieved swap request does not match the passed in test swap request")
 	}
 }
@@ -119,7 +119,7 @@ func TestSwapRequestAccept(t *testing.T) {
 		t.Fatal("Error in getItem")
 	}
 	item3New, _ := GetItem(itemid3)
-	if item2New.user_id != userid3 && item3New.user_id != userid2 {
+	if item2New.User_id != userid3 && item3New.User_id != userid2 {
 		t.Fatal("Failed to swap user IDs on items")
 	}
 }
@@ -150,7 +150,7 @@ func TestSwapRequestDeny(t *testing.T) {
 		t.Fatal("Error in getItem")
 	}
 	item3New, _ := GetItem(itemid3)
-	if item2New.user_id != userid2 && item3New.user_id != userid3 {
+	if item2New.User_id != userid2 && item3New.User_id != userid3 {
 		t.Fatal("Item relations to users were incorrectly modified in a reject swap request.")
 	}
 }
@@ -169,9 +169,9 @@ func TestSearch(t *testing.T) {
 }
 */
 
-func TestSearch(t *testing.T) {
-	godotenv.Load("../.env")
-	Initialize()
+func TestGetItems(t *testing.T) {
+	//godotenv.Load("../.env")
+	//Initialize()
 	_, err := GetItems()
 	if err != nil {
 		t.Fatal(err)
