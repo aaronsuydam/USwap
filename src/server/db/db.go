@@ -109,7 +109,10 @@ func createUserTable() error {
 
 // Items table maintains all actively listed items
 func createItemsTable() error {
-	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image blob)`
+	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image blob),
+	FULLTEXT(item_name, item_description),
+	ENGINE=INNODB`
+
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -234,14 +237,14 @@ type Item struct {
 	item_name        string
 	item_description string
 	user_id          string
-	image_path       string
+	image            []byte
 }
 
 func GetItem(itemID string) (Item, error) {
 	var item Item
 
 	row := DB.QueryRow("SELECT * FROM items WHERE item_id = ?", itemID)
-	if err := row.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+	if err := row.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
 		if err == sql.ErrNoRows {
 			return item, fmt.Errorf("getItem %v: no such item", itemID)
 		}
@@ -251,28 +254,46 @@ func GetItem(itemID string) (Item, error) {
 	return item, nil
 }
 
-/*
-func searchItems(search string) ([]Item, err) {
+func GetItems() ([]Item, error) {
 	var items []Item
 
-	rows, err := DB.Query("SELECT * FROM items WHERE user_id = ?", userID)
+	rows, err := DB.Query("SELECT * FROM items")
+
 	if err != nil {
-		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		var item Item
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
+			log.Fatal(err)
+		}
+		items = append(items, item)
+	}
+	return items, err
+}
+
+func SearchItems(search string) ([]Item, error) {
+	var items []Item
+
+	rows, err := DB.Query("SELECT * FROM items WHERE MATCH (item_name, item_description) AGAINST (? IN NATURAL LANGUAGE MODE)", search)
+	if err != nil {
+		log.Fatal(err)
 	}
 	defer rows.Close()
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
 		var item Item
-		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
-			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
+			log.Fatal(err)
 		}
 		items = append(items, item)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+		log.Fatal(err)
 	}
-	return items, nil
-}*/
+	fmt.Printf("%d", len(items))
+	return items, err
+}
 
 type Swap struct {
 	swap_id          string
@@ -307,7 +328,7 @@ func GetUserItems(userID string) ([]Item, error) {
 	// Loop through rows, using Scan to assign column data to struct fields.
 	for rows.Next() {
 		var item Item
-		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image); err != nil {
 			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 		}
 		items = append(items, item)

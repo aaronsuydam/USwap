@@ -35,8 +35,12 @@ func main() {
 
 	r.HandleFunc("/item", handler.GetItem).Methods("GET")
 	r.HandleFunc("/item/create", handler.CreateListing).Methods("POST")
+	r.HandleFunc("/items", handler.GetItems).Methods("GET")
+	r.HandleFunc("/items/search", handler.SearchItems).Methods("GET")
 	//r.HandleFunc("/item/delete", handler.DeleteListing).Methods("POST") // Delete an item
 	//r.HandleFunc("/item/modify", handler.ModifyItem).Methods("PUT") // Modify an item
+
+	//r.HandleFunc("/")
 
 	r.HandleFunc("/swap", handler.AcceptSwapRequest).Methods("GET")
 	r.HandleFunc("/swap/create", handler.AcceptSwapRequest).Methods("GET")

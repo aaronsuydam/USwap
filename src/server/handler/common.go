@@ -148,7 +148,9 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	var item Item
+
 	json.Unmarshal(body, &item)
 
 	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
@@ -194,6 +196,31 @@ func SearchItems(w http.ResponseWriter, r *http.Request) {
 	}
 	var search Search
 	json.Unmarshal(body, &search)
+
+	items, _ := db.SearchItems(search.Search)
+
+	jsonBytes, err := utils.StructToJSON(items)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
+
+}
+
+func GetItems(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
+	items, _ := db.GetItems()
+
+	jsonBytes, err := utils.StructToJSON(items)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonBytes)
 
 }
 
