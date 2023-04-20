@@ -7,8 +7,7 @@
 
 
 # Frontend Unit Tests
-
-
+Components: Test all components and root app to ensure they are created successfully. Test LoginPage for proper login state and storage of a user. Signup Service: Service is successfully posting user object to backend and receiving it back. Auth Service: Service is successfully logging a user in and assigning a JWT. Cypress Test: Created e2e unit test to test post functionality of signup service and auth service. Form: Validate user input into signup form fields.
 
 # Backend Changes and Documentation
 
