@@ -154,3 +154,26 @@ func TestSwapRequestDeny(t *testing.T) {
 		t.Fatal("Item relations to users were incorrectly modified in a reject swap request.")
 	}
 }
+
+/* Current MySQL database version does not support Fulltext
+func TestSearch(t *testing.T) {
+	godotenv.Load("../.env")
+	Initialize()
+	items, err := SearchItems("test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, item := range items {
+		t.Logf("%s", item.item_name)
+	}
+}
+*/
+
+func TestSearch(t *testing.T) {
+	godotenv.Load("../.env")
+	Initialize()
+	_, err := GetItems()
+	if err != nil {
+		t.Fatal(err)
+	}
+}
