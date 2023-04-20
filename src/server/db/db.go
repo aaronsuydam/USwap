@@ -112,7 +112,9 @@ func createUserTable() error {
 
 // Items table maintains all actively listed items
 func createItemsTable() error {
-	var err error
+	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image blob)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
 
 	err = DB.PingContext(Ctx)
 	if err != nil {
@@ -189,72 +191,17 @@ func CreateUser(userName string, userEmail string, userPassword string) (int64, 
 	return newID, nil
 }
 
-func ReadUsers() (int, error) {
-	err := DB.PingContext(Ctx)
-	if err != nil {
-		return -1, err
-	}
-
-	tsql := fmt.Sprintf("SELECT Id, Name, Email, Password FROM TestSchema.Users;")
-
-	// Execute query
-	rows, err := DB.QueryContext(Ctx, tsql)
-	if err != nil {
-		return -1, err
-	}
-
-	defer rows.Close()
-
-	var count int
-
-	// Iterate through the result set.
-	for rows.Next() {
-		var name, email, password string
-		var id int
-
-		// Get values from row.
-		err := rows.Scan(&id, &name, &email, &password)
-		if err != nil {
-			return -1, err
-		}
-
-		fmt.Printf("ID: %d, Name: %s, Email: %s, Password: %s\n", id, name, email, password)
-		count++
-	}
-
-	return count, nil
-}
-
 // Add an item to the items table upon user listing the item
-func CreateItem(itemName string, itemDescription string, userID string, image string) (int64, error) {
-	var err error
+func CreateItem(itemName string, itemDescription string, userID string, image []byte) (itemID string, err error) {
 
-	if DB == nil {
-		err = errors.New("CreateItem: db is null")
-		return -1, err
-	}
+	query := `INSERT INTO items (item_id, item_name, item_description, user_id, image) VALUES (?,?,?,?,?)`
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+	stmt, err := DB.PrepareContext(ctx, query)
 
-	queryStatement := `
-		INSERT INTO TestSchema.Items (Name, Description, UserId, Image) VALUES (@Name, @Description, @UserId, @Image)
-	`
-
-	query, err := DB.Prepare(queryStatement); if err != nil {
-		return -1, err
-	}
-	defer query.Close()
-	
-	row := query.QueryRowContext(
-		Ctx,
-		sql.Named("Name", itemName),
-		sql.Named("Description", itemDescription),
-		sql.Named("UserId", userID),
-		sql.Named("Image", image))
-	
-	var newItem int64
-	err = row.Scan(&newItem); if err != nil {
-		return -1, err
-	}
-	return newItem, nil
+	defer stmt.Close()
+	_, err = stmt.ExecContext(ctx, itemID, itemName, itemDescription, userID, image)
+	return itemID, err
 }
 
 // Add a swap request into swap table
@@ -374,6 +321,28 @@ func GetUserItems(userID string) ([]Item, error) {
 	var items []Item
 
 	rows, err := DB.Query("SELECT * FROM items WHERE user_id = ?", userID)
+	if err != nil {
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var item Item
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+		}
+		items = append(items, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+	}
+	return items, nil
+}
+
+func GetALLItems(userID string) ([]Item, error) {
+	var items []Item
+
+	rows, err := DB.Query("SELECT *")
 	if err != nil {
 		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
 	}

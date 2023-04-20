@@ -79,6 +79,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	defer rows.Close()
 
 	var hash string
+
 	for rows.Next() {
 		err := rows.Scan(&hash)
 		if err != nil {
@@ -93,11 +94,28 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id_rows, err := db.DB.Query("SELECT user_id FROM users WHERE user_name = ?", login.Username)
+
+	if err != nil {
+		fmt.Println("Error when selecting id query")
+		log.Fatal(err)
+	}
+	defer id_rows.Close()
+
+	var sub string
+
+	for id_rows.Next() {
+		if err := id_rows.Scan(&sub); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	expirationTime := time.Now().Add(time.Minute)
 
 	claims := &Claims{
 		Username: login.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
+			Subject: sub,
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
@@ -121,8 +139,16 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	var m map[string]interface{}
+	json.Unmarshal(loginJson, &m)
+	m["id_token"] = sub
+	response, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+
 	w.WriteHeader(http.StatusOK)
-	w.Write(loginJson)
+	w.Write(response)
 }
 
 type SignUp struct {
@@ -153,8 +179,8 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
-	UserID      int64  `json:"userID"`
-	ImageData	string `json:"image"`
+	UserID      string `json:"userID"`
+	ImagePath   []byte `json:"image"`
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
@@ -175,7 +201,6 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	// Write the image data to a local file
 	err = ioutil.WriteFile("image.jpg", imageData, 0644)
 	if err != nil {
@@ -245,6 +270,10 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	var swap Swap
 	json.Unmarshal(body, &swap)
 
+	_, err = db.CreateSwapRequest(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
+	if err != nil {
+		log.Fatal("Failed to create the swap request")
+	}
 }
 
 type SwapID struct {

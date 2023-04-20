@@ -41,7 +41,6 @@ export class ItemFormComponent {
       const file: File = event.target.files[0];
 
       var reader = new FileReader();
-
       if (file) {
         this.fileName = file.name;
         
