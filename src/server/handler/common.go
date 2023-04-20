@@ -1,8 +1,14 @@
 package handler
 
 import (
+	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"strings"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"log"
 	"net/http"
@@ -53,19 +59,30 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
-	if err != nil {
-		fmt.Println("Error with creating db query")
-		log.Fatal(err)
+	ctx := db.Ctx
+	er := db.DB.PingContext(ctx)
+	if er != nil {
+		panic(er)
 	}
 
+	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
+
+	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
+	if err != nil {
+		fmt.Println("Error with creating db query")
+		panic(err)
+	}
 	defer rows.Close()
+
 	var hash string
+
 	for rows.Next() {
-		if err := rows.Scan(&hash); err != nil {
+		err := rows.Scan(&hash)
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -77,11 +94,28 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id_rows, err := db.DB.Query("SELECT user_id FROM users WHERE user_name = ?", login.Username)
+
+	if err != nil {
+		fmt.Println("Error when selecting id query")
+		log.Fatal(err)
+	}
+	defer id_rows.Close()
+
+	var sub string
+
+	for id_rows.Next() {
+		if err := id_rows.Scan(&sub); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	expirationTime := time.Now().Add(time.Minute)
 
 	claims := &Claims{
 		Username: login.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
+			Subject: sub,
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
@@ -105,8 +139,16 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
+	var m map[string]interface{}
+	json.Unmarshal(loginJson, &m)
+	m["id_token"] = sub
+	response, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+
 	w.WriteHeader(http.StatusOK)
-	w.Write(loginJson)
+	w.Write(response)
 }
 
 type SignUp struct {
@@ -125,11 +167,11 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	var signup SignUp
 	json.Unmarshal(body, &signup)
 
-	signup.Password, _ = utils.HashPassword(string(signup.Password)) // Hash password
-	_, err = db.CreateUser(signup.Username, signup.Email, signup.Password)
+	createID, err := db.CreateUser(signup.Username, signup.Email, signup.Password)
 	if err != nil {
-		log.Fatal("Failed to sign up user")
+		log.Fatal("Error creating User: ", err.Error())
 	}
+	fmt.Printf("Inserted ID: %d successfully.\n", createID)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -144,19 +186,32 @@ type Item struct {
 func CreateListing(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
-	body, err := io.ReadAll(r.Body)
+	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
 	}
 
-	var item Item
+	defer r.Body.Close()
 
-	json.Unmarshal(body, &item)
+	image := r.FormValue("imageSrc")
 
-	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
+    // Decode the base64 encoded string into image data
+	imageData, err := base64.StdEncoding.DecodeString(strings.TrimSpace(image))
 	if err != nil {
-		log.Fatal("Failed to create item listing")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+	// Write the image data to a local file
+	err = ioutil.WriteFile("image.jpg", imageData, 0644)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+    // send response back to client
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("Item created successfully"))
 }
 
 type ItemID struct {

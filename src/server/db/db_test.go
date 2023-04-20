@@ -80,7 +80,7 @@ func TestGetUserItems(t *testing.T) {
 func TestSwapRequestCreation(t *testing.T) {
 	//godotenv.Load("../.env")
 	//Initialize()
-	swapid, err := CreateSwapRequest("testuser1", "testitem1", "testuser2", "testitem2")
+	swapid, err := CreateSwapRequest(2, "testitem1", 3, "testitem2")
 	if err != nil {
 		t.Fatal("Failed to create test user")
 	}
