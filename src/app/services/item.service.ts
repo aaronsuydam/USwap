@@ -11,6 +11,7 @@ export class ItemService {
     
     getItem(itemID : number) : Item {
         let singleItem : Item = new Item(NaN, "", "", NaN, "");
+        console.log("Attempting to get an item.");
         this.http.get<any>('/item').pipe(
             map(data => ({
                 ID : data.ID,

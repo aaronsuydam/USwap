@@ -3,7 +3,7 @@
         <div id="input">
             <mat-form-field class="login-credentials-input">
             <mat-icon matPrefix>search</mat-icon>
-            <input matInput type="query" [(ngModel)]="swapFor" id="search" placeholder="I want to swap for..." (keydown.enter)="search()">
+            <input matInput type="query" [(ngModel)]="swapFor" id="search" placeholder="I want to swap for...">
             <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''">
                 <mat-icon>close</mat-icon>
             </button>
