@@ -15,9 +15,9 @@
 Sprint 4 changes:
 Imagepath field was changed slightly to accomodate storing images. Routing between front-end and back-end was changed in order to accept images into the database and store/return them properly.
 
-Search functionality has been added to allow a user to search by a specific keyword.
+Search functionality has been added to allow a user to search by a specific keyword. However, our database server went down and the version of our backup MySQL database does not support the search functionality we were using.
 
-Get ALL users functionality has been added to allow frontend to grab a large amount of items and display them in order to display various users items at once.
+Get ALL items functionality has been added to allow frontend to grab a large amount of items and display them in order to display various users items at once. This populates the front-page dashboard.
 
 Test methods for the above have also been added. 
  

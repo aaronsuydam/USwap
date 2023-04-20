@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../item';
 import { ItemService } from '../services/item.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-small-swap-ui',
@@ -13,7 +14,7 @@ export class SmallSwapUiComponent {
     item : Item = new Item(NaN, "", "", NaN, "");
     like : string = "Like";
 
-    constructor(private router: Router, private route: ActivatedRoute, private itemService : ItemService) {
+    constructor(private router: Router, private route: ActivatedRoute, private itemService : ItemService, private http: HttpClient) {
         if(this.router.url !== "/swap-narrow")
         {
             this.swappingFor = false;
@@ -21,8 +22,7 @@ export class SmallSwapUiComponent {
     }
 
     ngOnInit() {
-        if(Number.isNaN(this.item.ID))
-        {
+        if(Number.isNaN(this.item.ID)) {
             this.itemService.setDefaultValues(this.item);
         }
     }

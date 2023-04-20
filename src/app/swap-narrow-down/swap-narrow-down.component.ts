@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Item } from '../item';
 import { ItemService } from '../services/item.service';
@@ -8,7 +8,7 @@ import { ItemService } from '../services/item.service';
   templateUrl: './swap-narrow-down.component.html',
   styleUrls: ['./swap-narrow-down.component.scss']
 })
-export class SwapNarrowDownComponent {
+export class SwapNarrowDownComponent implements OnInit {
 
     constructor(private http: HttpClient, private itemService : ItemService) {}
 
@@ -23,6 +23,21 @@ export class SwapNarrowDownComponent {
     items : Item[] = [];
     numberOfItemsToDisplay = 6;
     filterNames : string[] = ["Filter 1", "Filter 2 - Longer", "Short", "Filter 4"];
+
+    ngOnInit(): void {
+        this.getItems();
+    }
+
+    getItems(): void {
+        this.http.get<Item[]>('items').subscribe({
+            next: (res) => {
+                this.items = res;
+            },
+            error: (error) => {
+                console.log(error)
+            }
+        });
+    }
 
     // FIXME: Talk to andrew about implementation
     getFilterNames() : void {
