@@ -65,7 +65,7 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
-	
+
 	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
 	if err != nil {
 		fmt.Println("Error with creating db query")
@@ -148,7 +148,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
-	UserID      string `json:"userID"`
+	UserID      int64  `json:"userID"`
 	ImagePath   string `json:"imagePath"`
 }
 
@@ -225,10 +225,6 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	var swap Swap
 	json.Unmarshal(body, &swap)
 
-	_, err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
-	if err != nil {
-		log.Fatal("Failed to create the swap request")
-	}
 }
 
 type SwapID struct {
