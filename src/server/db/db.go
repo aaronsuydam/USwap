@@ -109,7 +109,7 @@ func createUserTable() error {
 
 // Items table maintains all actively listed items
 func createItemsTable() error {
-	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image_path text)`
+	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image blob)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 
@@ -162,7 +162,7 @@ func CreateUser(userName string, userEmail string, userPassword string) (userID 
 }
 
 // Add an item to the items table upon user listing the item
-func CreateItem(itemName string, itemDescription string, userID string, imagePath string) (itemID string, err error) {
+func CreateItem(itemName string, itemDescription string, userID string, image []byte) (itemID string, err error) {
 
 	// Generate an item ID
 	byteItemID, err := uuid.NewV4()
@@ -171,7 +171,7 @@ func CreateItem(itemName string, itemDescription string, userID string, imagePat
 	}
 	itemID = byteItemID.String()
 
-	query := `INSERT INTO items (item_id, item_name, item_description, user_id, image_path) VALUES (?,?,?,?,?)`
+	query := `INSERT INTO items (item_id, item_name, item_description, user_id, image) VALUES (?,?,?,?,?)`
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
 	stmt, err := DB.PrepareContext(ctx, query)
@@ -179,7 +179,7 @@ func CreateItem(itemName string, itemDescription string, userID string, imagePat
 		log.Fatal(err)
 	}
 	defer stmt.Close()
-	_, err = stmt.ExecContext(ctx, itemID, itemName, itemDescription, userID, imagePath)
+	_, err = stmt.ExecContext(ctx, itemID, itemName, itemDescription, userID, image)
 	return itemID, err
 }
 
