@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"strings"
 	_ "image/jpeg"
 	_ "image/png"
@@ -63,23 +61,9 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	var login Login
 	json.Unmarshal(body, &login)
 
-	ctx := db.Ctx
-	er := db.DB.PingContext(ctx)
-	if er != nil {
-		panic(er)
-	}
-
-	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
-
-	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
-	if err != nil {
-		fmt.Println("Error with creating db query")
-		panic(err)
-	}
-	defer rows.Close()
+	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
 
 	var hash string
-
 	for rows.Next() {
 		err := rows.Scan(&hash)
 		if err != nil {
@@ -167,11 +151,9 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	var signup SignUp
 	json.Unmarshal(body, &signup)
 
-	createID, err := db.CreateUser(signup.Username, signup.Email, signup.Password)
-	if err != nil {
-		log.Fatal("Error creating User: ", err.Error())
-	}
-	fmt.Printf("Inserted ID: %d successfully.\n", createID)
+	signup.Password, _ = utils.HashPassword(signup.Password)
+
+	db.CreateUser(signup.Username, signup.Email, signup.Password)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -194,6 +176,9 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
+	itemName := r.FormValue("itemName")
+	itemDescription := r.FormValue("itemDescription")
+    userID := r.FormValue("userID")
 	image := r.FormValue("imageSrc")
 
     // Decode the base64 encoded string into image data
@@ -202,12 +187,19 @@ func CreateListing(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// Write the image data to a local file
-	err = ioutil.WriteFile("image.jpg", imageData, 0644)
+
+	// Store imageData to database
+	db.CreateItem(itemName, itemDescription, userID, imageData)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	// Write the image data to a local file
+	// err = ioutil.WriteFile("image.jpg", imageData, 0644)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 	return
+	// }
 
     // send response back to client
     w.WriteHeader(http.StatusOK)
