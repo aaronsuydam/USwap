@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Item } from '../item';
 
 @Component({
   selector: 'app-user-profile',
@@ -7,8 +8,13 @@ import { Component } from '@angular/core';
 })
 export class UserProfileComponent {
     
-    //TODO: Add Child Route, Add Routing, Create Component
-    addItemsOnClick() {
-        
-    }
+    @Input() username : string = "Placeholder";
+    interests : string = "";
+    profilePicPath : string = "../../assets/aaron-profile-pic.jpg";
+    memberSinceDate : string = "Placeholder PHYear";
+    userItems : Item[] = [];
+
+
+
 }
+

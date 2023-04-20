@@ -2,13 +2,13 @@
     <mat-card class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>{{itemName}}</mat-card-title>
-          <mat-card-subtitle>{{itemOwner}}</mat-card-subtitle>
+          <mat-card-title>{{item.name}}</mat-card-title>
+          <mat-card-subtitle>{{item.uidOfOwner}}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-image src={{imageSource}} alt="Photo of a Shiba Inu">
+        <img mat-card-image src={{item.imgSrc}} alt="Photo of a Shiba Inu">
         <mat-card-content>
           <p>
-            {{itemDescription}}
+            {{item.description}}
           </p>
         </mat-card-content>
         <mat-card-actions>
