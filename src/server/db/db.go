@@ -318,6 +318,28 @@ func GetUserItems(userID string) ([]Item, error) {
 	return items, nil
 }
 
+func GetALLItems(userID string) ([]Item, error) {
+	var items []Item
+
+	rows, err := DB.Query("SELECT *")
+	if err != nil {
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+	}
+	defer rows.Close()
+	// Loop through rows, using Scan to assign column data to struct fields.
+	for rows.Next() {
+		var item Item
+		if err := rows.Scan(&item.item_id, &item.item_name, &item.item_description, &item.user_id, &item.image_path); err != nil {
+			return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+		}
+		items = append(items, item)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("alluserItems %v: %v", userID, err)
+	}
+	return items, nil
+}
+
 func AcceptSwapRequest(swapID string) (err error) {
 	swap, err := GetSwapRequest(swapID)
 	if err != nil {
