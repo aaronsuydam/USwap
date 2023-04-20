@@ -164,7 +164,7 @@ type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
 	UserID      string `json:"userID"`
-	ImagePath   string `json:"imagePath"`
+	ImagePath   []byte `json:"image"`
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
@@ -242,7 +242,7 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	var swap Swap
 	json.Unmarshal(body, &swap)
 
-	_, err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
+	_, err = db.CreateSwapRequest(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
 	if err != nil {
 		log.Fatal("Failed to create the swap request")
 	}
