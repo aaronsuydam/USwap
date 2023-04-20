@@ -109,9 +109,7 @@ func createUserTable() error {
 
 // Items table maintains all actively listed items
 func createItemsTable() error {
-	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image blob),
-	FULLTEXT(item_name, item_description),
-	ENGINE=INNODB`
+	query := `CREATE TABLE IF NOT EXISTS items(item_id text, item_name text, item_description text, user_id text, image blob)`
 
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
