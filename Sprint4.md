@@ -36,9 +36,7 @@ Post - Provide args username and password
 None right now. Future Calls:
 Get - Receive item postings
 
-## Item (item)
 
-## Profile (/profile)
 
 ## Backend Documentation
 Server Our test server runs on Golang’s Gorilla Mux on port 4201. 
