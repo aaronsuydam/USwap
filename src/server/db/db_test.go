@@ -56,8 +56,8 @@ func TestUserCreation(t *testing.T) {
 func TestGetUserItems(t *testing.T) {
 	//godotenv.Load("../.env")
 	//Initialize()
-	itemid1, err := CreateItem("testitem1", "testitem1description", "testuser1", "testimagepath1")
-	_, err = CreateItem("testitem2", "testitem2description", "testuser1", "testimagepath2")
+	itemid1, err := CreateItem("testitem1", "testitem1description", 2, "testimagepath1")
+	_, err = CreateItem("testitem2", "testitem2description", 2, "testimagepath2")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +80,7 @@ func TestGetUserItems(t *testing.T) {
 func TestSwapRequestCreation(t *testing.T) {
 	//godotenv.Load("../.env")
 	//Initialize()
-	swapid, err := CreateSwapRequest("testuser1", "testitem1", "testuser2", "testitem2")
+	swapid, err := CreateSwapRequest(2, "testitem1", 3, "testitem2")
 	if err != nil {
 		t.Fatal("Failed to create test user")
 	}

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -53,19 +54,29 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
-	if err != nil {
-		fmt.Println("Error with creating db query")
-		log.Fatal(err)
+	ctx := db.Ctx
+	er := db.DB.PingContext(ctx)
+	if er != nil {
+		panic(er)
 	}
 
+	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
+
+	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
+	if err != nil {
+		fmt.Println("Error with creating db query")
+		panic(err)
+	}
 	defer rows.Close()
+
 	var hash string
 	for rows.Next() {
-		if err := rows.Scan(&hash); err != nil {
+		err := rows.Scan(&hash)
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -125,11 +136,11 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	var signup SignUp
 	json.Unmarshal(body, &signup)
 
-	signup.Password, _ = utils.HashPassword(string(signup.Password)) // Hash password
-	_, err = db.CreateUser(signup.Username, signup.Email, signup.Password)
+	createID, err := db.CreateUser(signup.Username, signup.Email, signup.Password)
 	if err != nil {
-		log.Fatal("Failed to sign up user")
+		log.Fatal("Error creating User: ", err.Error())
 	}
+	fmt.Printf("Inserted ID: %d successfully.\n", createID)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -137,7 +148,7 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
-	UserID      string `json:"userID"`
+	UserID      int64  `json:"userID"`
 	ImagePath   string `json:"imagePath"`
 }
 
@@ -214,10 +225,6 @@ func CreateSwapRequest(w http.ResponseWriter, r *http.Request) {
 	var swap Swap
 	json.Unmarshal(body, &swap)
 
-	_, err = db.CreateItem(swap.SenderID, swap.SenderItemID, swap.ReceiverID, swap.ReceiverItemID)
-	if err != nil {
-		log.Fatal("Failed to create the swap request")
-	}
 }
 
 type SwapID struct {
