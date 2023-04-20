@@ -26,8 +26,9 @@ export class LoginPageComponent {
 
     login() {
         const val = this.form.value;
-
-        if (val.username && val.password) {
+        this.isLoggedIn = true;
+        this.router.navigate(['/swap-narrow']);
+        /*if (val.username && val.password) {
             this.authService.login(val.username, val.password)
                 .subscribe(
                     data => {
@@ -37,7 +38,7 @@ export class LoginPageComponent {
                         this.router.navigate(['/swap-narrow']);
                     }
                 )
-        }
+        }*/
     }
 
     signUp() {

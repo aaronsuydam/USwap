@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../assets/material.module';
+import { MatChipsModule } from '@angular/material/chips'
 //import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AppComponent } from './app.component';
@@ -20,7 +21,9 @@ import { SmallSwapUiComponent } from './small-swap-ui/small-swap-ui.component';
 import { APIInterceptor } from './services/interceptor.service';
 import { SignupPageComponent } from './signup-page/signup-page.component';
 import { AuthGuard } from './auth/auth.guard';
+import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
 import { ItemFormComponent } from './item-form/item-form.component';
+
 
 const appRoutes: Routes = [
     { path: '', title: "USwap Home", component: HomepageComponent},
@@ -46,6 +49,7 @@ const appRoutes: Routes = [
     SwapNarrowDownComponent,
     SmallSwapUiComponent,
     SignupPageComponent,
+    BottomBarComponent,
     ItemFormComponent,
   ],
   imports: [
@@ -56,7 +60,8 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
-    // HttpClientTestingModule
+    MatChipsModule
+    //HttpClientTestingModule
   ],
   exports: [RouterModule],
   providers: [

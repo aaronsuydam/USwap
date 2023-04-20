@@ -3,29 +3,23 @@
         <div id="input">
             <mat-form-field class="login-credentials-input">
             <mat-icon matPrefix>search</mat-icon>
-            <input matInput type="query" [(ngModel)]="swapFor" id="swap-for-input" placeholder="I want to swap for...">
+            <input matInput type="query" [(ngModel)]="swapFor" id="search" placeholder="I want to swap for...">
             <button *ngIf="swapFor" matSuffix mat-icon-button aria-label="Clear" (click)="swapFor=''">
                 <mat-icon>close</mat-icon>
             </button>
             </mat-form-field>
         </div>
     </div>
-
+    
     <div id="bottom-left">
-        <section id="filters">
-            <mat-checkbox>Filter 1</mat-checkbox>
-            <mat-checkbox>Filter 2</mat-checkbox>
-            <mat-checkbox>Filter 3</mat-checkbox>
-            <mat-checkbox>Filter 4</mat-checkbox>
-        </section>
-    </div>
+        <div id="filters">
+            <mat-chip-listbox class="mat-mdc-chip-set-stacked" multiple="true" >
+                <mat-chip-option *ngFor="let filter of filterNames; index as i">{{filterNames[i]}}</mat-chip-option>
+            </mat-chip-listbox>
+        </div>
+    </div>   
 
     <div id="bottom-right">
-        <app-small-swap-ui id="one">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="two">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="three">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="four">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="five">Item Details</app-small-swap-ui>
-        <app-small-swap-ui id="six">Item Details</app-small-swap-ui>
+        <app-small-swap-ui *ngFor="let item of items; index as i"></app-small-swap-ui>
     </div>
 </div>

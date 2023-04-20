@@ -1,0 +1,9 @@
+mat-toolbar {
+    display: grid;
+    justify-content: center;
+    text-align: center;
+    font-size: 11pt;
+    .company {
+        font-size: 16pt;
+    }
+}

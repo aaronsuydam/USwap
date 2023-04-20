@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { StorageService } from '../services/storage.service';
+import { HttpClient } from '@angular/common/http';
+import { Item } from '../item';
+import { ItemService } from '../services/item.service';
 
 @Component({
   selector: 'app-swap-narrow-down',
@@ -7,5 +9,25 @@ import { StorageService } from '../services/storage.service';
   styleUrls: ['./swap-narrow-down.component.scss']
 })
 export class SwapNarrowDownComponent {
+
+    constructor(private http: HttpClient, private itemService : ItemService) {}
+
+    onInit() {
+        for (let index = 0; index < this.items.length; index++) {
+            console.log("For Loop number" + index);
+            this.items.push(this.itemService.getItem(index)); 
+        }
+    }
+    
     swapFor: string = "";
+    items : Item[] = [];
+    numberOfItemsToDisplay = 6;
+    filterNames : string[] = ["Filter 1", "Filter 2 - Longer", "Short", "Filter 4"];
+
+    // FIXME: Talk to andrew about implementation
+    getFilterNames() : void {
+        this.http.get('swap-filters').subscribe(data => this.filterNames);
+    }
 }
+
+

@@ -2,40 +2,18 @@
     <mat-card class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Item Name</mat-card-title>
-          <mat-card-subtitle>Owner Name</mat-card-subtitle>
+          <mat-card-title>{{item.name}}</mat-card-title>
+          <mat-card-subtitle>{{item.uidOfOwner}}</mat-card-subtitle>
         </mat-card-header>
-        <img mat-card-image src="../../assets/shiba2.jpg" alt="Photo of a Shiba Inu">
+        <img mat-card-image src={{item.imgSrc}} alt="Photo of a Shiba Inu">
         <mat-card-content>
           <p>
-            Some text will go here, right now this is just a placeholder. But we want to put
-            some details about items here.
+            {{item.description}}
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button id="likeButton">Like</button>
-          <button mat-button id="swapForButton" (click)="onClickSwapFor()">Swap For</button>
-        </mat-card-actions>
-    </mat-card>
-</ng-container>
-
-<ng-container *ngIf="!swappingFor">
-    <mat-card class="example-card">
-        <mat-card-header>
-          <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>Item Name</mat-card-title>
-          <mat-card-subtitle>Owner Name</mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image src="../../assets/shiba2.jpg" alt="Photo of a Shiba Inu">
-        <mat-card-content>
-          <p>
-            Some text will go here, right now this is just a placeholder. But we want to put
-            some details about items here.
-          </p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button id="likeButton">Like</button>
-          <button mat-button id="swapForButton" (click)="onClickSwapWith()">Swap With</button>
+          <button mat-raised-button id="likeButton" color="accent" (click)="onClickLike()">{{like}}</button>
+          <button mat-raised-button id="swapForButton" (click)="onClickSwapFor()" color="primary">Swap For</button>
         </mat-card-actions>
     </mat-card>
 </ng-container>
