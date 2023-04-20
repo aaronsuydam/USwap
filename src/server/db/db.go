@@ -150,13 +150,6 @@ func createSwapTable() error {
 func CreateUser(userName string, userEmail string, userPassword string) (int64, error) {
 	var err error
 
-	// Generate a user ID
-	// byteUserID, err := uuid.NewV4()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// userID = byteUserID.String()
-
 	if DB == nil {
 		err = errors.New("CreateUser: db is null")
 		return -1, err
@@ -225,25 +218,35 @@ func ReadUsers() (int, error) {
 }
 
 // Add an item to the items table upon user listing the item
-func CreateItem(itemName string, itemDescription string, userID string, imagePath string) (itemID string, err error) {
+func CreateItem(itemName string, itemDescription string, userID string, image string) (int64, error) {
+	var err error
 
-	// Generate an item ID
-	byteItemID, err := uuid.NewV4()
-	if err != nil {
-		log.Fatal(err)
+	if DB == nil {
+		err = errors.New("CreateItem: db is null")
+		return -1, err
 	}
-	itemID = byteItemID.String()
 
-	query := `INSERT INTO items (item_id, item_name, item_description, user_id, image_path) VALUES (?,?,?,?,?)`
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
-	stmt, err := DB.PrepareContext(ctx, query)
-	if err != nil {
-		log.Fatal(err)
+	queryStatement := `
+		INSERT INTO TestSchema.Items (Name, Description, UserId, Image) VALUES (@Name, @Description, @UserId, @Image)
+	`
+
+	query, err := DB.Prepare(queryStatement); if err != nil {
+		return -1, err
 	}
-	defer stmt.Close()
-	_, err = stmt.ExecContext(ctx, itemID, itemName, itemDescription, userID, imagePath)
-	return itemID, err
+	defer query.Close()
+	
+	row := query.QueryRowContext(
+		Ctx,
+		sql.Named("Name", itemName),
+		sql.Named("Description", itemDescription),
+		sql.Named("UserId", userID),
+		sql.Named("Image", image))
+	
+	var newItem int64
+	err = row.Scan(&newItem); if err != nil {
+		return -1, err
+	}
+	return newItem, nil
 }
 
 // Add a swap request into swap table

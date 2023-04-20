@@ -2,8 +2,13 @@ package handler
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"strings"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"log"
 	"net/http"
@@ -149,23 +154,38 @@ type Item struct {
 	Name        string `json:"itemName"`
 	Description string `json:"itemDescription"`
 	UserID      string `json:"userID"`
-	ImagePath   string `json:"imagePath"`
+	ImageData	string `json:"image"`
 }
 
 func CreateListing(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
-	body, err := io.ReadAll(r.Body)
+	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
 	}
-	var item Item
-	json.Unmarshal(body, &item)
+	defer r.Body.Close()
 
-	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
+	image := r.FormValue("imageSrc")
+
+    // Decode the base64 encoded string into image data
+	imageData, err := base64.StdEncoding.DecodeString(strings.TrimSpace(image))
 	if err != nil {
-		log.Fatal("Failed to create item listing")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+
+	// Write the image data to a local file
+	err = ioutil.WriteFile("image.jpg", imageData, 0644)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+    // send response back to client
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("Item created successfully"))
 }
 
 type ItemID struct {
