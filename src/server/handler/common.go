@@ -1,8 +1,14 @@
 package handler
 
 import (
+	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"strings"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"log"
 	"net/http"
@@ -53,20 +59,30 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
 	var login Login
 	json.Unmarshal(body, &login)
 
-	rows, err := db.DB.Query("SELECT user_password FROM users WHERE user_name = ?", login.Username)
+	ctx := db.Ctx
+	er := db.DB.PingContext(ctx)
+	if er != nil {
+		panic(er)
+	}
+
+	tsql := fmt.Sprintf("SELECT Password FROM TestSchema.Users WHERE Name = @Name")
+
+	rows, err := db.DB.QueryContext(ctx, tsql, sql.Named("Name", login.Username))
 	if err != nil {
 		fmt.Println("Error with creating db query")
-		log.Fatal(err)
+		panic(err)
 	}
 	defer rows.Close()
-	
+
 	var hash string
 
 	for rows.Next() {
-		if err := rows.Scan(&hash); err != nil {
+		err := rows.Scan(&hash)
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -151,11 +167,11 @@ func SignUpPost(w http.ResponseWriter, r *http.Request) {
 	var signup SignUp
 	json.Unmarshal(body, &signup)
 
-	signup.Password, _ = utils.HashPassword(string(signup.Password)) // Hash password
-	_, err = db.CreateUser(signup.Username, signup.Email, signup.Password)
+	createID, err := db.CreateUser(signup.Username, signup.Email, signup.Password)
 	if err != nil {
-		log.Fatal("Failed to sign up user")
+		log.Fatal("Error creating User: ", err.Error())
 	}
+	fmt.Printf("Inserted ID: %d successfully.\n", createID)
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -170,19 +186,31 @@ type Item struct {
 func CreateListing(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 
-	body, err := io.ReadAll(r.Body)
+	err := r.ParseMultipartForm(32 << 20)
 	if err != nil {
-		panic(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
 	}
-	var item Item
-	json.Unmarshal(body, &item)
+	defer r.Body.Close()
 
-	_, err = db.CreateItem(item.Name, item.Description, item.UserID, item.ImagePath)
+	image := r.FormValue("imageSrc")
+
+    // Decode the base64 encoded string into image data
+	imageData, err := base64.StdEncoding.DecodeString(strings.TrimSpace(image))
 	if err != nil {
-		log.Fatal("Failed to create item listing")
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	// Write the image data to a local file
+	err = ioutil.WriteFile("image.jpg", imageData, 0644)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	w.Write([]byte("success"))
+    // send response back to client
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("Item created successfully"))
 }
 
 type ItemID struct {
