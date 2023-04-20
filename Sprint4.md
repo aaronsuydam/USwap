@@ -49,12 +49,7 @@ Assigns a user a JWT in a cookie.
 ## Signup (signup) Calls:
 Post - Provide args username and password
 Home (home) Home/dashboard page. Holds links to login and will hold an intro dashboard. 
-Calls:  
-None right now. 
-##### Future Calls:
-Get - Receive item postings
-Item (item) 
-Profile (profile)  
+ 
 ## Database Users Table
 User objects containing a base of user_id, user_name, user_email and user_password  
   
